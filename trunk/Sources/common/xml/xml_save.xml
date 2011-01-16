@@ -1,0 +1,173 @@
+<?xml version="1.0" ?>
+<demo>
+    <scene id="0">
+		<shader>NORMALSPEC</shader>
+    <light x="0.0" y="5.0" z="1.0"/>
+       
+      <obj id="0" scene="1">
+        <model>models/house_obj/house_obj.obj</model>
+        <scale x="0.003" y="0.003" z="0.003" />
+        <rotation angle="0." x="0." y="0." z="0" />
+        <translate x="1" y="0.0" z="0.0" />
+        <texture id="0">models/house_obj/house_diffuse.ppm</texture>
+        <texture id="1">models/house_obj/house_normal.ppm</texture>
+        <texture id="2">models/house_obj/house_spec.ppm</texture>
+	    </obj>
+	
+      <obj id="1" scene="2">
+        <model>models/windmill_obj/windmill.obj</model>
+        <scale x="0.003" y="0.003" z="0.003" />
+        <rotation angle="0." x="0." y="0." z="0" />
+        <translate x="-3.5" y="0.0" z="-2.5" />
+        <texture id="0">models/windmill_obj/windmill_diffuse.ppm</texture>
+        <texture id="1">models/windmill_obj/windmill_normal.ppm</texture>
+        <texture id="2">models/windmill_obj/windmill_spec.ppm</texture>
+      </obj>
+		
+		<obj id="2" scene="3">
+      <model>models/chapel/chapel_obj.obj</model>
+      <scale x="0.003" y="0.003" z="0.003" />
+      <rotation angle="0." x="0." y="0." z="0" />
+      <translate x="2." y="0.0" z="-5.0" />
+      <texture id="0">models/chapel/chapel_diffuse.ppm</texture>
+      <texture id="1">models/chapel/chapel_normal.ppm</texture>
+      <texture id="2">models/chapel/chapel_spec.ppm</texture>
+      </obj>
+		
+		<obj id="3" scene="4">
+      <model>models/house_obj/house_obj.obj</model>
+      <scale x="0.002" y="0.002" z="0.002" />
+      <rotation angle="0." x="0." y="0." z="0" />
+      <translate x="-4" y="0.0" z="2.5" />
+      <texture id="0">models/house_obj/house_diffuse.ppm</texture>
+      <texture id="1">models/house_obj/house_normal.ppm</texture>
+      <texture id="2">models/house_obj/house_spec.ppm</texture>
+     </obj>
+
+		 <obj id="4">
+        <model>models/full/full019.obj</model>
+        <scale x="0.02" y="0.02" z="0.02" />
+        <rotation angle="0." x="0." y="0." z="0" />
+        <translate x="2.6" y="0.0" z="1.6" />
+        <texture id="0">models/kitchen_table/TBL02201.ppm</texture>
+     </obj>
+     
+		 <obj id="5">
+	         <model>models/full/full019.obj</model>
+	          <scale x="0.02" y="0.02" z="0.02" />
+	          <rotation angle="0." x="0." y="0." z="0" />
+	          <translate x="-3.6" y="0.0" z="3.6" />
+			  <texture id="0">models/kitchen_table/TBL02201.ppm</texture>
+	     </obj>
+		 <obj id="5">
+	         <model>models/full/full019.obj</model>
+	          <scale x="0.02" y="0.02" z="0.02" />
+	          <rotation angle="0." x="0." y="0." z="0" />
+	          <translate x="-6.6" y="0.0" z="-4.6" />
+			  <texture id="0">models/kitchen_table/TBL02201.ppm</texture>
+	     </obj>
+	
+		 <obj id="6">
+	         <model>models/wall/castle_wall.obj</model>
+	          <scale x="4." y="5." z="3." />
+	          <rotation angle="90." x="0." y="1." z="0" />
+	          <translate x="0." y="-1.4" z="-2.5" />
+			  <texture id="0">models/wall/Stone.ppm</texture>
+	     </obj>
+        
+    </scene>
+    
+    <scene id="1">
+        <shader>ENV</shader>
+        <light x="0.0" y="0.5" z="0.5"/>
+
+        <obj id="0">
+          <model>models/logs/fre005.obj</model>
+          <scale x="0.001" y="0.001" z="0.001" />
+          <rotation angle="270." x="1." y="0." z="0." />
+          <translate x="1" y="0.0" z="1.0" />
+          <texture id="0">models/logs/FRE00502.ppm</texture>
+        </obj> 
+         
+        <obj id="1">
+          <model>models/kitchen_table/tbl022.obj</model>
+          <scale x="0.0009" y="0.0009" z="0.0009" />
+          <rotation angle="270." x="1." y="0." z="0." />
+          <translate x="1" y="0.0" z="-1.0" />
+          <texture id="0">models/kitchen_table/TBL02201.ppm</texture>
+        </obj>     
+    </scene>
+    
+    <scene id="2">
+      <shader>TOON</shader>
+      <light x="-3.5" y="2.0" z="2.5"/>
+        <obj id="1">
+          <model>models/kitchen_table/tbl022.obj</model>
+          <scale x="0.0009" y="0.0009" z="0.0009" />
+          <rotation angle="270." x="1." y="0." z="0." />
+          <translate x="3." y="0.0" z="-1.0" />
+          <texture id="0">models/kitchen_table/TBL02201.ppm</texture>
+        </obj>      
+        
+		<obj id="0">
+      <model>models/Wine_Goblet/goblet03.obj</model>
+      <scale x="0.02" y="0.02" z="0.02" />
+      <rotation angle="0." x="0." y="0." z="0" />
+      <translate x="+3.0" y="0.0" z="0.0" />
+		</obj>	
+		
+		<obj id="0">
+		<model>models/wood_chest/cbc001.obj</model>
+		<scale x="0.002" y="0.002" z="0.002" />
+		<rotation angle="270." x="1." y="0." z="0." />
+		<translate x="-1.0" y="-1.0" z="0.0" />
+		<texture id="0">models/wood_chest/CBC00101.ppm</texture>
+		</obj>
+		
+		<obj id="0">
+		<model>models/candle/lmp049.obj</model>
+		<scale x="0.0009" y="0.0009" z="0.0009" />
+		<rotation angle="270." x="1." y="0." z="0." />
+		<translate x="-3.0" y="0.0" z="-2.0" />
+		</obj>
+	</scene>
+	
+	<scene id="3">
+		<shader>BUMP</shader>
+		<obj id="0">
+      		<model>models/logs/fre005.obj</model>
+      		<scale x="0.001" y="0.001" z="0.001" />
+      		<rotation angle="270." x="1." y="0." z="0." />
+      		<translate x="2." y="0.0" z="-5.0" />
+      		<texture id="0">models/logs/FRE00502.ppm</texture>
+    	</obj> 
+     
+    	<obj id="1">
+      		<model>models/kitchen_table/tbl022.obj</model>
+      		<scale x="0.0009" y="0.0009" z="0.0009" />
+      		<rotation angle="270." x="1." y="0." z="0." />
+      		<translate x="2." y="0.0" z="-5.0" />
+      		<texture id="0">models/kitchen_table/TBL02201.ppm</texture>
+		</obj>
+    </scene>
+
+	<scene id="4">
+		<shader>ALPHA</shader>
+		<obj id="0">
+      		<model>models/logs/fre005.obj</model>
+      		<scale x="0.001" y="0.001" z="0.001" />
+      		<rotation angle="270." x="1." y="0." z="0." />
+      		<translate x="-4" y="0.0" z="2.5" />
+      		<texture id="0">models/logs/FRE00502.ppm</texture>
+    	</obj> 
+     
+    	<obj id="1">
+      		<model>models/kitchen_table/tbl022.obj</model>
+      		<scale x="0.0009" y="0.0009" z="0.0009" />
+      		<rotation angle="270." x="1." y="0." z="0." />
+      		<translate x="-4" y="0.0" z="2.5" />
+      		<texture id="0">models/kitchen_table/TBL02201.ppm</texture>
+		</obj>
+    </scene>
+    
+</demo>

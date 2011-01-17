@@ -54,6 +54,13 @@ class Scene
     inline GLfloat* getLightPosition(){ return lightPosition; };
     void setLightPosition(float x, float y, float z, float w );
 
+    void lightUp();
+    void lightDown();
+    void lightRight();
+    void lightLeft();
+    void lightFront();
+    void lightBack();
+
     void initGL();
     void display();
     

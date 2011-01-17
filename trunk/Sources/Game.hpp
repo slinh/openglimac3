@@ -42,6 +42,14 @@ public:
   void setContentHouse();
   
   GLfloat* getLightPosition();
+  
+  void lightUp();
+  void lightDown();
+  void lightRight();
+  void lightLeft();
+  
+  void lightFront();
+  void lightBack();
 
 protected:
   std::vector<Scene*> 	sceneList;

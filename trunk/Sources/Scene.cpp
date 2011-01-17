@@ -82,3 +82,39 @@ void Scene::setLightPosition(float x, float y, float z, float w )
   lightPosition[2] = (GLfloat)z;
   lightPosition[3] = (GLfloat)w;
 }
+
+void Scene::lightUp()
+{
+  float pas = 0.01;
+  lightPosition[1] = lightPosition[1]+pas;
+}
+
+void Scene::lightDown()
+{
+  float pas = 0.01;
+  lightPosition[1] = lightPosition[1]-pas;
+}
+
+void Scene::lightRight()
+{
+  float pas = 0.01;
+  lightPosition[2] = lightPosition[2]+pas;
+}
+
+void Scene::lightLeft()
+{
+  float pas = 0.01;
+  lightPosition[2] = lightPosition[2]-pas;
+}
+
+void Scene::lightFront()
+{
+  float pas = 0.01;
+  lightPosition[0] = lightPosition[0]+pas;
+}
+
+void Scene::lightBack()
+{
+  float pas = 0.01;
+  lightPosition[0] = lightPosition[0]-pas;
+}

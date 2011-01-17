@@ -173,6 +173,8 @@ void Game::display()
 			break;
 
       case SHADOW:
+        glUseProgramObjectARB(0);
+        std::cout << "shadow" << std::endl;
       break;
 
       default:
@@ -250,3 +252,50 @@ GLfloat* Game::getLightPosition()
   }
 }
 
+void Game::lightUp()
+{
+  if( currentScene < (int)sceneList.size() )
+	{
+    return sceneList[currentScene]->lightUp();
+  }
+}
+  
+void Game::lightDown()
+{
+  if( currentScene < (int)sceneList.size() )
+	{
+    return sceneList[currentScene]->lightDown();
+  }
+}
+
+void Game::lightRight()
+{
+  if( currentScene < (int)sceneList.size() )
+	{
+    return sceneList[currentScene]->lightRight();
+  }
+}
+
+void Game::lightLeft()
+{
+  if( currentScene < (int)sceneList.size() )
+	{
+    return sceneList[currentScene]->lightLeft();
+  }
+}
+
+void Game::lightFront()
+{
+  if( currentScene < (int)sceneList.size() )
+	{
+    return sceneList[currentScene]->lightFront();
+  }
+}
+
+void Game::lightBack()
+{
+  if( currentScene < (int)sceneList.size() )
+	{
+    return sceneList[currentScene]->lightBack();
+  }
+}

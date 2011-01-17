@@ -47,6 +47,8 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
 			scene->setTypeShader() = NORMALSPEC;
 		else if(value == "TOON")
 			scene->setTypeShader() = TOON;
+    else if(value == "SHADOW")
+			scene->setTypeShader() = SHADOW;
 //		else if(value == "BUMP")
 //			scene->setTypeShader() = BUMP;
     else if(value == "ALPHA")

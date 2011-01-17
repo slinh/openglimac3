@@ -220,7 +220,9 @@ static void displayGL(void)
   // See where the light is
   glPushMatrix();
      glTranslatef(game.getLightPosition()[0],game.getLightPosition()[1],game.getLightPosition()[2]);
-     drawSphere(0.5, 30, 30);
+     drawSphere(0.1, 30, 30);
+     std::cout << "lightPos :" << game.getLightPosition()[0] << " / " << game.getLightPosition()[1] << " / " << game.getLightPosition()[2] << " /"  << game.getLightPosition()[3]<< std::endl;
+     
   glPopMatrix();
   //*/
 
@@ -503,6 +505,27 @@ static void keyboardGL(unsigned char c,
   case 27:
     quit();
     break;
+    
+   case 'y': // light up
+    game.lightUp();
+   break; 
+   case 'h': // light down
+    game.lightDown();
+   break; 
+   case 'g': // light left
+    game.lightLeft();
+   break;
+   case 'j': // light right
+    game.lightRight();
+   break; 
+   case 'i': // light left
+    game.lightFront();
+   break;
+   case 'k': // light right
+    game.lightBack();
+   break;  
+    
+    
   case 'z' :
     position[0] += step*direction[0];
     position[2] += step*direction[2];

@@ -8,6 +8,9 @@
 #include "ppm.hpp"
 
 
+
+
+
 //#define __NO_SHADER__
 #define __CUBE_MAP__
 #define __MAIN_SCENE__
@@ -235,7 +238,7 @@ static void displayGL(void)
 #ifdef __CUBE_MAP__ // --- CUBEMAP
 
 //glActiveTexture(GL_TEXTURE3);
-glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap->getIdTex());
+//glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap->getIdTex());
 
 #ifndef __NO_SHADER__  
   glUseProgramObjectARB(programobject[CUBEMAP]);
@@ -485,9 +488,49 @@ static void reshapeGL(int newwidth,
 
 }
 
+/**
+ * casteljau : implantation de l'algo de Casteljau
+ * Copyright (C) 2002 Stephane Marchesin
+**/
+vector3df casteljau(float t,std::vector<vector3df> l)
+{
+	std::vector<vector3df> liste_points=l;
+	std::vector<vector3df> nouvelle_liste_points;
+
+	do
+	{
+		for(unsigned int i=0;i<liste_points.size()-1;i++)
+		{
+			nouvelle_liste_points.push_back(liste_points[i]*(1.0f-t)+liste_points[i+1]*t);
+		}
+		liste_points=nouvelle_liste_points;
+		nouvelle_liste_points.clear();
+	}
+	while(liste_points.size()>1);
+	
+	if (liste_points.size()!=1)
+	{
+		printf("Erreur !\n");
+	}
+
+	return liste_points[0];
+}
+
+
 static void idleGL(void)
 {
     angle += 0.25;
+
+   	if(f<=1.){
+			vector3df p=casteljau(f,controlPoints);
+			position[0]=p.X;
+			position[1]=p.Y;
+			position[2]=p.Z;
+			f+=1./(float)nbPoints;
+			sleep(0.1);
+		}
+
+    
     glutPostRedisplay();
 }
 
@@ -761,14 +804,14 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
    "textures/greenhill_positive_z.ppm");
 
   // church cubemap
-  church=new CubeMap();
+  /*church=new CubeMap();
   church->initCubeMap(
    "textures/church/negative_x.ppm",
    "textures/church/negative_z.ppm",
    "textures/church/negative_y.ppm",
    "textures/church/positive_x.ppm",
    "textures/church/positive_y.ppm",
-   "textures/church/positive_z.ppm");
+   "textures/church/positive_z.ppm");*/
     game.setChurch(church);
 
 
@@ -858,6 +901,17 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
   glBindTexture (GL_TEXTURE_2D, 0);
   checkGLError(849);
 #endif
+
+	nbPoints = 32;
+	f=0;
+	vector3df pointTmp= vector3df(5.,0.5,2.0);
+	vector3df point2= vector3df(8., 0.5, -2.0);
+	vector3df point3= vector3df(-1., 0.5, -2.);
+	vector3df cam = vector3df(position[0], position[1], position[2]);
+	controlPoints.push_back(cam);
+	controlPoints.push_back(pointTmp);
+	controlPoints.push_back(point2);
+	controlPoints.push_back(point3);
 
 }
 

@@ -24,6 +24,9 @@
 #include "Game.hpp"
 
 
+#include <vector>
+
+
 // Origine de la fenetre
 static const unsigned int windowx = 0;
 static const unsigned int windowy = 0;
@@ -43,6 +46,12 @@ static float direction[] = {0.0f,0.0f,-1.0f};
 static float yrotation = 0.0f;
 static float xrotation = 0.0f;
 
+
+//Courbe de Bezier
+std::vector<vector3df> controlPoints;
+int nbPoints;
+float f;
+    
 // Données sur le curseur et la souris
 static int xmouseposition = 0;
 static int ymouseposition = 0;

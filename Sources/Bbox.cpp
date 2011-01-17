@@ -58,8 +58,6 @@ void Bbox::initialize(Obj* obj)
 	float newHeight = height * (float) obj->getScale().Y;
 	
 	
-	
-	
 	x = obj->getTranslate().X;
 	y = obj->getTranslate().Z;
 	
@@ -70,22 +68,22 @@ void Bbox::initialize(Obj* obj)
 	top = y + (newHeight/2.);
 	bottom = y - (newHeight/2.);
 	
-	
-	
+  
+  // size-up
+  /*
+	right += 1.f;
+  left -= 1.f;
+  top += 1.f;
+  bottom -= 1.f; 
+	*/
 	height = top-bottom;
 	width = right-left;
 
-
-	// init = true;
-
-	// TODO : translate
 	
 }
 
 bool Bbox::intersect(const Bbox & box)const
 {
-	
-	
 	return true;
 }
 
@@ -139,11 +137,12 @@ void Bbox::display()const
 		// on deplace le rectangle à la bonne position	
 		glTranslatef(x, 2, y);
 		
-		glScalef(getWidth(), 4., getHeight());
+		glScalef(getWidth()*1.5, 4., getHeight()*1.5);
 		createCube(color);
 	glPopMatrix();
 	
 }
+
 
 void Bbox::initTextures()
 {

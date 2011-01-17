@@ -482,12 +482,12 @@ void Obj::draw()
   glPushMatrix();
     
     
-    glTranslatef(translate.X, translate.Y, translate.Z);
-    glScalef(scale.X, scale.Y, scale.Z);
-    glRotatef(angleRotation, axeRotate.X, axeRotate.Y, axeRotate.Z);
+  glTranslatef(translate.X, translate.Y, translate.Z);
+  glScalef(scale.X, scale.Y, scale.Z);
+  glRotatef(angleRotation, axeRotate.X, axeRotate.Y, axeRotate.Z);
  
     
-    RenderOBJModel();
+  RenderOBJModel();
   glPopMatrix();
   
 //  bbox->display();

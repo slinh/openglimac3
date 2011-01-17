@@ -15,7 +15,7 @@
 #define __CUBE_MAP__
 #define __MAIN_SCENE__
 //#define __ENV_TEST__
-// #define __BUMP_TEST__
+//#define __BUMP_TEST__
 //#define __TOON_TEST__
 //#define __ALPHA_TEST__
 //#define __SHADOW_TEST__
@@ -214,26 +214,29 @@ static void displayGL(void)
 //glRotatef(angle,0.0,0.0,1.0);
 //  glLightfv(GL_LIGHT0, GL_POSITION,lightPosition);
 
-    glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
- //   std::cout << "lightPos" <<  game.getLightPosition()[0] << ", " << game.getLightPosition()[1] << ", " << game.getLightPosition()[2] << std::endl;
+//   glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
+//   std::cout << "lightPos" <<  game.getLightPosition()[0] << ", " << game.getLightPosition()[1] << ", " << game.getLightPosition()[2] << std::endl;
     
   glPopMatrix();
   
   
+  GLfloat global_ambient[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+
+  
   // See where the light is
   glPushMatrix();
      glTranslatef(game.getLightPosition()[0],game.getLightPosition()[1],game.getLightPosition()[2]);
-     drawSphere(0.1, 30, 30);
-     std::cout << "lightPos :" << game.getLightPosition()[0] << " / " << game.getLightPosition()[1] << " / " << game.getLightPosition()[2] << " /"  << game.getLightPosition()[3]<< std::endl;
-     
+     drawSphere(0.01, 30, 30);
+     std::cout << "lightPos :" << game.getLightPosition()[0] << " / " << game.getLightPosition()[1] << " / " << game.getLightPosition()[2] << " /"  << game.getLightPosition()[3]<< std::endl;     
   glPopMatrix();
-  //*/
 
+/*  
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,white);
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,white);
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,black);
   glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
-
+*/
 
 #ifdef __CUBE_MAP__ // --- CUBEMAP
 
@@ -776,12 +779,15 @@ static void initGL(int argc,
 
 checkGLError(711);
 
-glLightfv(GL_LIGHT0, GL_SPECULAR,grey);
-glLightfv(GL_LIGHT0, GL_AMBIENT,grey);
-glLightfv(GL_LIGHT0, GL_DIFFUSE,white);
+
+glLightfv(GL_LIGHT0, GL_SPECULAR, grey);
+glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
+glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+
 
 glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 glPixelStorei(GL_PACK_ALIGNMENT,1);
+
 
 //  Game & game = Game::Instance();
   game.setProgramObject(programobject);
@@ -891,6 +897,7 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
   glReadBuffer(GL_FRONT);
 
   checkGLError(849);
+  
   glLightfv(GL_LIGHT0, GL_SPECULAR,white);
   glLightfv(GL_LIGHT0, GL_AMBIENT,white);
   glLightfv(GL_LIGHT0, GL_DIFFUSE,white);

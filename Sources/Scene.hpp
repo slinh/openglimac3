@@ -73,8 +73,6 @@ class Scene
     GLfloat*				    lightPosition;
 	
 //    SphereMap * sphereMap;      //  spheremap of the field    
-
-    
 	
     
   

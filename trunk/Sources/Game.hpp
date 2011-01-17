@@ -55,10 +55,12 @@ protected:
   std::vector<Scene*> 	sceneList;
 
 	vector3df 				    camera;	
-  CubeMap*          church;
-  int                      currentScene;
-  GLhandleARB* 		programObject;
-  float*                  invmat;
+  CubeMap*              church;
+  int                   currentScene;
+  GLhandleARB* 		      programObject;
+  float*                invmat;
+  
+  
 
 };
 

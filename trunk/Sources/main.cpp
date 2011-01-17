@@ -233,7 +233,7 @@ static void displayGL(void)
 #ifdef __CUBE_MAP__ // --- CUBEMAP
 
 //glActiveTexture(GL_TEXTURE3);
-//glBindTexture(GL_TEXTURE_CUBE_MAP,texturesid[3]);
+glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap->getIdTex());
 
 #ifndef __NO_SHADER__  
   glUseProgramObjectARB(programobject[CUBEMAP]);

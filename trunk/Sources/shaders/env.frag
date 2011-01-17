@@ -8,7 +8,7 @@ void main(void) {
   vec3 myN = N;
   if( myDot < 0.)
   {
-  	discard;
+    // discard;
   }
 
    vec3 tmpR = vectorPC - myDot * myN;

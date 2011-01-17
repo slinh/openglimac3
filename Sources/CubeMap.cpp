@@ -39,39 +39,6 @@ void CubeMap::drawCubeMap(float size)
   glDisable (GL_TEXTURE_GEN_R);
 }
 
-void CubeMap::drawSphereMap(double size)
-{
-	
-  glColor3f(1.0f, 1.0f, 1.0f);
-  static GLfloat xPlane[] = { 1.0f, 0.0f, 0.0f, 0.0f };
-  static GLfloat yPlane[] = { 0.0f, 1.0f, 0.0f, 0.0f };
-  static GLfloat zPlane[] = { 0.0f, 0.0f, 1.0f, 0.0f };
-
-  glEnable (GL_TEXTURE_GEN_S);
-  glEnable (GL_TEXTURE_GEN_T);
-  glEnable (GL_TEXTURE_GEN_R);
-
-  glEnable (GL_TEXTURE_CUBE_MAP);
-
-  glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-  glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-  glTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-
-  glTexGenfv (GL_S, GL_OBJECT_PLANE, xPlane);
-  glTexGenfv (GL_T, GL_OBJECT_PLANE, yPlane);
-  glTexGenfv (GL_R, GL_OBJECT_PLANE, zPlane);
-
-  glDisable(GL_CULL_FACE);
-  glutSolidSphere (size, 30, 30);
-  glEnable(GL_CULL_FACE);
-
-  glDisable (GL_TEXTURE_CUBE_MAP);
-  glDisable (GL_TEXTURE_GEN_S);
-  glDisable (GL_TEXTURE_GEN_T);
-  glDisable (GL_TEXTURE_GEN_R);
-}
-
-
 void CubeMap::initCubeMap(const char* negative_x,
                                            const char* negative_z,
                                            const char* negative_y,
@@ -89,7 +56,7 @@ void CubeMap::initCubeMap(const char* negative_x,
       return;
     }
 
-//    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
 
     unsigned int tmpwidth, tmpheight;
     unsigned char * image = loadPPM(negative_x, tmpwidth, tmpheight);
@@ -181,7 +148,8 @@ void CubeMap::initCubeMap(const char* negative_x,
 
       //drawSphereMap(10.0);
     glEndList();*/
-//    glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+
+    glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
 
 
 }

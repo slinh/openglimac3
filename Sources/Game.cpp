@@ -81,20 +81,14 @@ void Game::display()
           sceneList[currentScene]->getContentHouse().getBbox().display();
         glPopMatrix();*/
 
-        /*#ifndef __NO_SHADER__
-          glUseProgramObjectARB(programObject[CUBEMAP]);
-          glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), church->getIdTex());
-        #endif
+        glPushMatrix();
+        glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
 
         church->drawCubeMap(10.0);
 
         #ifndef __NO_SHADER__
           glUseProgramObjectARB(0);
         #endif
-        */
-
-        glPushMatrix();
-        glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
 
         float mat[16];
         float invmat[16];
@@ -147,8 +141,6 @@ void Game::display()
 			case PARALLAX:
 			break;
       case ENV:
-			
-      // std::cout << "ENV" << std::endl;
 
         glMatrixMode(GL_TEXTURE);
         glPushMatrix();
@@ -186,7 +178,6 @@ void Game::display()
       default:
       break;
 		}
-	
 
 		// display the scene
 		sceneList[currentScene]->display();

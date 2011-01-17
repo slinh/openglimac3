@@ -36,7 +36,6 @@ void initCubeMap(const char* negative_x,
                            const char* positive_z
                            );
 void drawCubeMap(float size);
-void drawSphereMap(double size);
 void display();
 inline GLuint getIdTex() {return idTex;};
 		

@@ -58,7 +58,8 @@ HEADERS += Obj.hpp \
        lib/tinyxml/tinystr.h \
        common/include/XMLParser.hpp \
        Draw.hpp \
-       main.hpp
+       main.hpp \
+       utils.hpp
 
 #UIs
 FORMS += 
@@ -82,4 +83,5 @@ SOURCES += Obj.cpp \
        lib/tinyxml/tinyxmlparser.cpp \
        common/src/XMLParser.cpp \
        Draw.cpp \
-       main.cpp
+       main.cpp \
+       utils.cpp

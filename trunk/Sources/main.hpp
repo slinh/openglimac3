@@ -63,6 +63,7 @@ GLfloat lightprojectionmatrix[16];
 GLfloat lightmodelviewmatrix[16];
 GLfloat transformationmatrix[16];
 GLfloat shadowmatrix[16];
+
 static GLfloat biasmatrix[16] =
 {
   0.5f, 0.0f, 0.0f, 0.0f,

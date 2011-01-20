@@ -12,6 +12,7 @@
 #include "Obj.hpp"
 #include "Bbox.hpp"
 #include "Texture.hpp"
+#include "utils.hpp"
 
 Obj::Obj()
 {
@@ -469,23 +470,27 @@ void Obj::initGL()
 
 void Obj::display()
 {
-  glCallList(displayListId);
+//  glCallList(displayListId);
+  draw();
 }
 
 void Obj::draw()
 {
+
+  checkGLError(480);
   glEnable(GL_TEXTURE_2D);
   for(unsigned int i=0; i<textures.size(); ++i)
   {
     textures[i]->bind();
   }
   glPushMatrix();
-    
+  checkGLError(483);
     
   glTranslatef(translate.X, translate.Y, translate.Z);
   glScalef(scale.X, scale.Y, scale.Z);
   glRotatef(angleRotation, axeRotate.X, axeRotate.Y, axeRotate.Z);
- 
+
+  checkGLError(489);
     
   RenderOBJModel();
   glPopMatrix();

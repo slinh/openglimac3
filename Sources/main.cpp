@@ -6,12 +6,14 @@
 
 #include "Game.hpp"
 #include "ppm.hpp"
+#include "utils.hpp"
 
 
 
 
 
 //#define __NO_SHADER__
+//#define __CASTELJAU__
 #define __CUBE_MAP__
 #define __MAIN_SCENE__
 //#define __ENV_TEST__
@@ -22,16 +24,6 @@
 #define CHECK_ERRORS
 
 
-
-void checkGLError(int line) {
-#ifdef CHECK_ERRORS
- err = glGetError();
- if(err!=GL_NO_ERROR){
-   std::cerr << "Erreur GL "<<line<<" :" << std::endl;
-   std::cerr << gluErrorString(err) << std::endl;
- }
-#endif
-}
 
 void mat_inverse (float *in, float *out)
 {
@@ -64,142 +56,6 @@ void mat_inverse (float *in, float *out)
   out[15] = 1.0f;
 }
 
-void draw(bool shaders = false)
-{
-  glMaterialfv(GL_FRONT, GL_SPECULAR,white);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE,red);
-  glMaterialfv(GL_FRONT, GL_AMBIENT,softred);
-  glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
-
-
-  if(shaders){
-      glPushMatrix();
-      glLoadIdentity();
-      glTranslatef(2.0,1.0,2.0);
-      glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
-      glUniformMatrix4fvARB(glGetUniformLocationARB(programobject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
-      glPopMatrix();
-  }
-
-  glPushMatrix();
-  glColor3f(1.0,0.0,0.0);
-  glTranslatef(2.0,1.0,2.0);
-  drawSphere(0.5,30,30);
-  glPopMatrix();
-
-  glMaterialfv(GL_FRONT, GL_SPECULAR,white);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE,red);
-  glMaterialfv(GL_FRONT, GL_AMBIENT,softred);
-  glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
-
-
-  if(shaders){
-      glPushMatrix();
-      glLoadIdentity();
-      glTranslatef(-1.0,-0.33,-1.0);
-      glRotatef(angle,1.0,0.0,0.0);
-      glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
-      glUniformMatrix4fvARB(glGetUniformLocationARB(programobject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
-      glPopMatrix();
-  }
-  glPushMatrix();
-  glColor3f(1.0,0.0,0.0);
-  glTranslatef(-1.0,-0.33,-1.0);
-  glRotatef(angle,1.0,0.0,0.0);
-  glutSolidCube(1.0);
-  glPopMatrix();
-
-
-  glMaterialfv(GL_FRONT, GL_SPECULAR,gray);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE,blue);
-  glMaterialfv(GL_FRONT, GL_AMBIENT,softblue);
-  glMaterialf( GL_FRONT, GL_SHININESS, 60.0f);
-
-  if(shaders){
-      glPushMatrix();
-      glLoadIdentity();
-      glTranslatef(0.0,-1.0,0.0);
-      glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
-      glUniformMatrix4fvARB(glGetUniformLocationARB(programobject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
-      glPopMatrix();
-      }
-
-  glTranslatef(0.0,-1.0,0.0);
-  glPushMatrix();
-  glBegin(GL_QUADS);
-  glColor3f(1.0f,1.0f,1.0f);
-  glNormal3f(0.0f,1.0f,0.0f);
-  glVertex3f(-20.0f, 0.0f, 20.0f);
-  glVertex3f( 20.0f, 0.0f, 20.0f);
-  glVertex3f( 20.0f, 0.0f,-20.0f);
-  glVertex3f(-20.0f, 0.0f,-20.0f);
-  glEnd();
-  glPopMatrix();
-}
-
-bool checkFramebufferStatus(void)
-{
-  GLenum status;
-  status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-  switch(status) {
-
-  case GL_FRAMEBUFFER_COMPLETE_EXT:
-    return true;
-    break;
-
-  case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT" << std::endl;
-    return false;
-    break;
-
-  case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_UNSUPPORTED_EXT" << std::endl;
-    return false;
-    break;
-
-    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT" << std::endl;
-    return false;
-    break;
-
-  case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT" << std::endl;
-    return false;
-    break;
-
-  case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT" << std::endl;
-    return false;
-    break;
-
-  case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT" << std::endl;
-    return false;
-    break;
-
-  case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT" << std::endl;
-    return false;
-    break;
-
-  default:
-    std::cerr << "FrameBuffer Status Error : unknown error" << std::endl;
-    return false;
-
-  }
-}
-
-void multMatrix4x4(float* m1, float* m2, float* res)
-{
-    glPushMatrix();
-    glLoadIdentity();
-    glMultMatrixf(m1);
-    glMultMatrixf(m2);
-    glGetFloatv(GL_MODELVIEW_MATRIX, res);
-    glPopMatrix();
-}
-
-
 static void displayGL(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -228,7 +84,7 @@ static void displayGL(void)
   glPushMatrix();
      glTranslatef(game.getLightPosition()[0],game.getLightPosition()[1],game.getLightPosition()[2]);
      drawSphere(0.01, 30, 30);
-     std::cout << "lightPos :" << game.getLightPosition()[0] << " / " << game.getLightPosition()[1] << " / " << game.getLightPosition()[2] << " /"  << game.getLightPosition()[3]<< std::endl;     
+//     std::cout << "lightPos :" << game.getLightPosition()[0] << " / " << game.getLightPosition()[1] << " / " << game.getLightPosition()[2] << " /"  << game.getLightPosition()[3]<< std::endl;
   glPopMatrix();
 
 /*  
@@ -252,7 +108,7 @@ static void displayGL(void)
   
   //glBindTexture(GL_TEXTURE_CUBE_MAP,texturesid[3]);
   //glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-  cubeMap->display();
+//  cubeMap->display();
   
 
   //HeightField
@@ -269,24 +125,12 @@ static void displayGL(void)
 #endif // --- END CUBEMAP 
 
 #ifdef __MAIN_SCENE__  // MAIN SCENE - FROM XML - + NORMAL SPEC ILLUMINATION
-#ifndef __NO_SHADER__  
-
-/*
-  glUseProgramObjectARB(programobject[NORMALSPEC]);
-
-  glUniform1i(glGetUniformLocationARB(programobject[NORMALSPEC], "diffuseTexture"), 0);
-  glUniform1i(glGetUniformLocationARB(programobject[NORMALSPEC], "normalMap"), 1);
-  glUniform1i(glGetUniformLocationARB(programobject[NORMALSPEC], "specularMap"), 2);
-  glUniform1f(glGetUniformLocationARB(programobject[NORMALSPEC], "shininess"), .2);
-  */
-#endif
 
 // Game & game = Game::Instance();
 vector3df cam = vector3df(position[0], position[1], position[2]);
 game.setCamera() = cam;
 game.checkCurrentScene();
 game.display();
-
 
 #ifndef __NO_SHADER__  
   glUseProgramObjectARB(0);
@@ -392,6 +236,7 @@ game.display();
 #endif
 #endif  // --- END TEST ALPHA SHADING
 
+
 #ifdef __SHADOW_TEST__
   // Premiere passe en FBO
   if(shadowbufferid!=0)
@@ -463,7 +308,7 @@ game.display();
 
 #endif
 
-  checkGLError(458);
+  checkGLError(332);
 
   glPopMatrix();
 
@@ -495,7 +340,7 @@ static void reshapeGL(int newwidth,
  * casteljau : implantation de l'algo de Casteljau
  * Copyright (C) 2002 Stephane Marchesin
 **/
-vector3df casteljau(float t,std::vector<vector3df> l)
+vector3df ge(float t,std::vector<vector3df> l)
 {
 	std::vector<vector3df> liste_points=l;
 	std::vector<vector3df> nouvelle_liste_points;
@@ -524,6 +369,8 @@ static void idleGL(void)
 {
     angle += 0.25;
 
+#ifdef __CASTELJAU__
+
    	if(f<=1.){
 			vector3df p=casteljau(f,controlPoints);
 			position[0]=p.X;
@@ -532,7 +379,7 @@ static void idleGL(void)
 			f+=1./(float)nbPoints;
 			sleep(0.1);
 		}
-
+#endif
     
     glutPostRedisplay();
 }
@@ -696,43 +543,43 @@ void loadShader(std::string vert, std::string frag, int idShader)
 	if(!isExtensionSupported("GL_ARB_shading_language_100"))
 		quit();
 
-	GLhandleARB so[2];
-	bzero(so,sizeof(GLhandleARB)*2);
+  GLhandleARB so[2];
+  bzero(so,sizeof(GLhandleARB)*2);
 
-	// std::string s1 = "shaders/foo.vert";
+  // std::string s1 = "shaders/foo.vert";
 
-	so[0] = loadShader(vert.c_str());
-	if(so[0]==0){
-		std::cerr << "loading shader "+vert+" failed (exiting...)" << std::endl;
-		quit();
-	}
-	if(!compileShader(so[0])){
-		std::cerr << "compiling shader "+vert+" failed (exiting...)" << std::endl;
-		quit();
-	}
+  so[0] = loadShader(vert.c_str());
+  if(so[0]==0){
+    std::cerr << "loading shader "+vert+" failed (exiting...)" << std::endl;
+    quit();
+  }
+  if(!compileShader(so[0])){
+    std::cerr << "compiling shader "+vert+" failed (exiting...)" << std::endl;
+    quit();
+  }
 
-	// std::string s2 = "shaders/foo.frag";
-	so[1] = loadShader(frag.c_str());
-	if(so[0]==0){
-		std::cerr << "loading shader "+frag+" failed (exiting...)" << std::endl;
-		quit();
-	}
-	if(!compileShader(so[1])){
-		std::cerr << "compiling shader "+frag+" failed (exiting...)" << std::endl;
-		quit();
-	}
-	programobject[idShader] = linkShaders(so,2);
+  // std::string s2 = "shaders/foo.frag";
+  so[1] = loadShader(frag.c_str());
+  if(so[0]==0){
+    std::cerr << "loading shader "+frag+" failed (exiting...)" << std::endl;
+    quit();
+  }
+  if(!compileShader(so[1])){
+    std::cerr << "compiling shader "+frag+" failed (exiting...)" << std::endl;
+    quit();
+  }
+  programobject[idShader] = linkShaders(so,2);
 }
 
 void loadTexture(std::string file, GLuint idTex)
 {
-	// Texture init ok
+  // Texture init ok
   if(idTex == 0){
     std::cerr << "Identifiant de texture incorrect" << std::endl;
     return;
   }
 
-	// bind for params
+  // bind for params
   glBindTexture(GL_TEXTURE_2D,idTex);
 
   unsigned int tmpwidth, tmpheight;
@@ -810,14 +657,14 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
    "textures/greenhill_positive_z.ppm");
 
   // church cubemap
-  /*church=new CubeMap();
+  church=new CubeMap();
   church->initCubeMap(
    "textures/church/negative_x.ppm",
    "textures/church/negative_z.ppm",
    "textures/church/negative_y.ppm",
    "textures/church/positive_x.ppm",
    "textures/church/positive_y.ppm",
-   "textures/church/positive_z.ppm");*/
+   "textures/church/positive_z.ppm");
     game.setChurch(church);
 
 
@@ -855,7 +702,7 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
 
 #endif // --- END TEST ALPHA
 
-#ifdef __SHADOW_TEST__
+  // shadow mapping
   glDisable(GL_LIGHTING);
   glDisable(GL_LIGHT0);
 
@@ -888,7 +735,7 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
   glReadBuffer(GL_NONE);
   glDepthMask( GL_TRUE );
 
-  if(!checkFramebufferStatus())
+  if(!game.checkFramebufferStatus())
    quit();
 
   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -896,8 +743,8 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
   glDrawBuffer(GL_BACK);
   glReadBuffer(GL_FRONT);
 
-  checkGLError(849);
-  
+  checkGLError(755);
+
   glLightfv(GL_LIGHT0, GL_SPECULAR,white);
   glLightfv(GL_LIGHT0, GL_AMBIENT,white);
   glLightfv(GL_LIGHT0, GL_DIFFUSE,white);
@@ -906,19 +753,23 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
   glPixelStorei(GL_PACK_ALIGNMENT,1);
 
   glBindTexture (GL_TEXTURE_2D, 0);
-  checkGLError(849);
-#endif
+  checkGLError(765);
 
-	nbPoints = 32;
-	f=0;
-	vector3df pointTmp= vector3df(5.,0.5,2.0);
-	vector3df point2= vector3df(8., 0.5, -2.0);
-	vector3df point3= vector3df(-1., 0.5, -2.);
-	vector3df cam = vector3df(position[0], position[1], position[2]);
-	controlPoints.push_back(cam);
-	controlPoints.push_back(pointTmp);
-	controlPoints.push_back(point2);
-	controlPoints.push_back(point3);
+  game.setBiasmatrix(biasmatrix);
+  game.setShadowtexid(shadowtexid);
+  game.setShadowbufferid(shadowbufferid);
+
+  // camera move
+  nbPoints = 32;
+  f=0;
+  vector3df pointTmp= vector3df(5.,0.5,2.0);
+  vector3df point2= vector3df(8., 0.5, -2.0);
+  vector3df point3= vector3df(-1., 0.5, -2.);
+  vector3df cam = vector3df(position[0], position[1], position[2]);
+  controlPoints.push_back(cam);
+  controlPoints.push_back(pointTmp);
+  controlPoints.push_back(point2);
+  controlPoints.push_back(point3);
 
 }
 
@@ -930,7 +781,7 @@ int main(int argc, char **argv)
 
   glutInitWindowPosition(windowx, windowy);
   glutInitWindowSize(windowwidth, windowheight);
- 
+
   
   if(glutCreateWindow("Bossoutrot - Jard - Linh - Martino : Epic IMAC") == 0){
     return 1;

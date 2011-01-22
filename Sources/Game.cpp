@@ -70,115 +70,124 @@ void Game::initGL()
 
 void Game::display()
 {
-	
+	//IF 1
 	if( currentScene < (int)sceneList.size() )
 	{
 		// if not main : display wall
+		//IF 2
 		if( sceneList[currentScene]->getTypeScene() != MAIN)
 		{
-      if(sceneList[currentScene]->getTypeShader() == ENV)
-      {
-        // draw cubemap
-        glPushMatrix();
-        glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
+			//IF 3
+			if(sceneList[currentScene]->getTypeShader() == ENV)
+			{
+				// draw cubemap
+				//PUSH 1
+				glPushMatrix();
+					glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
 
-        church->drawCubeMap(10.0);
+					church->drawCubeMap(10.0);
 
-        #ifndef __NO_SHADER__
-          glUseProgramObjectARB(0);
-        #endif
+					#ifndef __NO_SHADER__
+						glUseProgramObjectARB(0);
+					#endif
 
-          // invert matrix
-        float mat[16];
-        float invmat[16];
-        glGetFloatv (GL_MODELVIEW_MATRIX, mat);
-        mat_inverse (mat, invmat);
-        setInvMat(invmat);
+					// invert matrix
+					float mat[16];
+					float invmat[16];
+					glGetFloatv (GL_MODELVIEW_MATRIX, mat);
+					mat_inverse (mat, invmat);
+					setInvMat(invmat);
 
-      }
-      else if(sceneList[currentScene]->getTypeShader() == SHADOW)
-      {
-        checkGLError(108);
-        // Premiere passe en FBO
-        if(shadowbufferid!=0)
-        {
-          glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
-          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-          glDrawBuffer(GL_NONE);
-          glReadBuffer(GL_NONE);
-          checkFramebufferStatus();
+			}
+			//END IF 3
+			//ELSE IF 1
+			else if(sceneList[currentScene]->getTypeShader() == SHADOW)
+			{
+				checkGLError(108);
+				// Premiere passe en FBO
+				//IF 4
+				if(shadowbufferid!=0)
+				{
+					glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
+					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+					glDrawBuffer(GL_NONE);
+					glReadBuffer(GL_NONE);
+					checkFramebufferStatus();
 
-          glPushMatrix();
-          glLoadIdentity();
+					//PUSH 2
+					glPushMatrix();
+						glLoadIdentity();
 
-          gluLookAt(sceneList[currentScene]->getLightPosition()[0], sceneList[currentScene]->getLightPosition()[1], sceneList[currentScene]->getLightPosition()[2],
-                    0.0f, 0.0f, 0.0f,
-                    0.0f, 1.0f, 0.0f);
-          glRotatef(-angle,0.0,1.0,0.0);
-          glGetFloatv(GL_MODELVIEW_MATRIX, lightmodelviewmatrix);
+						gluLookAt(sceneList[currentScene]->getLightPosition()[0], sceneList[currentScene]->getLightPosition()[1], sceneList[currentScene]->getLightPosition()[2],
+								  0.0f, 0.0f, 0.0f,
+								  0.0f, 1.0f, 0.0f);
+						glRotatef(-angle,0.0,1.0,0.0);
+						glGetFloatv(GL_MODELVIEW_MATRIX, lightmodelviewmatrix);
 
-          multMatrix4x4(lightprojectionmatrix,lightmodelviewmatrix,shadowmatrix);
-          multMatrix4x4(biasmatrix,shadowmatrix,shadowmatrix);
+						multMatrix4x4(lightprojectionmatrix,lightmodelviewmatrix,shadowmatrix);
+						multMatrix4x4(biasmatrix,shadowmatrix,shadowmatrix);
 
-          checkGLError(129);
-          glEnable(GL_POLYGON_OFFSET_FILL);
-          glPolygonOffset(4.0,4.0);
-          drawShadow(false);
+						checkGLError(129);
+						glEnable(GL_POLYGON_OFFSET_FILL);
+						glPolygonOffset(4.0,4.0);
+						drawShadow(false);
 
-          glDisable(GL_POLYGON_OFFSET_FILL);
+						glDisable(GL_POLYGON_OFFSET_FILL);
+						glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+					//POP 2
+					glPopMatrix();
+					checkGLError(141);
+				}
+				//END IF 4
+				//PUSH 3
+				glPushMatrix();
 
-          glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-          glPopMatrix();
+					//        glRotatef(xrotation,1.0f,0.0f,0.0f);
+					//        glRotatef(yrotation,0.0f,1.0f,0.0f);
+					glTranslatef(-camera.X,-camera.Y,-camera.Z);
+				
+					//PUSH 4
+					glPushMatrix();
+						glRotatef(angle,0.0,1.0,0.0);
+						glLightfv(GL_LIGHT0, GL_POSITION, sceneList[currentScene]->getLightPosition());
+					//POP 4
+					glPopMatrix();
+				
+					//PUSH 5
+					glPushMatrix();
+						glRotatef(angle,0.0,1.0,0.0);
+						glTranslatef(sceneList[currentScene]->getLightPosition()[0],sceneList[currentScene]->getLightPosition()[1],sceneList[currentScene]->getLightPosition()[2]);
+						glutSolidSphere(0.5,30,30);
+					//POP 5
+					glPopMatrix();
 
-          checkGLError(141);
-        }
-
-        glPushMatrix();
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-//        glRotatef(xrotation,1.0f,0.0f,0.0f);
-//        glRotatef(yrotation,0.0f,1.0f,0.0f);
-        glTranslatef(-camera.X,-camera.Y,-camera.Z);
-
-        glPushMatrix();
-        glRotatef(angle,0.0,1.0,0.0);
-        glLightfv(GL_LIGHT0, GL_POSITION, sceneList[currentScene]->getLightPosition());
-        glPopMatrix();
-
-        glPushMatrix();
-        glRotatef(angle,0.0,1.0,0.0);
-        glTranslatef(sceneList[currentScene]->getLightPosition()[0],sceneList[currentScene]->getLightPosition()[1],sceneList[currentScene]->getLightPosition()[2]);
-
-        glutSolidSphere(0.5,30,30);
-        glPopMatrix();
-
-        glActiveTexture(GL_TEXTURE0);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D,shadowtexid);
-
-      }
-      else
-      {
-        glUseProgramObjectARB(programObject[PARALLAX]);
-       
-        glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "wallTex"), 0);
-        glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "heightmapTex"), 1);
-        glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
-
-        Bbox::bindTextures();
-
-        glPushMatrix();
-
-        sceneList[currentScene]->getContentHouse().getBbox().display();
-        glPopMatrix();
-        Bbox::unbindTextures();
-
-        glUseProgramObjectARB(0);
-      }
+					glActiveTexture(GL_TEXTURE0);
+					glActiveTexture(GL_TEXTURE1);
+					glBindTexture(GL_TEXTURE_2D,shadowtexid);
+			}
+			//END ELSE IF 1
+			//ELSE 1
+			else{
+				
+				glUseProgramObjectARB(programObject[PARALLAX]);
+				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "wallTex"), 0);
+				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "heightmapTex"), 1);
+				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
+				Bbox::bindTextures();
+				
+				//PUSH 6
+				glPushMatrix();
+					sceneList[currentScene]->getContentHouse().getBbox().display();
+				//POP 6
+				glPopMatrix();
+				Bbox::unbindTextures();
+				glUseProgramObjectARB(0);
+			}
+			//END ELSE
 		}
-
+		//END IF 2
 		
 		// active the scene shader
 		glUseProgramObjectARB(programObject[sceneList[currentScene]->getTypeShader()]);
@@ -197,68 +206,69 @@ void Game::display()
 				glUniform1i(glGetUniformLocationARB(programObject[NORMALSPEC], "normalMap"), 1);
 				glUniform1i(glGetUniformLocationARB(programObject[NORMALSPEC], "specularMap"), 2);
 				glUniform1f(glGetUniformLocationARB(programObject[NORMALSPEC], "shininess"), .2);
-			break;
+				break;
 			
 			case PARALLAX:
-			break;
-      case ENV:
+				break;
+				
+			case ENV:
 
-        glMatrixMode(GL_TEXTURE);
-        glPushMatrix();
-        glLoadMatrixf(invmat);
-        glMatrixMode(GL_MODELVIEW);
+				glMatrixMode(GL_TEXTURE);
+				glPushMatrix();
+				glLoadMatrixf(invmat);
+				glMatrixMode(GL_MODELVIEW);
 
-        glUniformMatrix4fv(glGetUniformLocationARB(programObject[ENV], "matInv"), 1, false, invmat);
-        glUniform1i(glGetUniformLocationARB(programObject[ENV], "myTexCube"), 0);
-        glUniform3fv(glGetUniformLocationARB(programObject[ENV], "posCamera"), 1, position);
-
-			break;
-
+				glUniformMatrix4fv(glGetUniformLocationARB(programObject[ENV], "matInv"), 1, false, invmat);
+				glUniform1i(glGetUniformLocationARB(programObject[ENV], "myTexCube"), 0);
+				glUniform3fv(glGetUniformLocationARB(programObject[ENV], "posCamera"), 1, position);
+				break;
+				
 			case CUBEMAP:
-			break;
+				break;
+				
 			case TOON:
-        glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
-      break;
+				glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
+				break;
 
-      case ALPHA:
-        glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "colorMap"), 0);
-        glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "alphaMap"), 1);
-			break;
+			case ALPHA:
+				glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "colorMap"), 0);
+				glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "alphaMap"), 1);
+				break;
 
-      case SHADOW:
-        glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"eyematrix"),1,GL_FALSE,shadowmatrix);
-        glUniform1iARB(glGetUniformLocationARB(programObject[SHADOW],"shadowmap"),0);
+			case SHADOW:
+				glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"eyematrix"),1,GL_FALSE,shadowmatrix);
+				glUniform1iARB(glGetUniformLocationARB(programObject[SHADOW],"shadowmap"),0);
 
-        checkGLError(239);
-        drawShadow(true);
+				checkGLError(239);
+				drawShadow(true);
+				checkGLError(242);
+				break;
 
-        checkGLError(242);
-      break;
-
-      default:
-      break;
+			default:
+				break;
 		}
 
 		// display the scene
 
-    checkGLError(251);
+		checkGLError(251);
 		sceneList[currentScene]->display();
 
 	}
-
-  checkGLError(254);
-  // pop env matrix
-  if(sceneList[currentScene]->getTypeShader() == ENV)
-  {
-      glPopMatrix();
-      glPopMatrix();
-
-      glMatrixMode(GL_TEXTURE);
-      glPopMatrix();
-      glMatrixMode(GL_MODELVIEW);
-  }
-
-  checkGLError(265);
+	//END IF 1
+	checkGLError(254);
+	// pop env matrix
+	if(sceneList[currentScene]->getTypeShader() == SHADOW){
+		glPopMatrix();
+	}
+	if(sceneList[currentScene]->getTypeShader() == ENV){
+		glPopMatrix();
+		//glPopMatrix();
+		glMatrixMode(GL_TEXTURE);
+		//POP 1
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+	}
+	checkGLError(265);
 }
 
 Game & Game::Instance()

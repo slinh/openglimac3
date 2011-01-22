@@ -99,6 +99,11 @@ void Texture::bind()const
   }	
 	
 	glBindTexture(GL_TEXTURE_2D,idTex);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE0);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+  
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
 }
 
 

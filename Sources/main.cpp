@@ -12,10 +12,11 @@
 
 
 
-//#define __NO_SHADER__
+// #define __NO_SHADER__
 #define __CASTELJAU__
 #define __CUBE_MAP__
 #define __MAIN_SCENE__
+//#define __TEST_TEXTURE__ 
 //#define __ENV_TEST__
 //#define __BUMP_TEST__
 //#define __TOON_TEST__
@@ -24,15 +25,7 @@
 #define CHECK_ERRORS
 
 
-	void checkGLError(int line) {		
-	#ifdef CHECK_ERRORS		
-	 err = glGetError();		
-	 if(err!=GL_NO_ERROR){		
-	   std::cerr << "Erreur GL "<<line<<" :" << std::endl;		
-	   std::cerr << gluErrorString(err) << std::endl;		
-	 }		
-	#endif		
-	}			
+		
 void mat_inverse (float *in, float *out)
 {
   float det, oneOverDet;
@@ -80,17 +73,17 @@ static void displayGL(void)
   //glTranslatef(-position[0],-position[1],-position[2]);
     
   glPushMatrix();
-//glRotatef(angle,0.0,0.0,1.0);
+// glRotatef(angle,0.0,0.0,1.0);
 //  glLightfv(GL_LIGHT0, GL_POSITION,lightPosition);
 
-//   glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
+    glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
 //   std::cout << "lightPos" <<  game.getLightPosition()[0] << ", " << game.getLightPosition()[1] << ", " << game.getLightPosition()[2] << std::endl;
     
   glPopMatrix();
   
   
-  GLfloat global_ambient[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+ // GLfloat global_ambient[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+ // glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
 
   
   // See where the light is
@@ -143,6 +136,38 @@ static void displayGL(void)
 vector3df cam = vector3df(position[0], position[1], position[2]);
 game.setCamera() = cam;
 game.checkCurrentScene();
+
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glShadeModel(GL_SMOOTH);
+
+
+#ifdef __TEST_TEXTURE__  
+  glPushMatrix();
+    glTranslatef(-1.0,1.0,2.0);
+
+    glUseProgramObjectARB(0);
+    glActiveTexture(GL_TEXTURE0);
+    glEnable(GL_TEXTURE_2D);
+    
+    glBindTexture (GL_TEXTURE_2D, idTexAlpha);
+      glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE0);
+  glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+  
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+  glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+    
+	  
+    drawSphere(1.2,30,30);
+    glBindTexture(GL_TEXTURE_2D,0);
+    glDisable(GL_TEXTURE_2D);
+  
+  glPopMatrix();
+#endif
+  
+  
 game.display();
 
 #ifndef __NO_SHADER__  
@@ -683,24 +708,7 @@ static void initGL(int argc,
   }
 #endif
  
-#ifdef __MAIN_SCENE__
 
-checkGLError(711);
-
-
-glLightfv(GL_LIGHT0, GL_SPECULAR, grey);
-glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
-glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-
-
-glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-glPixelStorei(GL_PACK_ALIGNMENT,1);
-
-
-//  Game & game = Game::Instance();
-  game.setProgramObject(programobject);
-  game.initGL();
-#endif
 
 #ifdef __CUBE_MAP__
   //Creation de la cube map
@@ -744,7 +752,7 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
 #endif
 
 #ifdef __ALPHA_TEST__
-  glGenTextures(0,&idTexAlpha);
+  glGenTextures(1,&idTexAlpha);
   glBindTexture (GL_TEXTURE_2D, idTexAlpha);
   unsigned int tmpwidth, tmpheight;
   unsigned char * image = loadPPM("textures/alpha_map.ppm",tmpwidth,tmpheight);
@@ -831,6 +839,54 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
 	controlPoints.push_back(point3);
 
 	nextP = vector3df(position[0], position[1], position[2]);
+
+#ifdef __MAIN_SCENE__
+
+checkGLError(711);
+
+glLightfv(GL_LIGHT0, GL_SPECULAR, grey);
+glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
+glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+
+
+glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+glPixelStorei(GL_PACK_ALIGNMENT,1);
+
+
+//  Game & game = Game::Instance();
+  game.setProgramObject(programobject);
+  game.initGL();
+  
+  
+  
+  
+  
+  
+  
+#ifdef __TEST_TEXTURE__  
+   
+    glGenTextures(1,&idTexAlpha);
+    glBindTexture (GL_TEXTURE_2D, idTexAlpha);
+    unsigned int tmpwidth, tmpheight;
+    unsigned char * image = loadPPM("models/wall/gate_wood.ppm",tmpwidth,tmpheight);
+    if(image==0){
+      std::cerr << "Erreur au chargement le l'image" << std::endl;
+      exit(0);
+
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE,image );
+
+    delete[] image;
+  
+#endif
+  
+  
+  
+#endif
 
 }
 

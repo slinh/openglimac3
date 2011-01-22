@@ -52,7 +52,6 @@ void Scene::initGL()
 
 void Scene::display()
 {
-
 	if(typeS == MAIN)
 	{
     	heightfield->display();

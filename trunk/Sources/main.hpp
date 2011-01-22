@@ -102,6 +102,7 @@ CubeMap * church;
 static const unsigned int nbtextures = 5;
 GLuint texturesid[nbtextures];
 GLuint shadowtexid;
+GLuint idTexAlpha;
 
 // Shaders
 GLhandleARB programobject[NB_SHADERS];

@@ -2,7 +2,7 @@
 <demo>
   <scene id="0">
     <shader>NORMALSPEC</shader>
-    <light x="0.0" y="5.0" z="3.0" w="1.0"/>
+    <light x="0.0" y="20.0" z="3.0" w="1.0"/>
     <obj id="0" scene="1">
       <model>models/house_obj/house_obj.obj</model>
       <scale x="0.003" y="0.003" z="0.003" />

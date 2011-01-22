@@ -25,7 +25,7 @@
 #define CHECK_ERRORS
 
 
-		
+
 void mat_inverse (float *in, float *out)
 {
   float det, oneOverDet;
@@ -59,6 +59,13 @@ void mat_inverse (float *in, float *out)
 
 static void displayGL(void)
 {
+
+  if(game.getSceneList()[game.getCurrentScene()]->getTypeShader() == SHADOW)
+  {
+    game.displayShadow();
+  }
+
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -74,31 +81,28 @@ static void displayGL(void)
     
   glPushMatrix();
 // glRotatef(angle,0.0,0.0,1.0);
-//  glLightfv(GL_LIGHT0, GL_POSITION,lightPosition);
+   glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
 
-    glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
 //   std::cout << "lightPos" <<  game.getLightPosition()[0] << ", " << game.getLightPosition()[1] << ", " << game.getLightPosition()[2] << std::endl;
     
   glPopMatrix();
   
-  
- // GLfloat global_ambient[] = { 1.0f, 0.0f, 0.0f, 1.0f };
- // glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
 
-  
+
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,white);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,white);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,white);
+  glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
+
+
   // See where the light is
   glPushMatrix();
      glTranslatef(game.getLightPosition()[0],game.getLightPosition()[1],game.getLightPosition()[2]);
-     drawSphere(0.01, 30, 30);
+     drawSphere(0.1, 30, 30);
 //     std::cout << "lightPos :" << game.getLightPosition()[0] << " / " << game.getLightPosition()[1] << " / " << game.getLightPosition()[2] << " /"  << game.getLightPosition()[3]<< std::endl;
   glPopMatrix();
 
-/*  
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,white);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,white);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,black);
-  glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
-*/
+
 
 #ifdef __CUBE_MAP__ // --- CUBEMAP
 
@@ -417,7 +421,7 @@ static void idleGL(void)
 			position[1]=nextP.Y;
 			position[2]=nextP.Z;
 			
-			//aim[0]=sin(yrotation*M_PI/180.0f);
+      //aim[0]=sin(yrotation*M_PI/180.0f);
     	//aim[1]=-sin(xrotation*M_PI/180.0f);
     	//aim[2]=-cos(yrotation*M_PI/180.0f);
 			direction[0]=p.X-nextP.X;
@@ -657,6 +661,9 @@ void loadShader(std::string vert, std::string frag, int idShader)
   programobject[idShader] = linkShaders(so,2);
 }
 
+
+
+
 void loadTexture(std::string file, GLuint idTex)
 {
   // Texture init ok
@@ -691,14 +698,7 @@ static void initGL(int argc,
 
   glClearColor(0.8f,0.8f,0.8f,1.0f);
 
-#ifdef __MAIN_SCENE__
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glShadeModel(GL_SMOOTH);
-  glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-#endif
+
 
 #ifndef __NO_SHADER__
   // load all shader programs  
@@ -771,6 +771,84 @@ static void initGL(int argc,
 
 #endif // --- END TEST ALPHA
 
+  initShadowGL();
+  game.setBiasmatrix(biasmatrix);
+  game.setShadowbufferid(shadowbufferid);
+  game.setShadowtexid(shadowtexid);
+
+  // camera
+	nbPoints = 32;
+	f=0;
+	vector3df pointTmp= vector3df(-2.,0.5,3.0);
+	vector3df point2= vector3df(10., 0.5, -1.0);
+	vector3df point3= vector3df(-1., 0.5, -3.);
+	vector3df cam = vector3df(position[0], position[1], position[2]);
+	controlPoints.push_back(cam);
+	controlPoints.push_back(pointTmp);
+	controlPoints.push_back(point2);
+	controlPoints.push_back(point3);
+
+	nextP = vector3df(position[0], position[1], position[2]);
+
+
+#ifdef __MAIN_SCENE__
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glShadeModel(GL_SMOOTH);
+  glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+
+checkGLError(711);
+
+
+glLightfv(GL_LIGHT0, GL_SPECULAR, grey);
+glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
+glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+
+
+glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+glPixelStorei(GL_PACK_ALIGNMENT,1);
+
+
+//  Game & game = Game::Instance();
+  game.setProgramObject(programobject);
+  game.initGL();
+#endif
+
+
+
+  
+  
+  
+#ifdef __TEST_TEXTURE__  
+   
+    glGenTextures(1,&idTexAlpha);
+    glBindTexture (GL_TEXTURE_2D, idTexAlpha);
+    unsigned int tmpwidth, tmpheight;
+    unsigned char * image = loadPPM("models/wall/gate_wood.ppm",tmpwidth,tmpheight);
+    if(image==0){
+      std::cerr << "Erreur au chargement le l'image" << std::endl;
+      exit(0);
+
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE,image );
+
+    delete[] image;
+  
+#endif
+  
+
+}
+
+
+void initShadowGL()
+{
+
   // shadow mapping
   glDisable(GL_LIGHTING);
   glDisable(GL_LIGHT0);
@@ -805,7 +883,7 @@ static void initGL(int argc,
   glDepthMask( GL_TRUE );
 
   if(!game.checkFramebufferStatus())
-   quit();
+   return;
 
   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
@@ -823,70 +901,6 @@ static void initGL(int argc,
 
   glBindTexture (GL_TEXTURE_2D, 0);
   checkGLError(765);
-
-  game.setBiasmatrix(biasmatrix);
-  game.setShadowtexid(shadowtexid);
-  game.setShadowbufferid(shadowbufferid);
-	nbPoints = 32;
-	f=0;
-	vector3df pointTmp= vector3df(-2.,0.5,3.0);
-	vector3df point2= vector3df(10., 0.5, -1.0);
-	vector3df point3= vector3df(-1., 0.5, -3.);
-	vector3df cam = vector3df(position[0], position[1], position[2]);
-	controlPoints.push_back(cam);
-	controlPoints.push_back(pointTmp);
-	controlPoints.push_back(point2);
-	controlPoints.push_back(point3);
-
-	nextP = vector3df(position[0], position[1], position[2]);
-
-#ifdef __MAIN_SCENE__
-
-checkGLError(711);
-
-glLightfv(GL_LIGHT0, GL_SPECULAR, grey);
-glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
-glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-
-
-glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-glPixelStorei(GL_PACK_ALIGNMENT,1);
-
-
-//  Game & game = Game::Instance();
-  game.setProgramObject(programobject);
-  game.initGL();
-  
-  
-  
-  
-  
-  
-  
-#ifdef __TEST_TEXTURE__  
-   
-    glGenTextures(1,&idTexAlpha);
-    glBindTexture (GL_TEXTURE_2D, idTexAlpha);
-    unsigned int tmpwidth, tmpheight;
-    unsigned char * image = loadPPM("models/wall/gate_wood.ppm",tmpwidth,tmpheight);
-    if(image==0){
-      std::cerr << "Erreur au chargement le l'image" << std::endl;
-      exit(0);
-
-    }
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE,image );
-
-    delete[] image;
-  
-#endif
-  
-  
-  
-#endif
 
 }
 

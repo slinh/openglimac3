@@ -43,6 +43,7 @@ public:
   inline GLuint getShadowtexid() { return shadowtexid; };
 
   inline void setShadowbufferid(GLuint shadowbufferid) { this->shadowbufferid = shadowbufferid; };
+
   inline void setWindowSize(int windowwidth, int windowheight) { this->windowwidth = windowwidth;
     this->windowheight = windowheight;};
 
@@ -53,6 +54,7 @@ public:
   bool checkFramebufferStatus(void);
   void multMatrix4x4(float* m1, float* m2, float* res);
   void drawShadow(bool shaders = false);
+  void displayShadow(void);
 
   void lightUp();
   void lightDown();
@@ -82,6 +84,7 @@ protected:
   float*  biasmatrix;
   int windowwidth;
   int windowheight;
+
 
 
 };

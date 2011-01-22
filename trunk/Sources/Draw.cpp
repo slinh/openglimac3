@@ -29,6 +29,30 @@ void createCarre(void)
   
 }
 
+void createCarreTest(void)
+{
+
+  glBegin(GL_QUADS);
+//  glColor3f(1.0f,1.0f,1.0f);
+  glNormal3f(0.0f,0.0f,1.0f);
+  glMultiTexCoord2f(GL_TEXTURE0, 0.0f, 0.0f);
+  glMultiTexCoord3f(GL_TEXTURE1, 1.0f, 0.0f, 0.0f);
+  glVertex3f(-0.5f, 0.5f, 0.0f);
+  glMultiTexCoord2f(GL_TEXTURE0, 0.0f, 1.0f);
+  glMultiTexCoord3f(GL_TEXTURE1, 1.0f, 0.0f, 0.0f);
+  glVertex3f(-0.5f,-0.5f, 0.0f);
+  glMultiTexCoord2f(GL_TEXTURE0, 1.0f, 1.0f);
+  glMultiTexCoord3f(GL_TEXTURE1, 1.0f, 0.0f, 0.0f);
+  glVertex3f( 0.5f,-0.5f, 0.0f);
+  glMultiTexCoord2f(GL_TEXTURE0, 1.0f, 0.0f);
+  glMultiTexCoord3f(GL_TEXTURE1, 1.0f, 0.0f, 0.0f);
+  glVertex3f( 0.5f, 0.5f, 0.0f);
+  glEnd();
+
+
+
+}
+
 void createCube(vector3df color)
 {
 	

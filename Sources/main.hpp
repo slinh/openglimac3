@@ -118,5 +118,6 @@ std::string tabShader[NB_SHADERS] = { "shaders/normalspec",
 									
 Scene* scene = NULL;
 Game & game = Game::Instance();									
-									
+
+void initShadowGL();
 #endif

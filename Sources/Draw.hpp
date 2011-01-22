@@ -6,5 +6,6 @@ void drawSphere(const float& radius,
     const unsigned int& stepx,
     const unsigned int& stepy);
 void createCarre(void);
-void createCube(vector3df color);
+void createCarreTest(void);
+void createCube(vector3df color = vector3df(1.0, 1.0, 1.0));
 #endif

@@ -38,9 +38,10 @@ static unsigned int windowheight = 600;
 GLenum err;
 
 // Modele de la camera
-static float position[] = {0.0f,0.5f,3.0f};
+static float position[] = {-1.0f,0.5f,9.0f};
 static float aim[] = {0.0f,0.0f,-1.0f};
 static float direction[] = {0.0f,0.0f,-1.0f};
+static float up[] = {0.0f, 1.0f, 0.0f};
 
 // Rotation de la camera
 static float yrotation = 0.0f;
@@ -51,6 +52,7 @@ static float xrotation = 0.0f;
 std::vector<vector3df> controlPoints;
 int nbPoints;
 float f;
+vector3df nextP;
     
 // Données sur le curseur et la souris
 static int xmouseposition = 0;

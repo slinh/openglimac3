@@ -13,7 +13,7 @@
 
 
 //#define __NO_SHADER__
-//#define __CASTELJAU__
+#define __CASTELJAU__
 #define __CUBE_MAP__
 #define __MAIN_SCENE__
 //#define __ENV_TEST__
@@ -24,7 +24,15 @@
 #define CHECK_ERRORS
 
 
-
+	void checkGLError(int line) {		
+	#ifdef CHECK_ERRORS		
+	 err = glGetError();		
+	 if(err!=GL_NO_ERROR){		
+	   std::cerr << "Erreur GL "<<line<<" :" << std::endl;		
+	   std::cerr << gluErrorString(err) << std::endl;		
+	 }		
+	#endif		
+	}			
 void mat_inverse (float *in, float *out)
 {
   float det, oneOverDet;
@@ -60,11 +68,16 @@ static void displayGL(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  gluLookAt(position[0],position[1],position[2],position[0]+direction[0],position[1]+direction[1],position[2]+direction[2],up[0],up[1],up[2]);
+  
   glPushMatrix();
 
-  glRotatef(xrotation,1.0f,0.0f,0.0f);
-  glRotatef(yrotation,0.0f,1.0f,0.0f);
-  glTranslatef(-position[0],-position[1],-position[2]);
+  //glRotatef(xrotation,1.0f,0.0f,0.0f);
+  //glRotatef(yrotation,0.0f,1.0f,0.0f);
+  //glTranslatef(-position[0],-position[1],-position[2]);
     
   glPushMatrix();
 //glRotatef(angle,0.0,0.0,1.0);
@@ -340,7 +353,7 @@ static void reshapeGL(int newwidth,
  * casteljau : implantation de l'algo de Casteljau
  * Copyright (C) 2002 Stephane Marchesin
 **/
-vector3df ge(float t,std::vector<vector3df> l)
+vector3df casteljau(float t,std::vector<vector3df> l)
 {
 	std::vector<vector3df> liste_points=l;
 	std::vector<vector3df> nouvelle_liste_points;
@@ -370,14 +383,28 @@ static void idleGL(void)
     angle += 0.25;
 
 #ifdef __CASTELJAU__
-
+//motion
    	if(f<=1.){
 			vector3df p=casteljau(f,controlPoints);
-			position[0]=p.X;
-			position[1]=p.Y;
-			position[2]=p.Z;
+			//xrotation+=(position[0]-p.X)/10.0f;
+			//yrotation+=(position[1]- p.Y )/10.0f;
+			position[0]=nextP.X;
+			position[1]=nextP.Y;
+			position[2]=nextP.Z;
+			
+			//aim[0]=sin(yrotation*M_PI/180.0f);
+    	//aim[1]=-sin(xrotation*M_PI/180.0f);
+    	//aim[2]=-cos(yrotation*M_PI/180.0f);
+			direction[0]=p.X-nextP.X;
+    	direction[1]=p.Y-nextP.Y;
+    	direction[2]=p.Z-nextP.Z;
+			/*std::cout << "x" << xrotation <<"y" <<yrotation << std::endl;
+			
+			std::cout << "x2" << xrotation <<"y2" <<yrotation << std::endl;*/
+			//direction[3]=p.Z+1.;
+			nextP = p;
 			f+=1./(float)nbPoints;
-			sleep(0.1);
+			sleep(0.9);
 		}
 #endif
     
@@ -521,16 +548,50 @@ static void mouseGL(int button, int state, int x, int y)
 static void motionGL(int x, int y)
 {
 
-  if(buttonpressed){
-    yrotation += (x - xmouseposition)/10.0f;
-    xrotation += (y - ymouseposition)/10.0f;
-    aim[0]=sin(yrotation*M_PI/180.0f);
-    aim[1]=-sin(xrotation*M_PI/180.0f);
-    aim[2]=-cos(yrotation*M_PI/180.0f);
-    direction[0]=sin(yrotation*M_PI/180.0f);
-    direction[2]=-cos(yrotation*M_PI/180.0f);
-    xmouseposition = x;
-    ymouseposition = y;
+  if(buttonpressed){		
+		if(x>xmouseposition){ // droite
+			
+			GLfloat directionTmp[] ={direction[0], direction[1],direction[2]};
+	
+			direction[0]=directionTmp[0]*cos(M_PI/60)-directionTmp[2]*sin(M_PI/60);
+			direction[2]=directionTmp[0]*sin(M_PI/60)+directionTmp[2]*cos(M_PI/60);
+		
+			//produitVectoriel(right, direction, up);
+	
+		}
+		else if(x<xmouseposition){ // gauche
+			GLfloat directionTmp[] ={direction[0], direction[1],direction[2]};
+		
+			direction[0]=directionTmp[0]*cos(M_PI/60)+directionTmp[2]*sin(M_PI/60);
+			direction[2]=-directionTmp[0]*sin(M_PI/60)+directionTmp[2]*cos(M_PI/60);
+		
+			//produitVectoriel(right, direction, up);
+	
+		}
+		if(y>ymouseposition){ // haut
+			GLfloat directionTmp[] ={direction[0], direction[1],direction[2]};
+			GLfloat upTmp[] = { up[0], up[1], up[2]};
+	
+			direction[2]=directionTmp[2]*cos(M_PI/60)-upTmp[2]*sin(M_PI/60);
+			direction[1]=directionTmp[1]*cos(M_PI/60)-upTmp[1]*sin(M_PI/60);
+			direction[0]=directionTmp[0]*cos(M_PI/60)-upTmp[0]*sin(M_PI/60);
+			
+			//produitVectoriel(right, direction, up);
+		}
+		else if(y<ymouseposition){ // bas
+			GLfloat directionTmp[] ={direction[0], direction[1],direction[2]};
+			GLfloat upTmp[] = { up[0], up[1], up[2]};
+	
+			direction[2]=directionTmp[2]*cos(M_PI/60)+upTmp[2]*sin(M_PI/60);
+			direction[1]=directionTmp[1]*cos(M_PI/60)+upTmp[1]*sin(M_PI/60);
+			direction[0]=directionTmp[0]*cos(M_PI/60)+upTmp[0]*sin(M_PI/60);
+			
+			//produitVectoriel(right, direction, up);
+		}
+	
+	
+	    xmouseposition = x;
+	    ymouseposition = y;
   }
 
   glutPostRedisplay();
@@ -758,18 +819,18 @@ glPixelStorei(GL_PACK_ALIGNMENT,1);
   game.setBiasmatrix(biasmatrix);
   game.setShadowtexid(shadowtexid);
   game.setShadowbufferid(shadowbufferid);
+	nbPoints = 32;
+	f=0;
+	vector3df pointTmp= vector3df(-2.,0.5,3.0);
+	vector3df point2= vector3df(10., 0.5, -1.0);
+	vector3df point3= vector3df(-1., 0.5, -3.);
+	vector3df cam = vector3df(position[0], position[1], position[2]);
+	controlPoints.push_back(cam);
+	controlPoints.push_back(pointTmp);
+	controlPoints.push_back(point2);
+	controlPoints.push_back(point3);
 
-  // camera move
-  nbPoints = 32;
-  f=0;
-  vector3df pointTmp= vector3df(5.,0.5,2.0);
-  vector3df point2= vector3df(8., 0.5, -2.0);
-  vector3df point3= vector3df(-1., 0.5, -2.);
-  vector3df cam = vector3df(position[0], position[1], position[2]);
-  controlPoints.push_back(cam);
-  controlPoints.push_back(pointTmp);
-  controlPoints.push_back(point2);
-  controlPoints.push_back(point3);
+	nextP = vector3df(position[0], position[1], position[2]);
 
 }
 

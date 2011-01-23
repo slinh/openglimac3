@@ -48,7 +48,7 @@ void CubeMap::initCubeMap(const char* negative_x,
                                           )
 {
 
-    glGenTextures(1,&idTex);
+    glGenTextures(1, &idTex);
 
     // Texture init ok
     if(idTex == 0){
@@ -56,65 +56,65 @@ void CubeMap::initCubeMap(const char* negative_x,
       return;
     }
 
-    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
-
     unsigned int tmpwidth, tmpheight;
     unsigned char * image = loadPPM(negative_x, tmpwidth, tmpheight);
-    //unsigned char * image = loadPPM("textures/arch_negx.ppm",tmpwidth,tmpheight);
     if(image==0){
     std::cerr << "Erreur au chargement le l'image" << std::endl;
     exit(0);
     }
 
-    glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    std::cout << "glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);" << idTex << std::endl;
+    glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_X_EXT, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
     delete[] image;
 
     image = loadPPM(negative_z, tmpwidth, tmpheight);
-    //image = loadPPM("textures/arch_negz.ppm",tmpwidth,tmpheight);
 
     if(image==0){
     std::cerr << "Erreur au chargement le l'image" << std::endl;
     exit(0);
     }
 
-    glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB,	GL_UNSIGNED_BYTE, image);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB,	GL_UNSIGNED_BYTE, image);
 
 
     delete[] image;
 
     image = loadPPM(negative_y, tmpwidth, tmpheight);
-    //image = loadPPM("textures/arch_negy.ppm",tmpwidth,tmpheight);
     if(image==0){
     std::cerr << "Erreur au chargement le l'image" << std::endl;
     exit(0);
     }
+    drawSphere(10.,30,30);
 
-    glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_EXT, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 
     delete[] image;
 
     image = loadPPM(positive_x, tmpwidth, tmpheight);
-    //image = loadPPM("textures/arch_posx.ppm",tmpwidth,tmpheight);
     if(image==0){
     std::cerr << "Erreur au chargement le l'image" << std::endl;
     exit(0);
     }
 
-    glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB,	GL_UNSIGNED_BYTE, image);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB,	GL_UNSIGNED_BYTE, image);
 
 
     delete[] image;
 
     image = loadPPM(positive_y, tmpwidth, tmpheight);
-    //image = loadPPM("textures/arch_posy.ppm",tmpwidth,tmpheight);
     if(image==0){
     std::cerr << "Erreur au chargement le l'image" << std::endl;
     exit(0);
     }
 
-    glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Y_EXT, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
 
     delete[] image;
@@ -126,7 +126,8 @@ void CubeMap::initCubeMap(const char* negative_x,
     exit(0);
     }
 
-    glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB,	GL_UNSIGNED_BYTE, image);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Z_EXT, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB,	GL_UNSIGNED_BYTE, image);
 
 
     delete[] image;
@@ -141,6 +142,8 @@ void CubeMap::initCubeMap(const char* negative_x,
 
 		// create a displaylist
     /*displayListId=glGenLists(1);
+ //glBindTexture(GL_TEXTURE_CUBE_MAP,texturesid[3]);
+ //glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     if(displayListId==0) std::cerr << "erreur d'initialisation de la liste " << std::endl;
     glNewList(displayListId, GL_COMPILE);
   	
@@ -148,8 +151,8 @@ void CubeMap::initCubeMap(const char* negative_x,
 
       //drawSphereMap(10.0);
     glEndList();*/
-
     glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+
 
 
 }

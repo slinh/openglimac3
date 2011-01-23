@@ -29,6 +29,9 @@ public:
 
   inline const CubeMap * getChurch()const{ return church; }
   inline void setChurch(CubeMap * church){ this->church = church; }
+
+  inline const CubeMap * getSky()const{ return sky; }
+  inline void setSky(CubeMap * sky){ this->sky = sky; }
   
   inline const int & getCurrentScene()const{ return currentScene; }
   inline int & setCurrentScene(){ return currentScene; }
@@ -55,6 +58,7 @@ public:
   void multMatrix4x4(float* m1, float* m2, float* res);
   void drawShadow(bool shaders = false);
   void displayShadow(void);
+  void displaySky(void);
 
   void lightUp();
   void lightDown();
@@ -69,6 +73,7 @@ protected:
 
   vector3df 			camera;
   CubeMap*        church;
+  CubeMap*        sky;
   int             currentScene;
   GLhandleARB* 		programObject;
   float*          invmat;

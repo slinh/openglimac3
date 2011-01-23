@@ -103,37 +103,6 @@ static void displayGL(void)
   glPopMatrix();
 
 
-
-#ifdef __CUBE_MAP__ // --- CUBEMAP
-
-//glActiveTexture(GL_TEXTURE3);
-//glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap->getIdTex());
-
-#ifndef __NO_SHADER__  
-  glUseProgramObjectARB(programobject[CUBEMAP]);
-  
-  glUniform1i(glGetUniformLocationARB(programobject[CUBEMAP] ,"id_tex"), cubeMap->getIdTex());
-  
-#endif
-  
-  //glBindTexture(GL_TEXTURE_CUBE_MAP,texturesid[3]);
-  //glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-//  cubeMap->display();
-  
-
-  //HeightField
-//  glScalef(0.002, 0.002, 0.002);
-//  hField.Render();	
-	
-  //cubeMap->drawSphere(4.0,50,50);
-  
- 	
-#ifndef __NO_SHADER__  
-  glUseProgramObjectARB(0);
-#endif
-  
-#endif // --- END CUBEMAP 
-
 #ifdef __MAIN_SCENE__  // MAIN SCENE - FROM XML - + NORMAL SPEC ILLUMINATION
 
 // Game & game = Game::Instance();
@@ -141,11 +110,11 @@ vector3df cam = vector3df(position[0], position[1], position[2]);
 game.setCamera() = cam;
 game.checkCurrentScene();
 
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glShadeModel(GL_SMOOTH);
+glEnable(GL_LIGHTING);
+glEnable(GL_LIGHT0);
+glEnable(GL_DEPTH_TEST);
+glEnable(GL_CULL_FACE);
+glShadeModel(GL_SMOOTH);
 
 
 #ifdef __TEST_TEXTURE__  
@@ -734,21 +703,11 @@ static void initGL(int argc,
    "textures/church/positive_x.ppm",
    "textures/church/positive_y.ppm",
    "textures/church/positive_z.ppm");
-    game.setChurch(church);
+
+  game.setSky(cubeMap);
+  game.setChurch(church);
 
 
-  //HeightField Map init
-//  glBindTexture(GL_TEXTURE_CUBE_MAP, texturesid[3]);
-//  hField.Create((char *)"textures/heightfieldBW.ppm", 512, 512);
-    
-/*
- // load model file
-  objfile = new Obj();
-  
- objfile->ReadOBJModel("models/house_obj1/house_obj.obj");
- */
- 
- //std::cout << "load obj ok" << std::endl;
 #endif
 
 #ifdef __ALPHA_TEST__
@@ -771,7 +730,7 @@ static void initGL(int argc,
 
 #endif // --- END TEST ALPHA
 
-  initShadowGL();
+  //initShadowGL();
   game.setBiasmatrix(biasmatrix);
   game.setShadowbufferid(shadowbufferid);
   game.setShadowtexid(shadowtexid);
@@ -790,7 +749,6 @@ static void initGL(int argc,
 
 	nextP = vector3df(position[0], position[1], position[2]);
 
-
 #ifdef __MAIN_SCENE__
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
@@ -799,17 +757,14 @@ static void initGL(int argc,
   glShadeModel(GL_SMOOTH);
   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
-checkGLError(711);
+  checkGLError(711);
 
+  glLightfv(GL_LIGHT0, GL_SPECULAR, grey);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
 
-glLightfv(GL_LIGHT0, GL_SPECULAR, grey);
-glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
-glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-
-
-glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-glPixelStorei(GL_PACK_ALIGNMENT,1);
-
+  glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+  glPixelStorei(GL_PACK_ALIGNMENT,1);
 
 //  Game & game = Game::Instance();
   game.setProgramObject(programobject);
@@ -906,6 +861,7 @@ void initShadowGL()
 
 int main(int argc, char **argv)
 {
+
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);

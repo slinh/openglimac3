@@ -90,8 +90,16 @@ void Game::display()
 				// draw cubemap
 				//PUSH 1
 				glPushMatrix();
+          glEnable(GL_TEXTURE_CUBE_MAP);
+          std::cout << "church->getIdTex():" << church->getIdTex() << std::endl;
 					glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
+          glEnable(GL_TEXTURE_GEN_S);
+          glEnable(GL_TEXTURE_GEN_T);
+          glEnable(GL_TEXTURE_GEN_R);
 
+          glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
+          glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
+          glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_ARB);
 					church->drawCubeMap(10.0);
 
 					#ifndef __NO_SHADER__
@@ -131,6 +139,10 @@ void Game::display()
 			}
 			//END ELSE
 		}
+    else
+    {
+      displaySky();
+    }
 		//END IF 2
 		
 		// active the scene shader
@@ -218,7 +230,11 @@ void Game::display()
 		glMatrixMode(GL_TEXTURE);
 		//POP 1
 		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW);
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP,0);
+    glDisable(GL_TEXTURE_CUBE_MAP);
+
 	}
 	checkGLError(265);
 }
@@ -233,6 +249,8 @@ void Game::checkCurrentScene()
 {
 	int tmpCurrent = -1;
 	
+  glEnable(GL_LIGHTING);
+  glEnable(GL_TEXTURE_2D);
 	// only obj in main scene :
 	std::vector<Obj *> myList = sceneList[0]->getObjList();
 	
@@ -495,4 +513,32 @@ void Game::displayShadow()
     glPopMatrix();
     checkGLError(141);
   }
+}
+
+void Game::displaySky()
+{
+
+  glPushMatrix();
+
+    glEnable(GL_TEXTURE_CUBE_MAP);
+    std::cout << "cubeMap->getIdTex():" << sky->getIdTex() << std::endl;
+
+// TODO : commenté ---> afficher les arbres
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, sky->getIdTex());
+
+#ifndef __NO_SHADER__
+    glUseProgramObjectARB(programObject[CUBEMAP]);
+    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), sky->getIdTex());
+
+#endif
+    sky->display();
+
+#ifndef __NO_SHADER__
+   glUseProgramObjectARB(0);
+#endif
+    glBindTexture(GL_TEXTURE_CUBE_MAP,0);
+    glDisable(GL_TEXTURE_CUBE_MAP);
+
+  glPopMatrix();
 }

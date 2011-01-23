@@ -79,7 +79,7 @@
     
   <scene id="1">
     <shader>SHADOW</shader>
-    <light x="1.17" y="3.0" z="1.5" w="1.0"/>
+    <light x="1.17" y="1.5" z="1.5" w="1.0"/>
     <obj id="0">
       <model>models/logs/fre005.obj</model>
       <scale x="0.001" y="0.001" z="0.001" />

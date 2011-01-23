@@ -64,7 +64,7 @@ void CubeMap::initCubeMap(const char* negative_x,
     }
 
     glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
-    std::cout << "glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);" << idTex << std::endl;
+//    std::cout << "glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);" << idTex << std::endl;
     glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_X_EXT, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
     delete[] image;

@@ -40,7 +40,7 @@ public:
   inline GLhandleARB* getProgramObject() { return programObject; };
 
   inline void setInvMat(float* invmat) { this->invmat = invmat; };
-  inline void setBiasmatrix(float* mat) { this->biasmatrix = mat; };
+  inline GLfloat* setLightprojectionmatrix() { return lightprojectionmatrix; };
 
   inline void setShadowtexid(GLuint shadowtexid) { this->shadowtexid = shadowtexid; };
   inline GLuint getShadowtexid() { return shadowtexid; };
@@ -56,6 +56,7 @@ public:
   GLfloat* getLightPosition();
   void displaySky(void);
   void initShadowGL();
+  void FBO();
   bool checkFramebufferStatus(void);
   void multMatrix4x4(float* m1, float* m2, float* res);
   void drawShadow(bool shaders = false);
@@ -84,10 +85,10 @@ protected:
   GLfloat lightprojectionmatrix[16];
   GLfloat lightmodelviewmatrix[16];
   GLfloat transformationmatrix[16];
-
   GLfloat shadowmatrix[16];
+  GLfloat biasmatrix[16];
+
   GLuint shadowtexid;
-  float*  biasmatrix;
   int windowwidth;
   int windowheight;
 

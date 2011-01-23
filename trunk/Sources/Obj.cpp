@@ -470,8 +470,8 @@ void Obj::initGL()
 
 void Obj::display()
 {
-//  glCallList(displayListId);
-  draw();
+  glCallList(displayListId);
+//  draw();
 }
 
 void Obj::draw()

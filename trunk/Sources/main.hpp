@@ -61,18 +61,6 @@ static bool buttonpressed = false;
 
 // lights
 GLfloat lightPosition[] = {0.0f,5.0f,5.0f,1.0f};
-GLfloat lightprojectionmatrix[16];
-GLfloat lightmodelviewmatrix[16];
-GLfloat transformationmatrix[16];
-GLfloat shadowmatrix[16];
-
-static GLfloat biasmatrix[16] =
-{
-  0.5f, 0.0f, 0.0f, 0.0f,
-  0.0f, 0.5f, 0.0f, 0.0f,
-  0.0f, 0.0f, 0.5f, 0.0f,
-  0.5f, 0.5f, 0.5f, 1.0f
-};
 
 static GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
 static GLfloat gray[]= { 0.5f, 0.5f, 0.5f, 1.0f };
@@ -85,8 +73,6 @@ static GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
 static GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
 //static GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
 
-// FBO
-unsigned int shadowbufferid = 0;
 
 float scale = 0.04;
 Obj* objfile;
@@ -101,7 +87,6 @@ CubeMap * church;
 // textures
 static const unsigned int nbtextures = 5;
 GLuint texturesid[nbtextures];
-GLuint shadowtexid;
 GLuint idTexAlpha;
 
 // Shaders

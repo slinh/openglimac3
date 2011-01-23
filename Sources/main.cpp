@@ -8,10 +8,6 @@
 #include "ppm.hpp"
 #include "utils.hpp"
 
-
-
-
-
 // #define __NO_SHADER__
 #define __CASTELJAU__
 #define __CUBE_MAP__
@@ -25,6 +21,156 @@
 #define CHECK_ERRORS
 
 
+void drawShadow(bool shaders)
+{
+/*
+  GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
+  GLfloat gray[]= { 0.5f, 0.5f, 0.5f, 1.0f };
+  //GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
+  GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
+  GLfloat softred[]= { 0.2f, 0.0f, 0.0f, 1.0f };
+  GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
+  GLfloat softblue[]= { 0.0f, 0.0f, 0.2f, 1.0f };
+  GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
+  GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
+
+  glMaterialfv(GL_FRONT, GL_SPECULAR,white);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,red);
+  glMaterialfv(GL_FRONT, GL_AMBIENT,softred);
+  glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
+
+  if(shaders){
+      glPushMatrix();
+      glLoadIdentity();
+      glTranslatef(2.0,1.0,2.0);
+      glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+      glUniformMatrix4fvARB(glGetUniformLocationARB(programobject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+      glPopMatrix();
+  }
+
+  glPushMatrix();
+  glColor3f(1.0,0.0,0.0);
+  glTranslatef(2.0,1.0,2.0);
+  drawSphere(0.5,30,30);
+  glPopMatrix();
+
+  glMaterialfv(GL_FRONT, GL_SPECULAR,white);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,blue);
+  glMaterialfv(GL_FRONT, GL_AMBIENT,softblue);
+  glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
+
+
+  if(shaders){
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslatef(0.0,-1.0,0.0);
+    glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+    glUniformMatrix4fvARB(glGetUniformLocationARB(programobject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+    glPopMatrix();
+  }
+
+
+//glPushMatrix();
+  glTranslatef(0.0,-1.0,0.0);
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor3f(1.0f,1.0f,1.0f);
+    glNormal3f(0.0f,1.0f,0.0f);
+    glVertex3f(-20.0f, 0.0f, 20.0f);
+    glVertex3f( 20.0f, 0.0f, 20.0f);
+    glVertex3f( 20.0f, 0.0f,-20.0f);
+    glVertex3f(-20.0f, 0.0f,-20.0f);
+    glEnd();
+    glPopMatrix();
+
+//  glPopMatrix();*/
+  /*
+  glPushMatrix();
+    glScalef(10.0, 10.0, 10.0);
+    createCube();
+  glPopMatrix();
+*/
+}
+
+void shadowTest()
+{/*
+// Premiere passe en FBO
+    if(shadowbufferid!=0){
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        checkFramebufferStatus();
+
+        glPushMatrix();
+        glLoadIdentity();
+
+
+        gluLookAt(lightPosition[0], lightPosition[1], lightPosition[2],
+                  0.0f, 0.0f, 0.0f,
+                  0.0f, 1.0f, 0.0f);
+//        glRotatef(-angle,0.0,1.0,0.0);
+        glGetFloatv(GL_MODELVIEW_MATRIX, lightmodelviewmatrix);
+
+        multMatrix4x4(lightprojectionmatrix,lightmodelviewmatrix,shadowmatrix);
+        multMatrix4x4(biasmatrix,shadowmatrix,shadowmatrix);
+
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(4.0,4.0);
+        drawShadow(false);
+        glDisable(GL_POLYGON_OFFSET_FILL);
+
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+
+        glPopMatrix();
+
+    }
+
+    glPushMatrix();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glRotatef(xrotation,1.0f,0.0f,0.0f);
+    glRotatef(yrotation,0.0f,1.0f,0.0f);
+    glTranslatef(-position[0],-position[1],-position[2]);
+
+    glPushMatrix();
+//    glRotatef(angle,0.0,1.0,0.0);
+    glLightfv(GL_LIGHT0, GL_POSITION,lightPosition);
+    glPopMatrix();
+
+    glPushMatrix();
+//    glRotatef(angle,0.0,1.0,0.0);
+    glTranslatef(lightPosition[0],lightPosition[1],lightPosition[2]);
+
+    glutSolidSphere(0.5,30,30);
+    glPopMatrix();
+
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,shadowtexid);
+
+    if(programobject[SHADOW]!=0){
+        glUseProgramObjectARB(programobject[SHADOW]);
+        glUniformMatrix4fvARB(glGetUniformLocationARB(programobject[SHADOW],"eyematrix"),1,GL_FALSE,shadowmatrix);
+        glUniform1iARB(glGetUniformLocationARB(programobject[SHADOW],"shadowmap"),0);
+    }
+
+
+    drawShadow(true);
+    glUseProgramObjectARB(0);
+
+    err = glGetError();
+    if(err!=GL_NO_ERROR){
+        std::cerr << "Erreur GL :" << std::endl;
+        std::cerr << gluErrorString(err) << std::endl;
+    }
+
+    glPopMatrix();
+
+    glutSwapBuffers();*/
+}
 
 void mat_inverse (float *in, float *out)
 {
@@ -57,43 +203,36 @@ void mat_inverse (float *in, float *out)
   out[15] = 1.0f;
 }
 
+
 static void displayGL(void)
 {
 
-  if(game.getSceneList()[game.getCurrentScene()]->getTypeShader() == SHADOW)
-  {
-    game.displayShadow();
-  }
+#ifdef __MAIN_SCENE__  // MAIN SCENE - FROM XML - + NORMAL SPEC ILLUMINATION
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glMatrixMode(GL_MODELVIEW);
+  glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
   gluLookAt(position[0],position[1],position[2],position[0]+direction[0],position[1]+direction[1],position[2]+direction[2],up[0],up[1],up[2]);
-  
+
   glPushMatrix();
 
   //glRotatef(xrotation,1.0f,0.0f,0.0f);
   //glRotatef(yrotation,0.0f,1.0f,0.0f);
   //glTranslatef(-position[0],-position[1],-position[2]);
-    
+
   glPushMatrix();
 // glRotatef(angle,0.0,0.0,1.0);
    glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
 
 //   std::cout << "lightPos" <<  game.getLightPosition()[0] << ", " << game.getLightPosition()[1] << ", " << game.getLightPosition()[2] << std::endl;
-    
-  glPopMatrix();
-  
 
+  glPopMatrix();
 
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,white);
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,white);
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,white);
   glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
-
 
   // See where the light is
   glPushMatrix();
@@ -102,10 +241,6 @@ static void displayGL(void)
 //     std::cout << "lightPos :" << game.getLightPosition()[0] << " / " << game.getLightPosition()[1] << " / " << game.getLightPosition()[2] << " /"  << game.getLightPosition()[3]<< std::endl;
   glPopMatrix();
 
-
-#ifdef __MAIN_SCENE__  // MAIN SCENE - FROM XML - + NORMAL SPEC ILLUMINATION
-
-// Game & game = Game::Instance();
 vector3df cam = vector3df(position[0], position[1], position[2]);
 game.setCamera() = cam;
 game.checkCurrentScene();
@@ -136,7 +271,7 @@ glShadeModel(GL_SMOOTH);
     drawSphere(1.2,30,30);
     glBindTexture(GL_TEXTURE_2D,0);
     glDisable(GL_TEXTURE_2D);
-  
+
   glPopMatrix();
 #endif
   
@@ -146,6 +281,12 @@ game.display();
 #ifndef __NO_SHADER__  
   glUseProgramObjectARB(0);
 #endif
+
+checkGLError(332);
+
+glPopMatrix();
+
+glutSwapBuffers();
 
 #endif  // --- END MAIN SCENE
 
@@ -249,81 +390,10 @@ game.display();
 
 
 #ifdef __SHADOW_TEST__
-  // Premiere passe en FBO
-  if(shadowbufferid!=0)
-  {
-    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDrawBuffer(GL_NONE);
-    glReadBuffer(GL_NONE);
-    checkFramebufferStatus();
-    checkGLError(417);
-
-    glPushMatrix();
-    glLoadIdentity();
-
-    gluLookAt(lightPosition[0], lightPosition[1], lightPosition[2],
-              0.0f, 0.0f, 0.0f,
-              0.0f, 1.0f, 0.0f);
-    glRotatef(-angle,0.0,1.0,0.0);
-    glGetFloatv(GL_MODELVIEW_MATRIX, lightmodelviewmatrix);
-
-    multMatrix4x4(lightprojectionmatrix,lightmodelviewmatrix,shadowmatrix);
-
-    checkGLError(434);
-    multMatrix4x4(biasmatrix,shadowmatrix,shadowmatrix);
-
-    glEnable(GL_POLYGON_OFFSET_FILL);
-    glPolygonOffset(4.0,4.0);
-    draw(false);
-
-    glDisable(GL_POLYGON_OFFSET_FILL);
-
-    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-
-    glPopMatrix();
-  }
-
-  glPushMatrix();
-
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  glRotatef(xrotation,1.0f,0.0f,0.0f);
-  glRotatef(yrotation,0.0f,1.0f,0.0f);
-  glTranslatef(-position[0],-position[1],-position[2]);
-
-  glPushMatrix();
-  glRotatef(angle,0.0,1.0,0.0);
-  glLightfv(GL_LIGHT0, GL_POSITION,lightPosition);
-  glPopMatrix();
-
-  glPushMatrix();
-  glRotatef(angle,0.0,1.0,0.0);
-  glTranslatef(lightPosition[0],lightPosition[1],lightPosition[2]);
-
-  glutSolidSphere(0.5,30,30);
-  glPopMatrix();
-
-  glActiveTexture(GL_TEXTURE0);
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D,shadowtexid);
-
-  if(programobject!=0){
-      glUseProgramObjectARB(programobject[SHADOW]);
-      glUniformMatrix4fvARB(glGetUniformLocationARB(programobject[SHADOW],"eyematrix"),1,GL_FALSE,shadowmatrix);
-      glUniform1iARB(glGetUniformLocationARB(programobject[SHADOW],"shadowmap"),0);
-  }
-
-  draw(true);
-  glUseProgramObjectARB(0);
+ shadowTest();
 
 #endif
 
-  checkGLError(332);
-
-  glPopMatrix();
-
-  glutSwapBuffers();
 
 }
 
@@ -667,7 +737,9 @@ static void initGL(int argc,
 
   glClearColor(0.8f,0.8f,0.8f,1.0f);
 
-
+  Game & game = Game::Instance();
+  game.setWindowSize(windowwidth, windowheight);
+  game.initShadowGL();
 
 #ifndef __NO_SHADER__
   // load all shader programs  
@@ -730,11 +802,10 @@ static void initGL(int argc,
 
 #endif // --- END TEST ALPHA
 
-  //initShadowGL();
-  game.setBiasmatrix(biasmatrix);
+/*  game.setBiasmatrix(biasmatrix);
   game.setShadowbufferid(shadowbufferid);
   game.setShadowtexid(shadowtexid);
-
+*/
   // camera
 	nbPoints = 32;
 	f=0;
@@ -766,9 +837,9 @@ static void initGL(int argc,
   glPixelStorei(GL_UNPACK_ALIGNMENT,1);
   glPixelStorei(GL_PACK_ALIGNMENT,1);
 
-//  Game & game = Game::Instance();
   game.setProgramObject(programobject);
   game.initGL();
+
 #endif
 
 
@@ -797,65 +868,6 @@ static void initGL(int argc,
   
 #endif
   
-
-}
-
-
-void initShadowGL()
-{
-
-  // shadow mapping
-  glDisable(GL_LIGHTING);
-  glDisable(GL_LIGHT0);
-
-  glEnable(GL_DEPTH_TEST);
-  glShadeModel(GL_SMOOTH);
-  glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-
-  glGenTextures (1, (GLuint *)&shadowtexid);
-  glBindTexture (GL_TEXTURE_2D, shadowtexid);
-  glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,
-               windowwidth,windowheight,0,
-               GL_DEPTH_COMPONENT,
-               GL_UNSIGNED_BYTE,0);
-  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-  // Fonctions très imortantes pour faire la comparaison de profondeur
-  // avec la fonction glsl shadow2D
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-
-  glGenFramebuffersEXT (1, (GLuint *)&shadowbufferid);
-  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
-
-  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D,shadowtexid, 0);
-
-  glDrawBuffer(GL_NONE);
-  glReadBuffer(GL_NONE);
-  glDepthMask( GL_TRUE );
-
-  if(!game.checkFramebufferStatus())
-   return;
-
-  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-  glDrawBuffer(GL_BACK);
-  glReadBuffer(GL_FRONT);
-
-  checkGLError(755);
-
-  glLightfv(GL_LIGHT0, GL_SPECULAR,white);
-  glLightfv(GL_LIGHT0, GL_AMBIENT,white);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE,white);
-
-  glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-  glPixelStorei(GL_PACK_ALIGNMENT,1);
-
-  glBindTexture (GL_TEXTURE_2D, 0);
-  checkGLError(765);
 
 }
 

@@ -5,6 +5,69 @@
 #include "common/include/XMLParser.hpp"
 #include "utils.hpp"
 
+bool Game::checkFramebufferStatus(void)
+{
+  GLenum status;
+  status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+  switch(status) {
+
+  case GL_FRAMEBUFFER_COMPLETE_EXT:
+    return true;
+    break;
+
+  case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT" << std::endl;
+    return false;
+    break;
+
+  case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_UNSUPPORTED_EXT" << std::endl;
+    return false;
+    break;
+
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT" << std::endl;
+    return false;
+    break;
+
+  case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT" << std::endl;
+    return false;
+    break;
+
+  case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT" << std::endl;
+    return false;
+    break;
+
+  case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT" << std::endl;
+    return false;
+    break;
+
+  case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT" << std::endl;
+    return false;
+    break;
+
+  default:
+    std::cerr << "FrameBuffer Status Error : unknown error" << std::endl;
+    return false;
+
+  }
+
+}
+
+void Game::multMatrix4x4(float* m1, float* m2, float* res)
+{
+    glPushMatrix();
+    glLoadIdentity();
+    glMultMatrixf(m1);
+    glMultMatrixf(m2);
+    glGetFloatv(GL_MODELVIEW_MATRIX, res);
+    glPopMatrix();
+}
+
 void Game::mat_inverse (float *in, float *out)
 {
     float det, oneOverDet;
@@ -74,7 +137,6 @@ void Game::initGL()
 
 }
 
-
 void Game::display()
 {
 	//IF 1
@@ -91,7 +153,7 @@ void Game::display()
 				//PUSH 1
 				glPushMatrix();
           glEnable(GL_TEXTURE_CUBE_MAP);
-          std::cout << "church->getIdTex():" << church->getIdTex() << std::endl;
+//          std::cout << "church->getIdTex():" << church->getIdTex() << std::endl;
 					glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
           glEnable(GL_TEXTURE_GEN_S);
           glEnable(GL_TEXTURE_GEN_T);
@@ -115,7 +177,11 @@ void Game::display()
 
 			}
       else if (sceneList[currentScene]->getTypeShader() == SHADOW)
-      {}
+      {
+          //shadowTest();
+          checkGLError(182);
+          return;
+      }
 			//END IF 3
 			//ELSE IF 1
 
@@ -193,19 +259,6 @@ void Game::display()
 
 			case SHADOW:
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,shadowtexid);
-        glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"eyematrix"),1,GL_FALSE,shadowmatrix);
-        glUniform1iARB(glGetUniformLocationARB(programObject[SHADOW],"shadowmap"),0);
-
-				checkGLError(239);
-
-        drawShadow(false);
-				checkGLError(242);
-
-        glBindTexture(GL_TEXTURE_2D,0);
-        glUseProgramObjectARB(0);
-
 				break;
 
 			default:
@@ -213,12 +266,7 @@ void Game::display()
 		}
 
 		// display the scene
-
-		checkGLError(251);
-    if(sceneList[currentScene]->getTypeShader() != SHADOW)
-    {
       sceneList[currentScene]->display();
-    }
 
 	}
 	//END IF 1
@@ -343,76 +391,127 @@ void Game::lightBack()
   }
 }
 
-bool Game::checkFramebufferStatus(void)
+
+void Game::initShadowGL()
 {
-  GLenum status;
-  status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-  switch(status) {
+  std::cout << "init shadow GL" << std::endl;
+  // shadow mapping
+  glDisable(GL_LIGHTING);
+  glDisable(GL_LIGHT0);
 
-  case GL_FRAMEBUFFER_COMPLETE_EXT:
-    return true;
-    break;
+  glEnable(GL_DEPTH_TEST);
+  glShadeModel(GL_SMOOTH);
+  glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
-  case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT" << std::endl;
-    return false;
-    break;
+  glGenTextures (1, (GLuint *)&shadowtexid);
+  glBindTexture (GL_TEXTURE_2D, shadowtexid);
+  glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,
+               windowwidth,windowheight,0,
+               GL_DEPTH_COMPONENT,
+               GL_UNSIGNED_BYTE,0);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-  case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_UNSUPPORTED_EXT" << std::endl;
-    return false;
-    break;
+  // Fonctions très imortantes pour faire la comparaison de profondeur
+  // avec la fonction glsl shadow2D
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 
-    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT" << std::endl;
-    return false;
-    break;
+  glGenFramebuffersEXT (1, (GLuint *)&shadowbufferid);
+  glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
 
-  case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT" << std::endl;
-    return false;
-    break;
+  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D,shadowtexid, 0);
 
-  case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT" << std::endl;
-    return false;
-    break;
+  glDrawBuffer(GL_NONE);
+  glReadBuffer(GL_NONE);
+  glDepthMask( GL_TRUE );
 
-  case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT" << std::endl;
-    return false;
-    break;
+  if(!checkFramebufferStatus())
+   return;
 
-  case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-    std::cerr << "FrameBuffer Status Error : GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT" << std::endl;
-    return false;
-    break;
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-  default:
-    std::cerr << "FrameBuffer Status Error : unknown error" << std::endl;
-    return false;
+  glDrawBuffer(GL_BACK);
+  glReadBuffer(GL_FRONT);
 
-  }
+  checkGLError(755);
 
+  GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
+  glLightfv(GL_LIGHT0, GL_SPECULAR,white);
+  glLightfv(GL_LIGHT0, GL_AMBIENT,white);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE,white);
+
+  glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+  glPixelStorei(GL_PACK_ALIGNMENT,1);
+
+  glBindTexture (GL_TEXTURE_2D, 0);
+  checkGLError(765);
+
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
 }
 
-void Game::multMatrix4x4(float* m1, float* m2, float* res)
+void Game::displaySky()
 {
-    glPushMatrix();
-    glLoadIdentity();
-    glMultMatrixf(m1);
-    glMultMatrixf(m2);
-    glGetFloatv(GL_MODELVIEW_MATRIX, res);
-    glPopMatrix();
+
+  glPushMatrix();
+
+    glEnable(GL_TEXTURE_CUBE_MAP);
+//    std::cout << "cubeMap->getIdTex():" << sky->getIdTex() << std::endl;
+
+// TODO : commenté ---> afficher les arbres
+  switch(sky->getIdTex())
+  {
+    case 0:
+      glActiveTexture(GL_TEXTURE0);
+      break;
+
+    case 1:
+      glActiveTexture(GL_TEXTURE1);
+      break;
+
+    case 2:
+      glActiveTexture(GL_TEXTURE2);
+      break;
+
+    case 3:
+      glActiveTexture(GL_TEXTURE3);
+      break;
+
+    case 4:
+      glActiveTexture(GL_TEXTURE4);
+      break;
+
+    case 5:
+      glActiveTexture(GL_TEXTURE5);
+      break;
+  }
+
+  glBindTexture (GL_TEXTURE_CUBE_MAP, sky->getIdTex());
+
+#ifndef __NO_SHADER__
+    glUseProgramObjectARB(programObject[CUBEMAP]);
+    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), sky->getIdTex());
+
+#endif
+    sky->display();
+
+#ifndef __NO_SHADER__
+   glUseProgramObjectARB(0);
+#endif
+    glBindTexture(GL_TEXTURE_CUBE_MAP,0);
+    glDisable(GL_TEXTURE_CUBE_MAP);
+
+  glPopMatrix();
 }
 
 void Game::drawShadow(bool shaders)
 {
 
-
   GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
   GLfloat gray[]= { 0.5f, 0.5f, 0.5f, 1.0f };
-  //GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
   GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
   GLfloat softred[]= { 0.2f, 0.0f, 0.0f, 1.0f };
   GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
@@ -456,7 +555,7 @@ void Game::drawShadow(bool shaders)
   }
 
 
-//glPushMatrix();
+  glPushMatrix();
   glTranslatef(0.0,-1.0,0.0);
 
     glPushMatrix();
@@ -470,7 +569,7 @@ void Game::drawShadow(bool shaders)
     glEnd();
     glPopMatrix();
 
-//  glPopMatrix();
+  glPopMatrix();
   /*
   glPushMatrix();
     glScalef(10.0, 10.0, 10.0);
@@ -479,66 +578,81 @@ void Game::drawShadow(bool shaders)
 */
 }
 
-void Game::displayShadow()
+void Game::shadowTest()
 {
-  if(shadowbufferid!=0)
-  {
-    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDrawBuffer(GL_NONE);
-    glReadBuffer(GL_NONE);
-    checkFramebufferStatus();
+// Premiere passe en FBO
+    if(shadowbufferid!=0){
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        checkFramebufferStatus();
 
-    //PUSH 2
-    glPushMatrix();
-      glLoadIdentity();
+        glPushMatrix();
+        glLoadIdentity();
 
-      gluLookAt(getLightPosition()[0], getLightPosition()[1], getLightPosition()[2],
-            0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f);
-//      glRotatef(-angle,0.0,1.0,0.0);
-      glGetFloatv(GL_MODELVIEW_MATRIX, lightmodelviewmatrix);
 
-      multMatrix4x4(lightprojectionmatrix,lightmodelviewmatrix,shadowmatrix);
-      multMatrix4x4(biasmatrix,shadowmatrix,shadowmatrix);
+        gluLookAt(getLightPosition()[0], getLightPosition()[1], getLightPosition()[2],
+                  0.0f, 0.0f, 0.0f,
+                  0.0f, 1.0f, 0.0f);
+//        glRotatef(-angle,0.0,1.0,0.0);
+        glGetFloatv(GL_MODELVIEW_MATRIX, lightmodelviewmatrix);
 
-      checkGLError(129);
-      glEnable(GL_POLYGON_OFFSET_FILL);
-      glPolygonOffset(4.0,4.0);
-      drawShadow(false);
+        multMatrix4x4(lightprojectionmatrix,lightmodelviewmatrix,shadowmatrix);
+        multMatrix4x4(biasmatrix,shadowmatrix,shadowmatrix);
 
-      glDisable(GL_POLYGON_OFFSET_FILL);
-      glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-    //POP 2
-    glPopMatrix();
-    checkGLError(141);
-  }
-}
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glPolygonOffset(4.0,4.0);
+        drawShadow(false);
+        glDisable(GL_POLYGON_OFFSET_FILL);
 
-void Game::displaySky()
-{
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
 
-  glPushMatrix();
+        glPopMatrix();
 
-    glEnable(GL_TEXTURE_CUBE_MAP);
-    std::cout << "cubeMap->getIdTex():" << sky->getIdTex() << std::endl;
+    }
 
-// TODO : commenté ---> afficher les arbres
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture (GL_TEXTURE_CUBE_MAP, sky->getIdTex());
+//    glPushMatrix();
 
-#ifndef __NO_SHADER__
-    glUseProgramObjectARB(programObject[CUBEMAP]);
-    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), sky->getIdTex());
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-#endif
-    sky->display();
+//    glRotatef(xrotation,1.0f,0.0f,0.0f);
+//    glRotatef(yrotation,0.0f,1.0f,0.0f);
+//    glTranslatef(-position[0],-position[1],-position[2]);
 
-#ifndef __NO_SHADER__
-   glUseProgramObjectARB(0);
-#endif
-    glBindTexture(GL_TEXTURE_CUBE_MAP,0);
-    glDisable(GL_TEXTURE_CUBE_MAP);
+//    glPushMatrix();
+//    glRotatef(angle,0.0,1.0,0.0);
+//    glLightfv(GL_LIGHT0, GL_POSITION,getLightPosition());
+//    glPopMatrix();
 
-  glPopMatrix();
+//    glPushMatrix();
+//    glRotatef(angle,0.0,1.0,0.0);
+//    glTranslatef(lightPosition[0],lightPosition[1],lightPosition[2]);
+
+//    glutSolidSphere(0.5,30,30);
+//    glPopMatrix();
+
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,shadowtexid);
+
+    if(programObject[SHADOW]!=0){
+        glUseProgramObjectARB(programObject[SHADOW]);
+        glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"eyematrix"),1,GL_FALSE,shadowmatrix);
+        glUniform1iARB(glGetUniformLocationARB(programObject[SHADOW],"shadowmap"),0);
+    }
+
+
+    drawShadow(true);
+    glUseProgramObjectARB(0);
+
+    GLenum err = glGetError();
+    if(err!=GL_NO_ERROR){
+        std::cerr << "Erreur GL :" << std::endl;
+        std::cerr << gluErrorString(err) << std::endl;
+    }
+
+//    glPopMatrix();
+
+//    glutSwapBuffers();
 }

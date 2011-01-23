@@ -54,11 +54,12 @@ public:
   void setContentHouse();
   
   GLfloat* getLightPosition();
+  void displaySky(void);
+  void initShadowGL();
   bool checkFramebufferStatus(void);
   void multMatrix4x4(float* m1, float* m2, float* res);
   void drawShadow(bool shaders = false);
-  void displayShadow(void);
-  void displaySky(void);
+  void shadowTest(void);
 
   void lightUp();
   void lightDown();

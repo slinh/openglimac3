@@ -39,18 +39,18 @@ class Bbox
 		bool intersect(const vector3df point)const;
 		void updateCenter();
 		void addPoint(const float & posX, const float & posY, const float & posZ);
-		void display()const;
-
+		void displayWall()const;
+		void displayUpDown()const;
 
 		inline const float & getX()const { return x; };
 		inline const float & getY()const { return y; };
 	
-    inline const float & getWidth()const { return width; };
-    inline const float & getHeight()const { return height; };
+		inline const float & getWidth()const { return width; };
+		inline const float & getHeight()const { return height; };
     
-    static void initTextures();
-    static void bindTextures();
-    static void unbindTextures();
+		static void initTextures();
+		static void bindTextures();
+		static void unbindTextures();
 		
 };
 

@@ -5,6 +5,9 @@
 #include "common/include/XMLParser.hpp"
 #include "utils.hpp"
 
+//#define __NO_SHADER__
+
+
 bool Game::checkFramebufferStatus(void)
 {
   GLenum status;
@@ -206,19 +209,25 @@ void Game::display()
 			//ELSE 1
 			else{
 				
+				#ifndef __NO_SHADER__
 				glUseProgramObjectARB(programObject[PARALLAX]);
 				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "wallTex"), 0);
 				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "heightmapTex"), 1);
 				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
+				#endif
 				Bbox::bindTextures();
 				
 				//PUSH 6
 				glPushMatrix();
-					sceneList[currentScene]->getContentHouse().getBbox().display();
+					sceneList[currentScene]->getContentHouse().getBbox().displayWall();
 				//POP 6
 				glPopMatrix();
 				Bbox::unbindTextures();
+				
+				#ifndef __NO_SHADER__
 				glUseProgramObjectARB(0);
+				sceneList[currentScene]->getContentHouse().getBbox().displayUpDown();
+				#endif
 			}
 			//END ELSE
 		}
@@ -229,7 +238,9 @@ void Game::display()
 		//END IF 2
 		
 		// active the scene shader
+		#ifndef __NO_SHADER__
 		glUseProgramObjectARB(programObject[sceneList[currentScene]->getTypeShader()]);
+		#endif
 		
 		float position[3];
 		
@@ -240,11 +251,12 @@ void Game::display()
 		switch(sceneList[currentScene]->getTypeShader())
 		{
 			case NORMALSPEC:	
-      
+				#ifndef __NO_SHADER__
 				glUniform1i(glGetUniformLocationARB(programObject[NORMALSPEC], "diffuseTexture"), 0);
 				glUniform1i(glGetUniformLocationARB(programObject[NORMALSPEC], "normalMap"), 1);
 				glUniform1i(glGetUniformLocationARB(programObject[NORMALSPEC], "specularMap"), 2);
 				glUniform1f(glGetUniformLocationARB(programObject[NORMALSPEC], "shininess"), .2);
+				#endif
 				break;
 			
 			case PARALLAX:
@@ -257,21 +269,28 @@ void Game::display()
 				glLoadMatrixf(invmat);
 				glMatrixMode(GL_MODELVIEW);
 
+				#ifndef __NO_SHADER__
 				glUniformMatrix4fv(glGetUniformLocationARB(programObject[ENV], "matInv"), 1, false, invmat);
 				glUniform1i(glGetUniformLocationARB(programObject[ENV], "myTexCube"), 0);
 				glUniform3fv(glGetUniformLocationARB(programObject[ENV], "posCamera"), 1, position);
+				#endif
+				
 				break;
 				
 			case CUBEMAP:
 				break;
 				
 			case TOON:
+				#ifndef __NO_SHADER__
 				glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
+				#endif
 				break;
 
 			case ALPHA:
+        #ifndef __NO_SHADER__
         glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "colorMap"), 0);
 				glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "alphaMap"), 1);
+				#endif
 				break;
 
 			case SHADOW:

@@ -106,6 +106,73 @@ void createCube(vector3df color)
 
 }
 
+void createWall(void)
+{
+	glPushMatrix();
+	glTranslatef(0.0, 0.0, 0.5);	
+    glRotatef(180.0,1.0,0.0,0.0);
+    createCarre();
+	glPopMatrix();
+	
+	/*
+	//Carre vert du bas
+	glPushMatrix();
+	glTranslatef(0.0, -0.5, 0.0);
+	glRotatef(-90.0,1.0,0.0,0.0);
+	createCarre();
+	glPopMatrix();
+	*/
+	/*
+	//Carre bleu-violet du haut
+	glPushMatrix();
+	glTranslatef(0.0, 0.5, 0.0);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
+	createCarre();
+	glPopMatrix();*/
+	
+	//Carre gris noir de droite
+	glPushMatrix();
+	glTranslatef(0.5, 0.0, 0.0);
+	glRotatef(-90,0.0,1.0,0.0);
+	createCarre();
+	glPopMatrix();
+	
+	//Carré orange de gauche
+	glPushMatrix();
+	//Rotation de 90 degres
+	glTranslatef(-0.5, 0.0, 0.0);
+	glRotatef(90,0.0,1.0,0.0);
+	createCarre();
+	glPopMatrix();
+	
+	//Carre violet du fond
+	glPushMatrix();	
+	glTranslatef(0.0, 0.0, -0.5);
+	glRotatef(0.0,0.0,1.0,0.0);
+	createCarre();
+	glPopMatrix();
+}
+
+void createRoof(void)
+{
+	//Carre bleu-violet du haut
+	glPushMatrix();
+	glTranslatef(0.0, 0.5, 0.0);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
+	createCarre();
+	glPopMatrix();
+}
+
+void createGround(void)
+{
+	//Carre vert du bas
+	glPushMatrix();
+	glTranslatef(0.0, -0.5, 0.0);
+	glRotatef(-90.0,1.0,0.0,0.0);
+	createCarre();
+	glPopMatrix();
+}
+
 void drawSphere(const float& radius,
     const unsigned int& stepx,
     const unsigned int& stepy)

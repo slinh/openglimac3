@@ -129,16 +129,39 @@ void Bbox::addPoint(const float & posX, const float & posY, const float & posZ)
 }
 
 
-void Bbox::display()const
+
+void Bbox::displayWall()const
 {
-	vector3df color(0.19,0.14,0.15);
+	//vector3df color(0.19,0.14,0.15);
 	
 	glPushMatrix();
 		// on deplace le rectangle à la bonne position	
 		glTranslatef(x, 2, y);
 		
 		glScalef(getWidth()*1.5, 4., getHeight()*1.5);
-		createCube(color);
+		createWall();
+	glPopMatrix();
+	
+}
+
+void Bbox::displayUpDown()const
+{
+	//vector3df color(0.19,0.14,0.15);
+	
+	glPushMatrix();
+	// on deplace le rectangle à la bonne position	
+	glTranslatef(x, 2, y);
+	
+	glScalef(getWidth()*1.5, 4., getHeight()*1.5);
+	
+	textures[3]->bind();
+		createRoof();
+	textures[3]->unbind();
+	
+	textures[4]->bind();
+	createGround();
+	textures[4]->unbind();
+	
 	glPopMatrix();
 	
 }
@@ -158,14 +181,24 @@ void Bbox::initTextures()
     
     Texture* textureThree = new Texture(2, "textures/normalmap.ppm");
     textureThree->create(1);
-    
-    textures.push_back(textureThree);
+	
+		textures.push_back(textureThree);
+	
+		Texture* roof = new Texture(0, "models/wall/gate_wood.ppm");
+    roof->create(1);
+	
+		textures.push_back(roof);
+	
+		Texture* ground = new Texture(0, "models/wall/gate_wood.ppm");
+    ground->create(1);
+	
+    textures.push_back(ground);
 }
 
 
 void Bbox::bindTextures()
 {
-  for(unsigned int i=0; i<textures.size(); ++i)
+  for(unsigned int i=0; i<3; ++i)
   {
     textures[i]->bind();
   }  
@@ -173,7 +206,7 @@ void Bbox::bindTextures()
 
 void Bbox::unbindTextures()
 {
-  for(unsigned int i=0; i<textures.size(); ++i)
+  for(unsigned int i=0; i<3; ++i)
   {
     textures[i]->unbind();
   }  

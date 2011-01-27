@@ -8,4 +8,9 @@ void drawSphere(const float& radius,
 void createCarre(void);
 void createCarreTest(void);
 void createCube(vector3df color = vector3df(1.0, 1.0, 1.0));
+
+void createWall(void);
+void createRoof(void);
+void createGround(void);
+
 #endif

@@ -54,6 +54,11 @@ class Scene
     inline GLfloat* getLightPosition(){ return lightPosition; };
     void setLightPosition(float x, float y, float z, float w );
 
+    inline GLfloat* getTinyLightPosition(){ return tinyLightPosition; };
+    void setTinyLightPosition(float size, float x, float y, float z);
+
+		void updateLight(void);
+
     void lightUp();
     void lightDown();
     void lightRight();
@@ -71,6 +76,13 @@ class Scene
     HeightField* 		    heightfield;   //  map of the field
 	  Obj*			          contentHouse;  // house    
     GLfloat*				    lightPosition;
+    
+		// Tiny Light
+    GLfloat*						tinyLightPosition;
+    float								tinyLightSize;
+    float								tinyLightRadian;
+    
+    
 	
 //    SphereMap * sphereMap;      //  spheremap of the field    
 	

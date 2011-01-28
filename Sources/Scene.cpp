@@ -27,6 +27,8 @@ Scene::Scene(TypeScene type):typeS(type), typeShader(PARALLAX), objList(NULL)
   lightPosition[1] = 5.;
   lightPosition[2] = 2.;
   lightPosition[3] = 1.;
+  
+  tinyLightPosition = new GLfloat[3];
 }
 
 Scene::~Scene(){
@@ -81,6 +83,20 @@ void Scene::setLightPosition(float x, float y, float z, float w )
   lightPosition[1] = (GLfloat)y;
   lightPosition[2] = (GLfloat)z;
   lightPosition[3] = (GLfloat)w;
+}
+
+void Scene::setTinyLightPosition(float size, float x, float y, float z)
+{
+	tinyLightSize = size;
+	
+	tinyLightPosition[0] = x;
+	tinyLightPosition[1] = y;
+	tinyLightPosition[2] = z;
+}
+
+void Scene::updateLight()
+{
+	
 }
 
 void Scene::lightUp()

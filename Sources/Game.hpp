@@ -48,7 +48,7 @@ public:
   inline void setShadowbufferid(GLuint shadowbufferid) { this->shadowbufferid = shadowbufferid; };
 
   inline void setWindowSize(int windowwidth, int windowheight) { this->windowwidth = windowwidth;
-    this->windowheight = windowheight;};
+  this->windowheight = windowheight;};
 
   static void mat_inverse (float *in, float *out);
   void setContentHouse();

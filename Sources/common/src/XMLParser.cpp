@@ -72,6 +72,20 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
       scene->setLightPosition(xl, yl, zl, wl);
     }
     
+    // tinylight
+    TiXmlElement* tinylightTag = hScene.FirstChild( "tinylight" ).Element();
+    float sizetl, xtl, ytl, ztl;
+    if(tinylightTag != NULL)
+    {
+			tinylightTag->QueryFloatAttribute("size", &sizetl);
+      tinylightTag->QueryFloatAttribute("x", &xtl);
+      tinylightTag->QueryFloatAttribute("y", &ytl);
+      tinylightTag->QueryFloatAttribute("z", &ztl);
+      
+      scene->setTinyLightPosition(sizetl, xtl, ytl, ztl);
+    }
+    
+    
     TiXmlElement* objTag = hScene.FirstChild( "obj" ).Element();
 
     while(NULL != objTag)

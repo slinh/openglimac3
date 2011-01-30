@@ -147,11 +147,6 @@ void Game::initGL()
   {
 		sceneList[i]->initGL();
 
-/*    if (sceneList[i]->getTypeShader() == SHADOW)
-    {
-      initShadowGL();
-    }
-*/
 	}
 	
 
@@ -551,6 +546,15 @@ void Game::displaySky()
 void Game::drawShadow(bool shaders)
 {
 
+  if(shaders)
+  {
+     glCullFace(GL_BACK);
+  }
+  else
+  {
+    glCullFace(GL_FRONT);
+  }
+
   GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
   GLfloat gray[]= { 0.5f, 0.5f, 0.5f, 1.0f };
   GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -560,31 +564,104 @@ void Game::drawShadow(bool shaders)
   GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
   GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
 
+
+
+
   glMaterialfv(GL_FRONT, GL_SPECULAR,white);
   glMaterialfv(GL_FRONT, GL_DIFFUSE,red);
   glMaterialfv(GL_FRONT, GL_AMBIENT,softred);
   glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
 
+  /*
+
+Obj* tmp;
+
+  for(unsigned int i=0; i<sceneList[currentScene]->getObjList().size(); ++i)
+  {
+    tmp = sceneList[currentScene]->getObjList()[i];
+
+    if(shaders)
+    {
+      glPushMatrix();
+      glLoadIdentity();
+      // todo translate
+
+
+      glTranslatef(tmp->getTranslate().X, tmp->getTranslate().Y, tmp->getTranslate().Z);
+      glScalef(tmp->getScale().X, tmp->getScale().Y, tmp->getScale().Z);
+    //  glRotatef(tmp->getAngleRotation(), tmp->getAxeRotate().X, tmp->getAxeRotate().Y, tmp->getAxeRotate().Z);
+
+      glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+      glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+      glPopMatrix();
+    }
+
+
+    glPushMatrix();
+        glScalef(tmp->getScale().X, tmp->getScale().Y, tmp->getScale().Z);
+       // glRotatef(tmp->getAngleRotation(), tmp->getAxeRotate().X, tmp->getAxeRotate().Y, tmp->getAxeRotate().Z);
+         tmp->RenderOBJModel();
+    glPopMatrix();
+
+    //objList[i]->setBbox().display();
+  }
+*/
+
+
+
+
   if(shaders)
   {
     glPushMatrix();
     glLoadIdentity();
-    glTranslatef(2.0,1.0,2.0);
+    glTranslatef(-1.,-0.33,2.0);
+    glRotatef(angle,1.0,0.0,0.0);
     glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
     glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
     glPopMatrix();
   }
 
 
-  //sceneList[currentScene]->display();
+//  sceneList[currentScene]->display();
+
 
   // test sphere
 
   glPushMatrix();
   glColor3f(1.0,0.0,0.0);
-  glTranslatef(2.0,1.0,2.0);
-  drawSphere(0.5,30,30);
+  glTranslatef(-1.0,-0.33,2.0);
+  glRotatef(angle,1.0,0.0,0.0);
+  // glutSolidSphere(0.5,30,30);
+  glutSolidCube(1.0);
   glPopMatrix();
+
+
+
+  glMaterialfv(GL_FRONT, GL_SPECULAR,white);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,red);
+  glMaterialfv(GL_FRONT, GL_AMBIENT,softred);
+  glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
+
+
+  if(shaders)
+  {
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslatef(-1.0,-0.33,-1.0);
+    glRotatef(angle,1.0,0.0,0.0);
+    glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+    glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+    glPopMatrix();
+  }
+
+  glPushMatrix();
+  glColor3f(1.0,0.0,0.0);
+  glTranslatef(-1.0,-0.33,-1.0);
+  glRotatef(angle,1.0,0.0,0.0);
+  // glutSolidCube(1.0);
+  glutSolidSphere(0.5,30,30);
+  glPopMatrix();
+
 
 
   glMaterialfv(GL_FRONT, GL_SPECULAR,gray);
@@ -602,7 +679,7 @@ void Game::drawShadow(bool shaders)
     glPopMatrix();
   }
 
-  glTranslatef(0.0,-1.0,0.0);
+  glTranslatef(0.0,-2.0,0.0);
   glPushMatrix();
   glBegin(GL_QUADS);
   glColor3f(1.0f,1.0f,1.0f);
@@ -614,7 +691,7 @@ void Game::drawShadow(bool shaders)
   glEnd();
   glPopMatrix();
 
-
+  glCullFace(GL_BACK);
 }
 
 
@@ -632,9 +709,14 @@ void Game::FBO()
     glPushMatrix();
     glLoadIdentity();
 
-    gluLookAt(getLightPosition()[0], getLightPosition()[1], getLightPosition()[2],
-      0.0f, 0.0f, 0.0f,
-      0.0f, 1.0f, 0.0f);
+    float up[] = {0.0f, 1.0f, 0.0f};
+    gluLookAt(getLightPosition()[0],getLightPosition()[1],getLightPosition()[2],
+              0.0,0.0,0.0,
+              up[0],up[1],up[2]);
+
+//    gluLookAt(getLightPosition()[0], getLightPosition()[1], getLightPosition()[2],
+//      0.0f, 0.0f, 0.0f,
+//      0.0f, 1.0f, 0.0f);
 //        glRotatef(-angle,0.0,1.0,0.0);
     glGetFloatv(GL_MODELVIEW_MATRIX, lightmodelviewmatrix);
 
@@ -642,7 +724,7 @@ void Game::FBO()
     multMatrix4x4(biasmatrix,shadowmatrix,shadowmatrix);
 
     glEnable(GL_POLYGON_OFFSET_FILL);
-    glPolygonOffset(4.0,4.0);
+      glPolygonOffset(4.0,4.0);
     drawShadow(false);
     glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -656,8 +738,9 @@ void Game::FBO()
 void Game::shadowTest()
 {
 
+  glActiveTexture(GL_TEXTURE0);
 //    std::cout << "shadowtexid " << shadowtexid << std::endl;
-    switch(shadowtexid)
+   /* switch(shadowtexid)
     {
       case 0:
         glActiveTexture(GL_TEXTURE0);
@@ -682,7 +765,16 @@ void Game::shadowTest()
       case 5:
         glActiveTexture(GL_TEXTURE5);
         break;
-    }
+      case 6
+       glActiveTexture(GL_TEXTURE6);
+      break;
+      case 7:
+       glActiveTexture(GL_TEXTURE7);
+      break;
+      case 8:
+       glActiveTexture(GL_TEXTURE8);
+      break;
+    }*/
 
     glBindTexture(GL_TEXTURE_2D,shadowtexid);
 
@@ -694,4 +786,8 @@ void Game::shadowTest()
 
 
     drawShadow(true);
+
+#ifndef __NO_SHADER__
+  glUseProgramObjectARB(0);
+#endif
 }

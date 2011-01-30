@@ -34,6 +34,8 @@ void main(void)
       gl_LightSource[0].quadraticAttenuation * Lnorm * Lnorm );
 
   vec4 myvertprojection = vertprojection /vertprojection.w;
+ // myvertprojection.z += 0.0005;
+
 
   float shadow = shadow2D(shadowmap,(myvertprojection.stp)).r;
 

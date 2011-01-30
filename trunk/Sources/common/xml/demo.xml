@@ -101,7 +101,7 @@
       <model>models/logs/fre005.obj</model>
       <scale x="0.001" y="0.001" z="0.001" />
       <rotation angle="270." x="1." y="0." z="0." />
-      <translate x="1" y="0.0" z="1.0" />
+      <translate x="2" y="0.0" z="1.0" />
       <texture id="0">models/logs/FRE00502.ppm</texture>
     </obj> 
      

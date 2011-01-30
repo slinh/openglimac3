@@ -27,6 +27,9 @@ public:
   inline const vector3df & getCamera()const{ return camera; }
   inline vector3df & setCamera(){ return camera; }
 
+  inline const vector3df & getDirection()const{ return direction; }
+  inline vector3df & setDirection(){ return direction; }
+
   inline const CubeMap * getChurch()const{ return church; }
   inline void setChurch(CubeMap * church){ this->church = church; }
 
@@ -74,6 +77,8 @@ protected:
   std::vector<Scene*> 	sceneList;
 
   vector3df 			camera;
+  vector3df 			direction;
+
   CubeMap*        church;
   CubeMap*        sky;
   int             currentScene;

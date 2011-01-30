@@ -66,9 +66,14 @@ static void displayGL(void)
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
+glPushMatrix();
   gluLookAt(position[0],position[1],position[2],position[0]+direction[0],position[1]+direction[1],position[2]+direction[2],up[0],up[1],up[2]);
 
-  glPushMatrix();
+//  gluLookAt(game.getLightPosition()[0],game.getLightPosition()[1]+1.0,game.getLightPosition()[2],
+//            0.0,0.0,0.0,
+//            up[0],up[1],up[2]);
+
+
 
   //glRotatef(xrotation,1.0f,0.0f,0.0f);
   //glRotatef(yrotation,0.0f,1.0f,0.0f);
@@ -81,6 +86,41 @@ static void displayGL(void)
 //   std::cout << "lightPos" <<  game.getLightPosition()[0] << ", " << game.getLightPosition()[1] << ", " << game.getLightPosition()[2] << std::endl;
 
   glPopMatrix();
+
+
+
+
+
+
+
+  glDisable(GL_TEXTURE_2D);
+glDisable(GL_LIGHTING);
+  glBegin(GL_LINES);
+  glColor3f(1.0f,0.0f,0.0f);
+  glVertex3f(0.0f, 0.0f, 0.0f);
+  glVertex3f(1.0f, 0.0f, 0.0f);
+  glEnd();
+
+
+  glBegin(GL_LINES);
+  glColor3f(0.0f,1.0f,0.0f);
+  glVertex3f(0.0f, 0.0f, 0.0f);
+  glVertex3f(0.0f, 0.0f, 1.0f);
+  glEnd();
+
+  glBegin(GL_LINES);
+  glColor3f(0.0f,0.0f,1.0f);
+  glVertex3f(0.0f, 0.0f, 0.0f);
+  glVertex3f(0.0f, 1.0f, 0.0f);
+  glEnd();
+
+  glEnable(GL_TEXTURE_2D);
+  glEnable(GL_LIGHTING);
+
+
+
+
+
 
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,white);
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,white);
@@ -95,7 +135,11 @@ static void displayGL(void)
   glPopMatrix();
 
   vector3df cam = vector3df(position[0], position[1], position[2]);
+  vector3df dir = vector3df(direction[0], direction[1], direction[2]);
+
   game.setCamera() = cam;
+  game.setDirection() = dir;
+
   game.checkCurrentScene();
 
   glEnable(GL_LIGHTING);
@@ -579,7 +623,6 @@ static void initGL(int argc,
 
   glClearColor(0.8f,0.8f,0.8f,1.0f);
 
-  game.initShadowGL();
 
 #ifndef __NO_SHADER__
   // load all shader programs  
@@ -589,6 +632,7 @@ static void initGL(int argc,
   }
 #endif
  
+  game.initShadowGL();
 
 
 #ifdef __CUBE_MAP__
@@ -651,7 +695,7 @@ static void initGL(int argc,
 	f=0;
 	vector3df pointTmp= vector3df(-2.,0.5,3.0);
 	vector3df point2= vector3df(10., 0.5, -1.0);
-	vector3df point3= vector3df(-1., 0.5, -3.);
+  vector3df point3= vector3df(-1., 0., 0.);
 	vector3df cam = vector3df(position[0], position[1], position[2]);
 	controlPoints.push_back(cam);
 	controlPoints.push_back(pointTmp);

@@ -75,7 +75,23 @@
       <translate x="0." y="-1.4" z="-2.5" />
       <texture id="0">models/wall/texture.ppm</texture>
     </obj>
-      
+    
+    <obj id="7">
+      <model>models/stones/stones.obj</model>
+      <scale x="0.005" y="0.005" z="0.005" />
+      <rotation angle="0." x="0." y="0." z="0" />
+      <translate x="-5." y="0." z="0." />
+      <texture id="0">models/stones/stones.ppm</texture>
+    </obj>
+    
+    <obj id="8">
+      <model>models/bridge/bridge.obj</model>
+      <scale x="0.025" y="0.025" z="0.025" />
+      <rotation angle="0." x="0." y="0." z="0" />
+      <translate x="-5." y="0." z="-1." />
+      <texture id="0">models/bridge/bridge.ppm</texture>
+    </obj>  
+    
   </scene>
     
   <scene id="1">
@@ -126,12 +142,21 @@
     </obj>
     
     <obj id="0">
+      <model>models/barrel/barrel.obj</model>
+      <scale x="0.01" y="0.01" z="0.01" />
+      <rotation angle="0." x="0." y="0." z="0." />
+      <translate x="-5." y="0.0" z="-2.8" />
+      <texture id="0">models/barrel/barrel.ppm</texture>
+    </obj>
+    
+    <obj id="0">
       <model>models/candle/candle.obj</model>
       <scale x="0.0006" y="0.0006" z="0.0006" />
       <rotation angle="270." x="1." y="0." z="0." />
       <translate x="-2.0" y=".72" z="-2.0" />
       <texture id="0">models/candle/texture.ppm</texture>
     </obj>
+    
 	</scene>
 	
 	<scene id="3">
@@ -172,8 +197,9 @@
       <translate x="-4" y="0.0" z="2.5" />
       <texture id="0">models/kitchen_table/TBL02201.ppm</texture>
       <texture id="1">textures/alpha_map.ppm</texture>
-
 		</obj>
+    
+   
   </scene>
     
 </demo>

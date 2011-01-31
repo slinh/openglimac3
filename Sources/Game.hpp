@@ -43,6 +43,7 @@ public:
   inline GLhandleARB* getProgramObject() { return programObject; };
 
   inline void setInvMat(float* invmat) { this->invmat = invmat; };
+
   inline GLfloat* setLightprojectionmatrix() { return lightprojectionmatrix; };
 
   inline void setShadowtexid(GLuint shadowtexid) { this->shadowtexid = shadowtexid; };
@@ -63,7 +64,8 @@ public:
   bool checkFramebufferStatus(void);
   void multMatrix4x4(float* m1, float* m2, float* res);
   void drawShadow(bool shaders = false);
-  void shadowTest(void);
+  void displayShadow(void);
+  void displayFBO(void);
 
   void lightUp();
   void lightDown();

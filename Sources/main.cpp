@@ -88,13 +88,8 @@ glPushMatrix();
   glPopMatrix();
 
 
-
-
-
-
-
   glDisable(GL_TEXTURE_2D);
-glDisable(GL_LIGHTING);
+  glDisable(GL_LIGHTING);
   glBegin(GL_LINES);
   glColor3f(1.0f,0.0f,0.0f);
   glVertex3f(0.0f, 0.0f, 0.0f);
@@ -116,10 +111,10 @@ glDisable(GL_LIGHTING);
 
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_LIGHTING);
-
-
-
-
+  glEnable(GL_LIGHT0);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glShadeModel(GL_SMOOTH);
 
 
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,white);
@@ -141,12 +136,6 @@ glDisable(GL_LIGHTING);
   game.setDirection() = dir;
 
   game.checkCurrentScene();
-
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glShadeModel(GL_SMOOTH);
 
 
 #ifdef __TEST_TEXTURE__  
@@ -686,10 +675,7 @@ static void initGL(int argc,
 
 #endif // --- END TEST ALPHA
 
-/*  game.setBiasmatrix(biasmatrix);
-  game.setShadowbufferid(shadowbufferid);
-  game.setShadowtexid(shadowtexid);
-*/
+
   // camera
 	nbPoints = 32;
 	f=0;

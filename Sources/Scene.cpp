@@ -63,8 +63,8 @@ void Scene::display()
 	// display all obj :
 	for(unsigned int i=0; i<objList.size(); ++i)
 	{	
-	
-		if( objList[i]->getType() == SETTING && typeS == MAIN)
+
+    if( objList[i]->getType() == SETTING && typeS == MAIN)
 		{
 			glUseProgramObjectARB(0);
 		}

@@ -1,0 +1,91 @@
+# Exported from Wings 3D 1.0
+newmtl Material01
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+
+newmtl Material2
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+
+newmtl Material3
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+
+newmtl Material4
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+
+newmtl Material5
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+
+newmtl Material6
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+
+newmtl Material7
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+
+newmtl Material8
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+
+newmtl Material9
+Ns 99.0
+d 1.0
+illum 2
+Kd 0.8 0.8 0.8
+Ka 0.8 0.8 0.8
+Ks 0.0 0.0 0.0
+Ke 0.0 0.0 0.0
+map_Kd FUR3.BMP
+

@@ -470,38 +470,43 @@ void Obj::initGL()
 
 void Obj::display()
 {
-  glCallList(displayListId);
-//  draw();
-}
-
-void Obj::draw()
-{
-
-  checkGLError(480);
+  checkGLError(473);
   glEnable(GL_TEXTURE_2D);
   for(unsigned int i=0; i<textures.size(); ++i)
   {
     textures[i]->bind();
   }
   glPushMatrix();
-  checkGLError(483);
-    
-  glTranslatef(translate.X, translate.Y, translate.Z);
-  glScalef(scale.X, scale.Y, scale.Z);
-  glRotatef(angleRotation, axeRotate.X, axeRotate.Y, axeRotate.Z);
 
-  checkGLError(489);
-    
-  RenderOBJModel();
+    checkGLError(481);
+
+    glTranslatef(translate.X, translate.Y, translate.Z);
+    glScalef(scale.X, scale.Y, scale.Z);
+    glRotatef(angleRotation, axeRotate.X, axeRotate.Y, axeRotate.Z);
+
+    glCallList(displayListId);
+
   glPopMatrix();
-  
+
 //  bbox->display();
-  
+
   for(unsigned int i=0; i<textures.size(); ++i)
   {
     textures[i]->unbind();
   }
-	glDisable(GL_TEXTURE_2D);
-	
-	
+  glDisable(GL_TEXTURE_2D);
+
+
+//  draw();
+}
+
+void Obj::displayList()
+{
+  glCallList(displayListId);
+}
+
+void Obj::draw()
+{
+    
+  RenderOBJModel();
 }

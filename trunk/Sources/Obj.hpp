@@ -144,6 +144,7 @@ public:
 
   void initGL();
   void display();
+  void displayList();
   void draw();
 
 };

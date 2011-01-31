@@ -3,7 +3,6 @@ uniform sampler2DShadow shadowmap;
 varying vec3 eye;
 varying vec3 lightvec;
 varying vec3 normal;
-
 varying vec4 vertprojection;
 
 void main(void)
@@ -41,13 +40,13 @@ void main(void)
 
   vec4 colorambient = gl_LightSource[0].ambient * gl_FrontMaterial.ambient;
 
-  if(myvertprojection.s > 1.0 || myvertprojection.t > 1.0)
+  /*if(myvertprojection.s > 1.0 || myvertprojection.t > 1.0)
          gl_FragColor = colorfrag;
-  else{
+  else{*/
     if(shadow != 1.0)
       gl_FragColor = colorambient;
     else
       gl_FragColor = colorfrag;
-  }
+  //}
 
 }

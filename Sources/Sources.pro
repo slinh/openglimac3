@@ -41,11 +41,10 @@ HEADERS += Bbox.hpp \
            vector3d.h \
            Game.hpp \
            utils.hpp \
-           noise.hpp \
            common/include/XMLParser.hpp \
            lib/tinyxml/tinystr.h \
            lib/tinyxml/tinyxml.h \
-           Draw.hpp
+           Draw.hpp \
 
 SOURCES += Bbox.cpp \
            CubeMap.cpp \
@@ -58,10 +57,9 @@ SOURCES += Bbox.cpp \
            Texture.cpp \
            Game.cpp \
            utils.cpp \
-           noise.cpp \
            common/src/XMLParser.cpp \
            lib/tinyxml/tinystr.cpp \
            lib/tinyxml/tinyxml.cpp \
            lib/tinyxml/tinyxmlerror.cpp \
            lib/tinyxml/tinyxmlparser.cpp \
-           Draw.cpp
+           Draw.cpp \

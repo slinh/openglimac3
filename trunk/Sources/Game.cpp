@@ -272,6 +272,10 @@ void Game::display()
 				glPushMatrix();
 				glLoadMatrixf(invmat);
 				glMatrixMode(GL_MODELVIEW);
+				
+				glEnable(GL_TEXTURE_CUBE_MAP);
+  			glActiveTexture(GL_TEXTURE0);
+ 	 			glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
 
 				#ifndef __NO_SHADER__
 				glUniformMatrix4fv(glGetUniformLocationARB(programObject[ENV], "matInv"), 1, false, invmat);
@@ -527,6 +531,8 @@ void Game::displaySky()
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+    //glActiveTexture(GL_TEXTURE1);
+    //glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
     glDisable(GL_TEXTURE_CUBE_MAP);
 
 #ifndef __NO_SHADER__

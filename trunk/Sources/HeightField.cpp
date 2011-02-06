@@ -1,16 +1,13 @@
+#include "Game.hpp"
 #include "HeightField.hpp"
+#include "TextureLoader.hpp"
 #include <stdio.h>
 #include <string>
 #include <vector>
 
 HeightField::HeightField(std::string hFileName, const int hWidth, const int hHeight) : height(hHeight), width(hWidth), filename(hFileName)
 {
-	Texture * tmp = new Texture(6, "textures/hmpRGB.ppm");
-	
-	textures.push_back(tmp);
-	
-	scale = vector3df(0.05, 0.03, 0.05);
-	
+	scale = vector3df(0.05, 0.03, 0.05);	
 }
 
 HeightField::~HeightField()
@@ -30,11 +27,11 @@ void HeightField::init(void){
 	fread(hHeightField, 1, width * height, fp);
 	fclose(fp);
 	
-	// load each texture
-	for( unsigned int i=0; i<textures.size(); ++i )
-	{
-		textures[i]->create();
-	}
+	Game & game = Game::Instance();
+	TextureLoader* tmpLoader = game.getLoader().getTextureLoader(24);
+			
+	Texture * tmp = new Texture(0, tmpLoader);
+	textures.push_back(tmp);
 	
 	// create displaylist
 	displayListId=glGenLists(1);
@@ -59,7 +56,6 @@ void HeightField::draw(void){
 	//	glActiveTexture(GL_TEXTURE0);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		textures[i]->bind();
-		std::cout<< "on bind cette texture : "<< textures[i]->getFile()<<std::endl;
 	}
 	
 	

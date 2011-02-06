@@ -108,7 +108,8 @@ Game::Game()
   /// scene principale
   const char * pFilename = "common/xml/demo.xml";
 
-  loadXML(pFilename, sceneList);
+	loader = new Loader();
+  loadXML(pFilename, sceneList, *loader);
 
   // set relation between other scene and content house
   setContentHouse();
@@ -136,17 +137,21 @@ Game::Game()
 Game::~Game()
 {
   sceneList.clear();
+  delete loader;
 }
 
 void Game::initGL()
 {
-  
-  Bbox::initTextures();
+	
+	// init texture in loader
+	loader->initTextures();
+	
+	// init obj in loader
+  loader->initObj();	
 	
 	for(unsigned int i=0; i<sceneList.size(); ++i)
   {
 		sceneList[i]->initGL();
-
 	}
 	
 
@@ -211,19 +216,20 @@ void Game::display()
 				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "heightmapTex"), 1);
 				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
 				#endif
-				Bbox::bindTextures();
+
+				sceneList[currentScene]->setContentHouse().setBbox().bindTextures();
 				
 				//PUSH 6
 				glPushMatrix();
-					sceneList[currentScene]->getContentHouse().getBbox().displayWall();
+					 sceneList[currentScene]->getContentHouse().getBbox().displayWall();
 				//POP 6
 				glPopMatrix();
-				Bbox::unbindTextures();
 				
 				#ifndef __NO_SHADER__
 				glUseProgramObjectARB(0);
-				sceneList[currentScene]->getContentHouse().getBbox().displayUpDown();
 				#endif
+				sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
+				sceneList[currentScene]->setContentHouse().setBbox().unbindTextures();
 			}
 			//END ELSE
 		}
@@ -499,12 +505,38 @@ void Game::displaySky()
 //    std::cout << "cubeMap->getIdTex():" << sky->getIdTex() << std::endl;
 
 // TODO : commenté ---> afficher les arbres
-//  glActiveTexture(GL_TEXTURE2);
+/*  switch(sky->getIdTex())
+  {
+    case 0:
+      glActiveTexture(GL_TEXTURE0);
+      break;
+
+    case 1:
+      glActiveTexture(GL_TEXTURE1);
+      break;
+
+    case 2:
+      glActiveTexture(GL_TEXTURE2);
+      break;
+
+    case 3:
+      glActiveTexture(GL_TEXTURE3);
+      break;
+
+    case 4:
+      glActiveTexture(GL_TEXTURE4);
+      break;
+
+    case 5:
+      glActiveTexture(GL_TEXTURE5);
+      break;
+  }*/
+// glActiveTexture(GL_TEXTURE2);
   glBindTexture (GL_TEXTURE_CUBE_MAP, sky->getIdTex());
 
 #ifndef __NO_SHADER__
     glUseProgramObjectARB(programObject[CUBEMAP]);
-    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), sky->getIdTex());
+    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), 2);
 
 #endif
     sky->display();
@@ -512,6 +544,7 @@ void Game::displaySky()
 #ifndef __NO_SHADER__
    glUseProgramObjectARB(0);
 #endif
+//	glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_CUBE_MAP,0);
     glDisable(GL_TEXTURE_CUBE_MAP);
 

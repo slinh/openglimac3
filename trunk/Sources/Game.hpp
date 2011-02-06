@@ -3,6 +3,7 @@
 
 #include "Scene.hpp"
 #include "CubeMap.hpp"
+#include "Loader.hpp"
 
 class Game
 {
@@ -23,6 +24,9 @@ public:
  
   inline const std::vector<Scene*> & getSceneList()const{ return sceneList; }
   inline std::vector<Scene*> & setSceneList(){ return sceneList; }
+  
+  inline const Loader & getLoader()const{ return *loader; }
+  inline Loader & setLoader(){ return *loader; }
   
   inline const vector3df & getCamera()const{ return camera; }
   inline vector3df & setCamera(){ return camera; }
@@ -77,6 +81,7 @@ public:
 
 protected:
   std::vector<Scene*> 	sceneList;
+  Loader*								loader;
 
   vector3df 			camera;
   vector3df 			direction;

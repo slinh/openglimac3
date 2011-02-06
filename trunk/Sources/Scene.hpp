@@ -49,6 +49,7 @@ class Scene
     inline std::vector<Obj*> & setObjList() {return objList;};	
 	
     inline void setContentHouse(Obj* obj) { contentHouse = obj; };
+    inline Obj & setContentHouse() { return *contentHouse; };
     inline const Obj & getContentHouse() { return *contentHouse; };
 
     inline GLfloat* getLightPosition(){ return lightPosition; };

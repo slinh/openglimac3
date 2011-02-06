@@ -45,6 +45,9 @@ HEADERS += Bbox.hpp \
            lib/tinyxml/tinystr.h \
            lib/tinyxml/tinyxml.h \
            Draw.hpp \
+	       TextureLoader.hpp \
+	       ObjLoader.hpp \
+	       Loader.hpp
 
 SOURCES += Bbox.cpp \
            CubeMap.cpp \
@@ -63,3 +66,6 @@ SOURCES += Bbox.cpp \
            lib/tinyxml/tinyxmlerror.cpp \
            lib/tinyxml/tinyxmlparser.cpp \
            Draw.cpp \
+       	   TextureLoader.cpp \
+       	   ObjLoader.cpp \
+           Loader.cpp

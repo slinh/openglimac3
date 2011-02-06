@@ -4,9 +4,10 @@
 #include <cstring>
 
 #include "Scene.hpp"
-#include "HeightField.hpp"
 #include "Draw.hpp"
+#include "HeightField.hpp"
 
+class Game;
 
 Scene::Scene(TypeScene type):typeS(type), typeShader(PARALLAX), objList(NULL) 
 {
@@ -48,7 +49,7 @@ void Scene::initGL()
 	
 	for(unsigned int i=0; i<objList.size(); ++i)
 	{
-		objList[i]->initGL();
+		objList[i]->init();
 	}
 
 }
@@ -73,7 +74,6 @@ void Scene::display()
         objList[i]->display();
 		glPopMatrix();
 		
-		//objList[i]->setBbox().display();
 	}
 }
 

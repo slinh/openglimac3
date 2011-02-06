@@ -8,6 +8,9 @@ uniform mat4 transmatrix;
 
 void main(void)
 {
+  
+  gl_TexCoord[0]  = gl_MultiTexCoord0;
+
   vec4 vertexpos = gl_ModelViewMatrix * gl_Vertex;
   vec3 verpos = (vertexpos.xyz)/vertexpos.w;
 

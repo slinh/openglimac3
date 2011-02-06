@@ -181,29 +181,29 @@
     
   <scene id="1">
     <shader>SHADOW</shader>
-    <light x="1.17" y="1.5" z="1.5" w="1.0"/>
+    <light x="2." y="5." z="2." w="1.0"/>
     <obj id="0" objid="10">
       <model>models/logs/fre005.obj</model>
       <scale x="0.001" y="0.001" z="0.001" />
       <rotation angle="0." x="0." y="0." z="0." />
-      <translate x="3" y="0.0" z="1.0" />
-      <texture id="0" texid="13">models/logs/FRE00502.ppm</texture>
+      <translate x="3" y="0.1" z="1.0" />
+      <texture id="1" texid="13">models/logs/FRE00502.ppm</texture>
     </obj> 
      
     <obj id="1" objid="11">
       <model>models/kitchen_table/kitchen_table.obj</model>
       <scale x="0.0009" y="0.0009" z="0.0009" />
       <rotation angle="0." x="0." y="0." z="0." />
-      <translate x="1" y="0.0" z="-1.0" />
-      <texture id="0" texid="14">models/kitchen_table/kitchen_table.ppm</texture>
+      <translate x="1" y="0.5" z="-1.0" />
+      <texture id="1" texid="14">models/kitchen_table/kitchen_table.ppm</texture>
     </obj>   
     
     <obj id="1" objid="12">
       <model>models/wood_chest/wood_chest.obj</model>
       <scale x="0.0005" y="0.0005" z="0.0005" />
       <rotation angle="0." x="0." y="0." z="0." />
-      <translate x="-3" y="0.0" z="-2.0" />
-      <texture id="0" texid="15">models/wood_chest/texture.ppm</texture>
+      <translate x="1.5" y="0.2" z="1." />
+      <texture id="1" texid="15">models/wood_chest/texture.ppm</texture>
     </obj>   
   </scene>
   
@@ -213,7 +213,7 @@
     <obj id="1" objid="11">
       <model>models/kitchen_table/kitchen_table.obj</model>
       <scale x="0.0009" y="0.0009" z="0.0009" />
-      <rotation angle="270." x="1." y="0." z="0." />
+      <rotation angle="0." x="0." y="0." z="0." />
       <translate x="-2.0" y="0.0" z="-2.0" />
       <texture id="0" texid="14">models/kitchen_table/kitchen_table.ppm</texture>
     </obj>      

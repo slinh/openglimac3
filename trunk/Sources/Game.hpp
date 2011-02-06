@@ -68,9 +68,11 @@ public:
   void displaySky(void);
   void initShadowGL();
   void FBO();
+  void displayMatrix(GLfloat * m);
   bool checkFramebufferStatus(void);
   void multMatrix4x4(float* m1, float* m2, float* res);
   void drawShadow(bool shaders = false);
+    void drawShadow2(bool shaders = false);
   void displayShadow(void);
   void displayFBO(void);
 

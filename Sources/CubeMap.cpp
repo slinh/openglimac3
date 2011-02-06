@@ -39,24 +39,17 @@ void CubeMap::drawCubeMap(float size)
   glDisable (GL_TEXTURE_GEN_R);
 }
 
-void CubeMap::initCubeMap(const char* negative_x,
-                                           const char* negative_z,
-                                           const char* negative_y,
-                                           const char* positive_x,
-                                           const char* positive_y,
-                                           const char* positive_z
-                                          )
-{
 
-    glGenTextures(1, &idTex);
+void CubeMap::loadTextures(const char* negative_x,
+                           const char* negative_z,
+                           const char* negative_y,
+                           const char* positive_x,
+                           const char* positive_y,
+                           const char* positive_z,
+                           int idT){
+		//std::cout<< "idtex load" << idT << std::endl;
 
-    // Texture init ok
-    if(idTex == 0){
-      std::cerr << "Identifiant de texture incorrect" << std::endl;
-      return;
-    }
-
-    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idT);
 
     unsigned int tmpwidth, tmpheight;
     unsigned char * image = loadPPM(negative_x, tmpwidth, tmpheight);
@@ -69,7 +62,7 @@ void CubeMap::initCubeMap(const char* negative_x,
 
     delete[] image;
 
-    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idT);
 
     image = loadPPM(negative_z, tmpwidth, tmpheight);
 
@@ -80,7 +73,7 @@ void CubeMap::initCubeMap(const char* negative_x,
 
     glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB,	GL_UNSIGNED_BYTE, image);
 
-    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idT);
 
     delete[] image;
 
@@ -92,7 +85,7 @@ void CubeMap::initCubeMap(const char* negative_x,
 
     glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idT);
 
     delete[] image;
 
@@ -104,7 +97,7 @@ void CubeMap::initCubeMap(const char* negative_x,
 
     glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB,	GL_UNSIGNED_BYTE, image);
 
-    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idT);
 
     delete[] image;
 
@@ -116,12 +109,11 @@ void CubeMap::initCubeMap(const char* negative_x,
 
     glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-    glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, idT);
 
     delete[] image;
 
     image = loadPPM(positive_z,tmpwidth,tmpheight);
-    //image = loadPPM("textures/arch_posz.ppm",tmpwidth,tmpheight);
     if(image==0){
     std::cerr << "Erreur au chargement le l'image" << std::endl;
     exit(0);
@@ -140,7 +132,79 @@ void CubeMap::initCubeMap(const char* negative_x,
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 
-		// create a displaylist
+
+}
+void CubeMap::initSimpleCubeMap(const char* negative_x,
+                         const char* negative_z,
+                         const char* negative_y,
+                         const char* positive_x,
+                         const char* positive_y,
+                         const char* positive_z)
+{
+		
+    glGenTextures(1, &idTex);
+
+    
+		/************************ Texture 1 *************************/
+		if(idTex == 0){
+      std::cerr << "Identifiant de texture incorrect" << std::endl;
+      return;
+    }
+		loadTextures(negative_x, negative_z, negative_y, positive_x, positive_y, positive_z, idTex);
+		
+		
+   	// create a displaylist
+    /*displayListId=glGenLists(1);
+    if(displayListId==0) std::cerr << "erreur d'initialisation de la liste " << std::endl;
+    glNewList(displayListId, GL_COMPILE);
+  	
+  		//drawSphere(10.,30,30);
+
+      //drawSphereMap(10.0);
+    glEndList();*/
+    glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+
+
+}
+
+void CubeMap::initDoubleCubeMap(const char* negative_1_x,
+                         const char* negative_1_z,
+                         const char* negative_1_y,
+                         const char* positive_1_x,
+                         const char* positive_1_y,
+                         const char* positive_1_z,
+                         const char* negative_2_x,
+                         const char* negative_2_z,
+                         const char* negative_2_y,
+                         const char* positive_2_x,
+                         const char* positive_2_y,
+                         const char* positive_2_z)
+{
+		
+    glGenTextures(1, &idTex);
+    
+
+    
+		/************************ Texture 1 *************************/
+		//std::cout<< "idtex0 " << idTex << std::endl;
+		if(idTex == 0){
+      std::cerr << "Identifiant de texture incorrect" << std::endl;
+      return;
+    }
+		loadTextures(negative_1_x, negative_1_z, negative_1_y, positive_1_x, positive_1_y, positive_1_z, idTex);
+		
+		
+		glGenTextures(1, &idTex2);
+		/************************ Texture 2 *************************/
+		//std::cout<< "idtex1 " << idTex2 << std::endl;
+		if(idTex2 ==0){
+      std::cerr << "Identifiant de texture incorrect" << std::endl;
+      return;
+    }
+		loadTextures(negative_2_x, negative_2_z, negative_2_y, positive_2_x, positive_2_y, positive_2_z, idTex2);
+
+
+   	// create a displaylist
     /*displayListId=glGenLists(1);
     if(displayListId==0) std::cerr << "erreur d'initialisation de la liste " << std::endl;
     glNewList(displayListId, GL_COMPILE);
@@ -156,7 +220,13 @@ void CubeMap::initCubeMap(const char* negative_x,
 
 void CubeMap::display()
 {
+				//std::cout<< "avant idtex0 " << idTex << " idtex1 " << idTex2<< std::endl;
+
 		drawSphere(10.,30,30);
+				//std::cout<< "apres idtex0 " << idTex << " idtex1 " << idTex2<< std::endl;
 
  //glCallList(displayListId);
 }
+
+const GLuint CubeMap::getIdTex() const { return this->idTex; }
+const GLuint CubeMap::getIdTex2() const { return idTex2; }

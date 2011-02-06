@@ -73,6 +73,8 @@ static GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
 static GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
 //static GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
 
+int facteur = -1.;
+
 
 float scale = 0.04;
 Obj* objfile;

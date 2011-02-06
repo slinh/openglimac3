@@ -187,7 +187,9 @@ void Game::display()
 					#ifndef __NO_SHADER__
 						glUseProgramObjectARB(0);
           #endif
-
+					glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+					glDisable(GL_TEXTURE_CUBE_MAP);
+					
 					// invert matrix
 					float mat[16];
 					float invmat[16];
@@ -498,26 +500,40 @@ void Game::initShadowGL()
 
 void Game::displaySky()
 {
+		//std::cout<< "displaySky idtex0 : " << (GLuint)sky->getIdTex() << " idtex1 : " << sky->getIdTex2() << std::endl;
 
   glPushMatrix();
 
     glEnable(GL_TEXTURE_CUBE_MAP);
-
   	glActiveTexture(GL_TEXTURE0);
  	 	glBindTexture (GL_TEXTURE_CUBE_MAP, sky->getIdTex());
+ 	 	
+ 	 	glEnable(GL_TEXTURE_CUBE_MAP);
+ 	 	glActiveTexture(GL_TEXTURE1);
+ 	 	glBindTexture(GL_TEXTURE_CUBE_MAP, sky->getIdTex2());
 
 #ifndef __NO_SHADER__
     glUseProgramObjectARB(programObject[CUBEMAP]);
-    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), 0);
+    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex_day"), 0);
+    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex_night"), 1);
+    glUniform1f(glGetUniformLocationARB(programObject[CUBEMAP] ,"timer"), timer);
+
+
 
 #endif
     sky->display();
+    
+    //std::cout<< "display Sky2 idtex0 : " << sky->getIdTex() << "idtex1 : " << sky->getIdTex2() << std::endl;
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+    glDisable(GL_TEXTURE_CUBE_MAP);
 
 #ifndef __NO_SHADER__
    glUseProgramObjectARB(0);
 #endif
-    glBindTexture(GL_TEXTURE_CUBE_MAP,0);
-    glDisable(GL_TEXTURE_CUBE_MAP);
+		    
+    
 
   glPopMatrix();
 }
@@ -755,3 +771,5 @@ void Game::displayFBO()
   glBindTexture(GL_TEXTURE_2D, 0);
 
 }
+
+  void Game::setSky(CubeMap * sky){ this->sky = sky; }

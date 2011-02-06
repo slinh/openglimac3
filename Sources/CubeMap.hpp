@@ -19,27 +19,52 @@ class CubeMap{
 	
 	public:
 		CubeMap(){};
-		CubeMap(int size, GLuint idtex):size(size), idTex(idtex){};
+		CubeMap(int size):size(size){};
 		~CubeMap();
-		GLuint idTex;
 
 	
 	private:
 		int size;
     GLint displayListId;
+ 		GLuint idTex;
+		GLuint idTex2;
+
 		
 	public:
-void initCubeMap(const char* negative_x,
+void loadTextures(const char* negative_x,
+                           const char* negative_z,
+                           const char* negative_y,
+                           const char* positive_x,
+                           const char* positive_y,
+                           const char* positive_z,
+                           int idT);
+void initSimpleCubeMap(const char* negative_x,
                            const char* negative_z,
                            const char* negative_y,
                            const char* positive_x,
                            const char* positive_y,
                            const char* positive_z
                            );
+void initDoubleCubeMap(const char* negative_1_x,
+                         const char* negative_1_z,
+                         const char* negative_1_y,
+                         const char* positive_1_x,
+                         const char* positive_1_y,
+                         const char* positive_1_z,
+                         const char* negative_2_x,
+                         const char* negative_2_z,
+                         const char* negative_2_y,
+                         const char* positive_2_x,
+                         const char* positive_2_y,
+                         const char* positive_2_z
+                         );
 void drawCubeMap(float size);
 void display();
 
-  inline const GLuint & getIdTex() const { return idTex; }
+const GLuint getIdTex() const;
+const GLuint getIdTex2() const;
+
+
 //inline GLuint getIdTex() {return idTex;};
 		
 };

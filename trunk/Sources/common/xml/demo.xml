@@ -179,7 +179,7 @@
       <scale x="0.0005" y="0.0005" z="0.0005" />
       <rotation angle="0." x="0." y="0." z="0." />
       <translate x="-4." y="0.0" z="-2.8" />
-      <texture id="0">models/furniture/fur  niture.ppm</texture>
+      <texture id="0">models/furniture/furniture.ppm</texture>
     </obj>
     
     <obj id="0">

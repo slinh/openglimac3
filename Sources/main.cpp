@@ -64,9 +64,11 @@ static void displayGL(void)
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glMatrixMode(GL_MODELVIEW);
+
+  glViewport(0, 0, windowwidth, windowheight);
   glLoadIdentity();
 
-glPushMatrix();
+  glPushMatrix();
   gluLookAt(position[0],position[1],position[2],position[0]+direction[0],position[1]+direction[1],position[2]+direction[2],up[0],up[1],up[2]);
 
 //  gluLookAt(game.getLightPosition()[0],game.getLightPosition()[1]+1.0,game.getLightPosition()[2],
@@ -81,7 +83,7 @@ glPushMatrix();
 
   glPushMatrix();
 // glRotatef(angle,0.0,0.0,1.0);
-   glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
+  glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
 
 //   std::cout << "lightPos" <<  game.getLightPosition()[0] << ", " << game.getLightPosition()[1] << ", " << game.getLightPosition()[2] << std::endl;
 
@@ -113,7 +115,7 @@ glPushMatrix();
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
+//  glEnable(GL_CULL_FACE);
   glShadeModel(GL_SMOOTH);
 
 
@@ -722,9 +724,6 @@ static void initGL(int argc,
 #endif
 
 
-
-  
-  
   
 #ifdef __TEST_TEXTURE__  
    

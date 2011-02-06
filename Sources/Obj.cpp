@@ -91,3 +91,26 @@ void Obj::display()
 
 }
 
+void Obj::displayList()
+{
+  glEnable(GL_TEXTURE_2D);
+  for(unsigned int i=0; i<textures.size(); ++i)
+  {
+    textures[i]->bind();
+  }
+  glPushMatrix();
+
+    glCallList(objLoader->getDisplayListId());
+
+  glPopMatrix();
+
+
+
+  for(unsigned int i=0; i<textures.size(); ++i)
+  {
+    textures[i]->unbind();
+  }
+  glDisable(GL_TEXTURE_2D);
+
+
+}

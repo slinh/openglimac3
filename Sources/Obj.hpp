@@ -81,6 +81,7 @@ public:
 
   void init();
   void display();
+  void displayList();
 
 };
 

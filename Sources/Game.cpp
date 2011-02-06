@@ -4,9 +4,18 @@
 #include "Obj.hpp"
 #include "common/include/XMLParser.hpp"
 #include "utils.hpp"
-
+#include <iostream>
 //#define __NO_SHADER__
 
+
+void Game::displayMatrix(GLfloat * m)
+{
+  std::cout << m[0] << ", " << m[1] << ", " << m[2] <<  ", " << m[3] << std::endl;
+  std::cout << m[4] << ", " << m[5] << ", " << m[6] <<  ", " << m[7] << std::endl;
+  std::cout << m[8] << ", " << m[9] << ", " << m[10] <<  ", " << m[11] << std::endl;
+  std::cout << m[12] << ", " << m[13] << ", " << m[14] <<  ", " << m[15] << std::endl << std::endl;
+
+}
 
 bool Game::checkFramebufferStatus(void)
 {
@@ -200,8 +209,34 @@ void Game::display()
 			}
       else if (sceneList[currentScene]->getTypeShader() == SHADOW)
       {
+
+
           displayShadow();
-          //displayFBO();
+
+          #ifndef __NO_SHADER__
+          glUseProgramObjectARB(programObject[PARALLAX]);
+          glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "wallTex"), 0);
+          glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "heightmapTex"), 1);
+          glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
+          #endif
+
+          sceneList[currentScene]->setContentHouse().setBbox().bindTextures();
+
+          //PUSH 6
+          glPushMatrix();
+             sceneList[currentScene]->getContentHouse().getBbox().displayWall();
+          //POP 6
+          glPopMatrix();
+
+          #ifndef __NO_SHADER__
+          glUseProgramObjectARB(0);
+          #endif
+          sceneList[currentScene]->setContentHouse().setBbox().unbindTextures();
+
+
+
+
+//          displayFBO();
           checkGLError(182);
           return;
       }
@@ -455,7 +490,7 @@ void Game::initShadowGL()
   glGenTextures (1, (GLuint *)&shadowtexid);
   glBindTexture (GL_TEXTURE_2D, shadowtexid);
   glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,
-               windowwidth,windowheight,0,
+               windowwidth * 3.,windowheight * 3.,0,
                GL_DEPTH_COMPONENT,
                GL_UNSIGNED_BYTE,0);
   glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -485,8 +520,6 @@ void Game::initShadowGL()
   glDrawBuffer(GL_BACK);
   glReadBuffer(GL_FRONT);
 
-  checkGLError(755);
-
   GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
   glLightfv(GL_LIGHT0, GL_SPECULAR,white);
   glLightfv(GL_LIGHT0, GL_AMBIENT,white);
@@ -496,10 +529,6 @@ void Game::initShadowGL()
   glPixelStorei(GL_PACK_ALIGNMENT,1);
 
   glBindTexture (GL_TEXTURE_2D, 0);
-  checkGLError(765);
-
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
 }
 
 void Game::displaySky()
@@ -544,20 +573,160 @@ void Game::displaySky()
   glPopMatrix();
 }
 
+
 void Game::drawShadow(bool shaders)
 {
 
   if(shaders)
   {
-     glCullFace(GL_BACK);
+  //  glCullFace(GL_BACK);
+    glDisable(GL_CULL_FACE);
   }
-  else
+   else
   {
-    glCullFace(GL_FRONT);
+   glEnable(GL_CULL_FACE);
+   //glDisable(GL_CULL_FACE);
+   glCullFace(GL_FRONT);
   }
 
-  //  glDisable(GL_CULL_FACE);
+  GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
+  GLfloat gray[]= { 0.5f, 0.5f, 0.5f, 1.0f };
+  GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
+  GLfloat softred[]= { 0.2f, 0.0f, 0.0f, 1.0f };
+  GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
+  GLfloat softblue[]= { 0.0f, 0.0f, 0.2f, 1.0f };
+  GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
+  GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
+/*
+  glMaterialfv(GL_FRONT, GL_SPECULAR,white);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,red);
+  glMaterialfv(GL_FRONT, GL_AMBIENT,softred);
+  glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
+*/
 
+  Obj* tmp;
+
+  for(unsigned int i=0; i<sceneList[currentScene]->getObjList().size(); ++i)
+  {
+    tmp = sceneList[currentScene]->getObjList()[i];
+
+    if(shaders)
+    {
+
+      /*
+      glActiveTexture(GL_TEXTURE1);
+
+      glBindTexture(GL_TEXTURE_2D,1);
+*/
+      glPushMatrix();
+      glLoadIdentity();
+
+      glTranslatef(tmp->getTranslate().X, tmp->getTranslate().Y, tmp->getTranslate().Z);
+      glScalef(tmp->getScale().X, tmp->getScale().Y, tmp->getScale().Z);
+    //  glRotatef(tmp->getAngleRotation(), tmp->getAxeRotate().X, tmp->getAxeRotate().Y, tmp->getAxeRotate().Z);
+
+      glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+      glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+      glUniform1i(glGetUniformLocationARB(programObject[SHADOW],"diffuseTexture"), 1);
+      glUniform1i(glGetUniformLocationARB(programObject[SHADOW],"boolShadow"), 1);
+
+      glPopMatrix();
+
+    }
+
+
+    glPushMatrix();
+        glTranslatef(tmp->getTranslate().X, tmp->getTranslate().Y, tmp->getTranslate().Z);
+        glScalef(tmp->getScale().X, tmp->getScale().Y, tmp->getScale().Z);
+       // glRotatef(tmp->getAngleRotation(), tmp->getAxeRotate().X, tmp->getAxeRotate().Y, tmp->getAxeRotate().Z);
+       //  tmp->RenderOBJModel();
+        tmp->displayList();
+    glPopMatrix();
+
+    //objList[i]->setBbox().display();
+  }
+
+/*
+  if(shaders)
+  {
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslatef(-1.,0.33,2.0);
+    glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+//    std::cout << "trans 1" << std::endl;
+//    displayMatrix(transformationmatrix);
+    glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+    glPopMatrix();
+  }
+
+
+  glPushMatrix();
+  glColor3f(1.0,0.0,0.0);
+  glTranslatef(-1.0,0.33,2.0);
+  //glutSolidSphere(0.5,30,30);
+  glutSolidTeapot(1.0);
+  glPopMatrix();
+
+  glMaterialfv(GL_FRONT, GL_SPECULAR,gray);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,blue);
+  glMaterialfv(GL_FRONT, GL_AMBIENT,softblue);
+  glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
+
+  glCullFace(GL_BACK);
+  */
+
+
+
+  glMaterialfv(GL_FRONT, GL_SPECULAR,gray);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE,white);
+  glMaterialfv(GL_FRONT, GL_AMBIENT,white);
+  glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
+
+  if(shaders)
+  {
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslatef(0.0,0.0,0.0);
+    glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+    glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+    glUniform1i(glGetUniformLocationARB(programObject[SHADOW],"boolShadow"), 0);
+    glPopMatrix();
+  }
+
+  glPushMatrix();
+  glTranslatef(0.0,0.0,0.0);
+
+  glBegin(GL_QUADS);
+  glColor3f(1.0f,1.0f,1.0f);
+  glNormal3f(0.0f,1.0f,0.0f);
+  glVertex3f(-10.0f, 0.0f, 10.0f);
+  glVertex3f( 10.0f, 0.0f, 10.0f);
+  glVertex3f( 10.0f, 0.0f,-10.0f);
+  glVertex3f(-10.0f, 0.0f,-10.0f);
+  glEnd();
+  glPopMatrix();
+
+  glCullFace(GL_BACK);
+
+}
+
+void Game::drawShadow2(bool shaders)
+{
+ // glEnable(GL_CULL_FACE);
+
+//  if(shaders)
+ //  {
+ //    glCullFace(GL_BACK);
+ // }
+ // else
+ // {
+  //  glDisable(GL_CULL_FACE);
+   // glCullFace(GL_FRONT);
+  // }
+
+// glCullFace(GL_FRONT);
+//  glDisable(GL_CULL_FACE);
+// glCullFace(GL_BACK);
   GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
   GLfloat gray[]= { 0.5f, 0.5f, 0.5f, 1.0f };
   GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -614,23 +783,47 @@ void Game::drawShadow(bool shaders)
   {
     glPushMatrix();
     glLoadIdentity();
-    glTranslatef(-1.,-0.33,2.0);
+    glTranslatef(1.,0.33,2.0);
     glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+//    std::cout << "trans 1" << std::endl;
+//    displayMatrix(transformationmatrix);
     glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
     glPopMatrix();
   }
 
 
 //  sceneList[currentScene]->display();
-
-
-  // test sphere
+// test sphere
 
   glPushMatrix();
   glColor3f(1.0,0.0,0.0);
-  glTranslatef(-1.0,-0.33,2.0);
-  // glutSolidSphere(0.5,30,30);
-  glutSolidCube(1.0);
+  glTranslatef(1.0,0.33,2.0);
+  //glutSolidSphere(0.5,30,30);
+  glutSolidTeapot(1.0);
+  glPopMatrix();
+
+
+  if(shaders)
+  {
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslatef(3.,1.33,2.0);
+    glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+ //   std::cout << "trans 2" << std::endl;
+//    displayMatrix(transformationmatrix);
+    glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+    glPopMatrix();
+  }
+
+
+//  sceneList[currentScene]->display();
+// test sphere
+
+  glPushMatrix();
+  glColor3f(1.0,0.0,0.0);
+  glTranslatef(3.0,1.33,2.0);
+  //glutSolidSphere(0.5,30,30);
+  glutSolidTeapot(2.0);
   glPopMatrix();
 
 
@@ -645,18 +838,54 @@ void Game::drawShadow(bool shaders)
   {
     glPushMatrix();
     glLoadIdentity();
-    glTranslatef(-1.0,-0.33,-1.0);
+    glTranslatef(-1.0,1.33,-1.0);
     glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+ //   std::cout << "trans 3" << std::endl;
+ //   displayMatrix(transformationmatrix);
     glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
     glPopMatrix();
   }
 
   glPushMatrix();
   glColor3f(1.0,0.0,0.0);
-  glTranslatef(-1.0,-0.33,-1.0);
+  glTranslatef(-1.0,1.33,-1.0);
   // glutSolidCube(1.0);
   glutSolidSphere(0.5,30,30);
   glPopMatrix();
+
+
+
+
+
+
+  if(shaders)
+  {
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslatef(4.,1.33,2.0);
+    glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
+//    std::cout << "trans 1" << std::endl;
+//    displayMatrix(transformationmatrix);
+    glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
+    glPopMatrix();
+  }
+
+
+//  sceneList[currentScene]->display();
+// test sphere
+
+  glPushMatrix();
+  glColor3f(1.0,0.0,0.0);
+  glTranslatef(4.0,1.33,2.0);
+  //glutSolidSphere(0.5,30,30);
+  glutSolidTeapot(1.0);
+  glPopMatrix();
+
+
+
+
+
+
 
 
 
@@ -665,6 +894,7 @@ void Game::drawShadow(bool shaders)
   glMaterialfv(GL_FRONT, GL_AMBIENT,softblue);
   glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
 
+//  glCullFace(GL_BACK);
   if(shaders)
   {
     glPushMatrix();
@@ -674,6 +904,8 @@ void Game::drawShadow(bool shaders)
     glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
     glPopMatrix();
   }
+
+
 
   glPushMatrix();
   glTranslatef(0.0,-1.0,0.0);
@@ -688,8 +920,16 @@ void Game::drawShadow(bool shaders)
   glEnd();
   glPopMatrix();
 
-  glCullFace(GL_BACK);
+  /*
+  glPushMatrix();
+  glColor3f(1.0,0.0,0.0);
+  // glutSolidCube(1.0);
+  glutSolidTeapot(2.0);
+  glPopMatrix();
+*/
 
+//  glCullFace(GL_BACK);
+// glDisable(GL_CULL_FACE);
 }
 
 
@@ -699,6 +939,7 @@ void Game::FBO()
   if(shadowbufferid!=0)
   {
     glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
+    glViewport(0, 0, windowwidth*3., windowheight*3.);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
@@ -709,7 +950,7 @@ void Game::FBO()
 
     float up[] = {0.0f, 1.0f, 0.0f};
     gluLookAt(getLightPosition()[0],getLightPosition()[1],getLightPosition()[2],
-              0.0,0.0,0.0,
+              0., 0., 0.,
               up[0],up[1],up[2]);
 
 //    gluLookAt(getLightPosition()[0], getLightPosition()[1], getLightPosition()[2],
@@ -745,9 +986,13 @@ void Game::displayShadow()
     glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"eyematrix"),1,GL_FALSE,shadowmatrix);
     glUniform1iARB(glGetUniformLocationARB(programObject[SHADOW],"shadowmap"),0);
   }
+  std::cout << "shadow matrix" << std::endl;
+  displayMatrix(shadowmatrix);
 
   drawShadow(true);
 
+  glBindTexture(GL_TEXTURE_2D,0);
+  glDisable(GL_TEXTURE_2D);
 #ifndef __NO_SHADER__
   glUseProgramObjectARB(0);
 #endif
@@ -759,22 +1004,40 @@ void Game::displayFBO()
     glUseProgramObjectARB(0);
   #endif
 
-  glEnable(GL_TEXTURE_2D);
-
-  glBindTexture(GL_TEXTURE_2D,shadowtexid);
-
-  glTranslatef(0.0,-2.0,0.0);
+  glMatrixMode(GL_PROJECTION);
   glPushMatrix();
+  glLoadIdentity();
+  glOrtho(-2.f, 2.f, -1.5f, 1.5f, 1.f, 20.f);
+
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
+
+
+  glEnable(GL_TEXTURE_2D);
+  glDisable(GL_LIGHTING);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, shadowtexid);
+
+  glTranslated(0., 0., -1.);
+
   glBegin(GL_QUADS);
-  glColor3f(1.0f,1.0f,1.0f);
-  glNormal3f(0.0f,1.0f,0.0f);
-  glVertex3f(-10.0f, 0.0f, 10.0f);
-  glVertex3f( 10.0f, 0.0f, 10.0f);
-  glVertex3f( 10.0f, 0.0f,-10.0f);
-  glVertex3f(-10.0f, 0.0f,-10.0f);
+
+  glTexCoord2f(0., 0.); glVertex3f(0., 0., 0.);
+  glTexCoord2f(1., 0.); glVertex3f(2., 0., 0.);
+  glTexCoord2f(1., 1.); glVertex3f(2., 1.5, 0.);
+  glTexCoord2f(0., 1.); glVertex3f(0, 1.5, 0.);
   glEnd();
+
+  //glDisable(GL_TEXTURE_2D);
+
   glPopMatrix();
-  glBindTexture(GL_TEXTURE_2D, 0);
+
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+
+  glMatrixMode(GL_MODELVIEW);
+
 
 }
 

@@ -38,10 +38,13 @@ public:
   inline void setChurch(CubeMap * church){ this->church = church; }
 
   inline const CubeMap * getSky()const{ return sky; }
-  inline void setSky(CubeMap * sky){ this->sky = sky; }
+  void setSky(CubeMap * sky);
   
   inline const int & getCurrentScene()const{ return currentScene; }
   inline int & setCurrentScene(){ return currentScene; }
+  
+  inline const float & getTimer()const{ return timer; }
+  inline float & setTimer(){ return timer; }
 
   inline void setProgramObject(GLhandleARB* program) { programObject=program; };
   inline GLhandleARB* getProgramObject() { return programObject; };
@@ -104,6 +107,8 @@ protected:
   int windowwidth;
   int windowheight;
 
+	//Timer
+	float timer;
 
 
 };

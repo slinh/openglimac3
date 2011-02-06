@@ -324,6 +324,10 @@ vector3df casteljau(float t,std::vector<vector3df> l)
 static void idleGL(void)
 {
     angle += 0.25;
+    if(game.getTimer()>1.) facteur=-1.; 
+    if(game.getTimer()<0.) facteur=1.;
+    
+    game.setTimer() +=facteur * 0.004;
 
 #ifdef __CASTELJAU__
 //motion
@@ -611,7 +615,7 @@ static void initGL(int argc,
 {
 
   glClearColor(0.8f,0.8f,0.8f,1.0f);
-
+	game.setTimer()=1.;
 
 #ifndef __NO_SHADER__
   // load all shader programs  
@@ -631,17 +635,23 @@ static void initGL(int argc,
   cubeMap=new CubeMap();
 
   //glBindTexture(GL_TEXTURE_CUBE_MAP, texturesid[3]);
-  cubeMap->initCubeMap(
+  cubeMap->initDoubleCubeMap(
    "textures/greenhill_negative_x.ppm",
    "textures/greenhill_negative_z.ppm",
    "textures/greenhill_negative_y.ppm",
    "textures/greenhill_positive_x.ppm",
    "textures/greenhill_positive_y.ppm",
-   "textures/greenhill_positive_z.ppm");
+   "textures/greenhill_positive_z.ppm",
+   "textures/night_negx.ppm",
+   "textures/night_negz.ppm",
+   "textures/night_negy.ppm",
+   "textures/night_posx.ppm",
+   "textures/night_posy.ppm",
+   "textures/night_posz.ppm");
 
   // church cubemap
   church=new CubeMap();
-  church->initCubeMap(
+  church->initSimpleCubeMap(
    "textures/church/negative_x.ppm",
    "textures/church/negative_z.ppm",
    "textures/church/negative_y.ppm",

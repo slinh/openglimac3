@@ -188,6 +188,7 @@ void drawSphere(const float& radius,
     glBegin(GL_TRIANGLE_STRIP);
     for(unsigned int j = 0; j < stepx + 1; ++j){
       glMultiTexCoord2f(GL_TEXTURE0, texx*j,(texy)*i);
+      glMultiTexCoord2f(GL_TEXTURE1, texx*j,(texy)*i);
       float x = radius*sin(angley*i)*sin(anglex*j);
       float y = radius*cos(angley*i);
       float z = radius*sin(angley*i)*cos(anglex*j);
@@ -198,6 +199,7 @@ void drawSphere(const float& radius,
       y = radius*cos(angley*(i+1));
       z = radius*sin(angley*(i+1))*cos(anglex*j);
       glMultiTexCoord2f(GL_TEXTURE0, texx*j,(texy)*(i+1));
+      glMultiTexCoord2f(GL_TEXTURE1, texx*j,(texy)*(i+1));
       glNormal3f(x/norm,y/norm,z/norm);
       glVertex3f(x, y, z);
     }

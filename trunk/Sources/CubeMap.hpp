@@ -21,10 +21,11 @@ class CubeMap{
 		CubeMap(){};
 		CubeMap(int size, GLuint idtex):size(size), idTex(idtex){};
 		~CubeMap();
+		GLuint idTex;
+
 	
 	private:
 		int size;
-		GLuint idTex;
     GLint displayListId;
 		
 	public:
@@ -37,7 +38,9 @@ void initCubeMap(const char* negative_x,
                            );
 void drawCubeMap(float size);
 void display();
-inline GLuint getIdTex() {return idTex;};
+
+  inline const GLuint & getIdTex() const { return idTex; }
+//inline GLuint getIdTex() {return idTex;};
 		
 };
 #endif

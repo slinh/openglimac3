@@ -502,41 +502,13 @@ void Game::displaySky()
   glPushMatrix();
 
     glEnable(GL_TEXTURE_CUBE_MAP);
-//    std::cout << "cubeMap->getIdTex():" << sky->getIdTex() << std::endl;
 
-// TODO : commenté ---> afficher les arbres
-/*  switch(sky->getIdTex())
-  {
-    case 0:
-      glActiveTexture(GL_TEXTURE0);
-      break;
-
-    case 1:
-      glActiveTexture(GL_TEXTURE1);
-      break;
-
-    case 2:
-      glActiveTexture(GL_TEXTURE2);
-      break;
-
-    case 3:
-      glActiveTexture(GL_TEXTURE3);
-      break;
-
-    case 4:
-      glActiveTexture(GL_TEXTURE4);
-      break;
-
-    case 5:
-      glActiveTexture(GL_TEXTURE5);
-      break;
-  }*/
-// glActiveTexture(GL_TEXTURE2);
-  glBindTexture (GL_TEXTURE_CUBE_MAP, sky->getIdTex());
+  	glActiveTexture(GL_TEXTURE0);
+ 	 	glBindTexture (GL_TEXTURE_CUBE_MAP, sky->getIdTex());
 
 #ifndef __NO_SHADER__
     glUseProgramObjectARB(programObject[CUBEMAP]);
-    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), 2);
+    glUniform1i(glGetUniformLocationARB(programObject[CUBEMAP] ,"id_tex"), 0);
 
 #endif
     sky->display();
@@ -544,7 +516,6 @@ void Game::displaySky()
 #ifndef __NO_SHADER__
    glUseProgramObjectARB(0);
 #endif
-//	glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_CUBE_MAP,0);
     glDisable(GL_TEXTURE_CUBE_MAP);
 

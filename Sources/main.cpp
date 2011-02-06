@@ -298,60 +298,59 @@ static void reshapeGL(int newwidth,
 **/
 vector3df casteljau(float t,std::vector<vector3df> l)
 {
-	std::vector<vector3df> liste_points=l;
-	std::vector<vector3df> nouvelle_liste_points;
+	std::vector<vector3df> list_points=l;
+	std::vector<vector3df> new_list_points;
 
 	do
 	{
-		for(unsigned int i=0;i<liste_points.size()-1;i++)
+		for(unsigned int i=0;i<list_points.size()-1;i++)
 		{
-			nouvelle_liste_points.push_back(liste_points[i]*(1.0f-t)+liste_points[i+1]*t);
+			new_list_points.push_back(list_points[i]*(1.0f-t)+list_points[i+1]*t);
 		}
-		liste_points=nouvelle_liste_points;
-		nouvelle_liste_points.clear();
+		list_points=new_list_points;
+		new_list_points.clear();
 	}
-	while(liste_points.size()>1);
+	while(list_points.size()>1);
 	
-	if (liste_points.size()!=1)
+	if (list_points.size()!=1)
 	{
 		printf("Erreur !\n");
 	}
 
-	return liste_points[0];
+	return list_points[0];
 }
 
 
 static void idleGL(void)
 {
     angle += 0.25;
+    
+    //Timer
     if(game.getTimer()>1.) facteur=-1.; 
     if(game.getTimer()<0.) facteur=1.;
     
-    game.setTimer() +=facteur * 0.004;
+    white[0]-= facteur * 0.005;
+    white[1]-= facteur * 0.005;
+    white[2]-= facteur * 0.005;
+    game.setTimer() +=facteur * 0.006;
 
 #ifdef __CASTELJAU__
-//motion
+
    	if(f<=1.){
 			vector3df p=casteljau(f,controlPoints);
-			//xrotation+=(position[0]-p.X)/10.0f;
-			//yrotation+=(position[1]- p.Y )/10.0f;
+
 			position[0]=nextP.X;
 			position[1]=nextP.Y;
 			position[2]=nextP.Z;
 			
-      //aim[0]=sin(yrotation*M_PI/180.0f);
-    	//aim[1]=-sin(xrotation*M_PI/180.0f);
-    	//aim[2]=-cos(yrotation*M_PI/180.0f);
+
 			direction[0]=p.X-nextP.X;
     	direction[1]=p.Y-nextP.Y;
     	direction[2]=p.Z-nextP.Z;
-			/*std::cout << "x" << xrotation <<"y" <<yrotation << std::endl;
-			
-			std::cout << "x2" << xrotation <<"y2" <<yrotation << std::endl;*/
-			//direction[3]=p.Z+1.;
+
 			nextP = p;
 			f+=1./(float)nbPoints;
-			sleep(0.9);
+			sleep(0.97);
 		}
 #endif
     
@@ -421,11 +420,11 @@ static void keyboardGL(unsigned char c,
     break;
   case 'p' :
 	position[1] += step;
-	direction[1] += step;
+	//direction[1] += step;
 	break;
   case 'l' :
 	position[1] -= step;
-	direction[1] -= step;
+	//direction[1] -= step;
 	break;
   case 'w':
     GLint wtype[2];
@@ -500,8 +499,8 @@ static void motionGL(int x, int y)
 			
 			GLfloat directionTmp[] ={direction[0], direction[1],direction[2]};
 	
-			direction[0]=directionTmp[0]*cos(M_PI/60)-directionTmp[2]*sin(M_PI/60);
-			direction[2]=directionTmp[0]*sin(M_PI/60)+directionTmp[2]*cos(M_PI/60);
+			direction[0]=directionTmp[0]*cos(M_PI/24)-directionTmp[2]*sin(M_PI/24);
+			direction[2]=directionTmp[0]*sin(M_PI/24)+directionTmp[2]*cos(M_PI/24);
 		
 			//produitVectoriel(right, direction, up);
 	
@@ -509,8 +508,8 @@ static void motionGL(int x, int y)
 		else if(x<xmouseposition){ // gauche
 			GLfloat directionTmp[] ={direction[0], direction[1],direction[2]};
 		
-			direction[0]=directionTmp[0]*cos(M_PI/60)+directionTmp[2]*sin(M_PI/60);
-			direction[2]=-directionTmp[0]*sin(M_PI/60)+directionTmp[2]*cos(M_PI/60);
+			direction[0]=directionTmp[0]*cos(M_PI/24)+directionTmp[2]*sin(M_PI/24);
+			direction[2]=-directionTmp[0]*sin(M_PI/24)+directionTmp[2]*cos(M_PI/24);
 		
 			//produitVectoriel(right, direction, up);
 	
@@ -519,9 +518,9 @@ static void motionGL(int x, int y)
 			GLfloat directionTmp[] ={direction[0], direction[1],direction[2]};
 			GLfloat upTmp[] = { up[0], up[1], up[2]};
 	
-			direction[2]=directionTmp[2]*cos(M_PI/60)-upTmp[2]*sin(M_PI/60);
-			direction[1]=directionTmp[1]*cos(M_PI/60)-upTmp[1]*sin(M_PI/60);
-			direction[0]=directionTmp[0]*cos(M_PI/60)-upTmp[0]*sin(M_PI/60);
+			direction[2]=directionTmp[2]*cos(M_PI/48)-upTmp[2]*sin(M_PI/48);
+			direction[1]=directionTmp[1]*cos(M_PI/48)-upTmp[1]*sin(M_PI/48);
+			direction[0]=directionTmp[0]*cos(M_PI/48)-upTmp[0]*sin(M_PI/48);
 			
 			//produitVectoriel(right, direction, up);
 		}

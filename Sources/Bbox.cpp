@@ -1,3 +1,4 @@
+#include "Game.hpp"
 #include "Bbox.hpp"
 #ifdef __APPLE__
 	#include <GLUT/glut.h>
@@ -10,42 +11,55 @@
 #include <iostream>
 #include <vector>
 #include "vector3d.h"
-
+#include "ObjLoader.hpp"
 #include "Obj.hpp"
 #include "Draw.hpp"
 #include "Texture.hpp"
 
-std::vector<Texture*> Bbox::textures;
-
+class Game;
 
 Bbox::Bbox()
 {
 	init = false;
 }
 
-Bbox::~Bbox(){}
-
-/*
-
-float Bbox::getWidth()const
+Bbox::Bbox(const Bbox & copy)
 {
-	if(init)
-		return width;
 
-	else
-		return right-left;
+	init = copy.init;
+	left = copy.left;
+	right = copy.right;
+	bottom = copy.bottom;
+	top = copy.top;
+	x = copy.x;
+	y = copy.y;
+	
+	width = copy.width;
+	height = copy.height;
+	
+	init = copy.init;
+	
+	for(unsigned int i=0; i<copy.textures.size(); ++i)
+	{
+		Texture* tmp = copy.textures[i];
+		textures.push_back(tmp);
+	}
 }
 
-float Bbox::getHeight()const
-{
-	if(init)
-		return height;
 
-	else
-		return top - bottom;
-}*/
+Bbox::~Bbox(){}
+
+
 		
-		
+void Bbox::initialize(ObjLoader* obj)
+{
+	// apply scale and translate :
+
+	height = top-bottom;
+	width = right-left;
+
+	
+}	
 void Bbox::initialize(Obj* obj)
 {
 	// apply scale and translate :
@@ -169,28 +183,30 @@ void Bbox::displayUpDown()const
 
 void Bbox::initTextures()
 {
-   	Texture* textureOne = new Texture(0, "textures/wall.ppm"); 
-    textureOne->create(1);
+		Game & game = Game::Instance();
+
+		TextureLoader* tmp = game.getLoader().getTextureLoader(20);
+
+   	Texture* textureOne = new Texture(0, tmp); 
     
     textures.push_back(textureOne);
     
-    Texture* textureTwo = new Texture(1, "textures/heightmap.ppm");
-    textureTwo->create(1);
+    tmp = game.getLoader().getTextureLoader(21);
+    Texture* textureTwo = new Texture(1, tmp);
     
     textures.push_back(textureTwo);
     
-    Texture* textureThree = new Texture(2, "textures/normalmap.ppm");
-    textureThree->create(1);
+    tmp = game.getLoader().getTextureLoader(22);
+    Texture* textureThree = new Texture(2, tmp);
 	
 		textures.push_back(textureThree);
 	
-		Texture* roof = new Texture(0, "models/wall/gate_wood.ppm");
-    roof->create(1);
+		tmp = game.getLoader().getTextureLoader(23);
+		Texture* roof = new Texture(0, tmp);
 	
 		textures.push_back(roof);
 	
-		Texture* ground = new Texture(0, "models/wall/gate_wood.ppm");
-    ground->create(1);
+		Texture* ground = new Texture(0, tmp);
 	
     textures.push_back(ground);
 }
@@ -198,7 +214,8 @@ void Bbox::initTextures()
 
 void Bbox::bindTextures()
 {
-  for(unsigned int i=0; i<3; ++i)
+	
+  for(unsigned int i=0; i<(textures.size()-2); ++i)
   {
     textures[i]->bind();
   }  
@@ -206,7 +223,7 @@ void Bbox::bindTextures()
 
 void Bbox::unbindTextures()
 {
-  for(unsigned int i=0; i<3; ++i)
+  for(unsigned int i=0; i<(textures.size()-2); ++i)
   {
     textures[i]->unbind();
   }  

@@ -87,7 +87,8 @@ void CubeMap::initCubeMap(const char* negative_x,
     std::cerr << "Erreur au chargement le l'image" << std::endl;
     exit(0);
     }
-    drawSphere(10.,30,30);
+    
+// drawSphere(10.,30,30);
 
     glBindTexture (GL_TEXTURE_CUBE_MAP, idTex);
     glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);

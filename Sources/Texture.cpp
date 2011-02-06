@@ -12,61 +12,6 @@
 #include "Texture.hpp"
 #include "ppm.hpp"
 
-Texture::~Texture()
-{
-
-}
-
-void Texture::create(int repeat)
-{
-	glGenTextures(1,&idTex);
-
-	// Texture init ok
-	if(idTex == 0){
-		std::cerr << "Identifiant de texture incorrect" << std::endl;
-		return;
-	}
-
-	// bind for params
-    glBindTexture(GL_TEXTURE_2D,idTex);
-
-	unsigned int tmpwidth, tmpheight;
-	unsigned char * image = loadPPM(file.c_str(), tmpwidth,tmpheight);
-	if(image==0){
-		std::cerr << "Erreur au chargement le l'image" << std::endl;
-		return;
-	}
-  
-	if( repeat == 1 )
-	{
-		/* Params texture smashtein
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		**/
-		
-//    std::cout << "texture avec repeat" << std::endl;
-    
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE,image );
-	}
-
-	else
-	{
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tmpwidth, tmpheight, 0, GL_RGB, GL_UNSIGNED_BYTE,image );
-	}
-
-	delete[] image;
-	glBindTexture(GL_TEXTURE_2D,0);
-}
 
 void Texture::bind()const
 {
@@ -97,8 +42,9 @@ void Texture::bind()const
 		  glActiveTexture(GL_TEXTURE5);
 	    break;
   }	
+  
+	glBindTexture(GL_TEXTURE_2D,textureLoader->getIdTex());
 	
-	glBindTexture(GL_TEXTURE_2D,idTex);
   glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE0);
   glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
   
@@ -147,7 +93,7 @@ void Texture::tryCube(){
 	
 	//application de la texture
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, idTex);
+	glBindTexture(GL_TEXTURE_2D, textureLoader->getIdTex());
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	
     glTranslatef(-10,-10,0.0f);

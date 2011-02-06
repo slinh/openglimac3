@@ -1,11 +1,12 @@
 #include "../../lib/tinyxml/tinyxml.h"
 #include "../../Scene.hpp"
+#include "../../Loader.hpp"
 #include "../../Shaders.hpp"
 #include "../../vector3d.h"
 #include <iostream>
 #include <string>
 
-void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
+void loadXML(const char * pFilename, std::vector<Scene*> & sceneList, Loader & loader)
 {
   TiXmlDocument doc(pFilename);
   if(!doc.LoadFile())
@@ -16,6 +17,50 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
   }
   
   TiXmlHandle hdl(&doc);
+  
+  TiXmlElement* loaderTag = hdl.FirstChild( "demo" ).FirstChild( "loader" ).Element();
+	TiXmlHandle hLoader = TiXmlHandle(loaderTag);
+	
+	// define texture
+	TiXmlElement* textureLoaderTag = hLoader.FirstChild( "texload" ).Element();
+	while(NULL != textureLoaderTag)
+	{
+		int texRepeat = -1 ;
+		textureLoaderTag->QueryIntAttribute("repeat", &texRepeat);
+      
+		std::string textureLoaderName = std::string(textureLoaderTag->GetText());
+		TextureLoader* tmpTextureLoader;
+		
+		if( texRepeat > 0)
+		{	std::cout << "////////////:::::::::::::////////////:::::::::://///" << std::endl;
+		
+			tmpTextureLoader = new TextureLoader(textureLoaderName, true);
+		}
+		else
+		{
+			tmpTextureLoader = new TextureLoader(textureLoaderName);
+		}
+		
+		loader.addTextureLoader(tmpTextureLoader);
+		
+		textureLoaderTag=textureLoaderTag->NextSiblingElement("texload");
+	
+	}
+	
+	// define obj
+	TiXmlElement* objLoaderTag = hLoader.FirstChild( "objload" ).Element();
+	while(NULL != objLoaderTag)
+	{
+		std::string objLoaderName = std::string(objLoaderTag->GetText());
+		ObjLoader* tmpObjLoader = new ObjLoader(objLoaderName);
+	
+		loader.addObjLoader(tmpObjLoader);
+		
+		objLoaderTag=objLoaderTag->NextSiblingElement("objload");
+		
+	}
+
+  
   TiXmlElement* sceneTag = hdl.FirstChild( "demo" ).FirstChild( "scene" ).Element();
   // first scene is main
   TypeScene typeS = MAIN;
@@ -34,28 +79,28 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
     while(NULL != shaderTag)
     {
 
-		std::string value = std::string(shaderTag->GetText());
+			
+			std::string value = std::string(shaderTag->GetText());
 
-    //TODO : complete with all kinds of shaders
-		if(value == "PARALLAX")
-			scene->setTypeShader() = PARALLAX;
-    else if(value == "ENV")
-      scene->setTypeShader() = ENV;
-		else if(value == "CUBEMAP")
-			scene->setTypeShader() = CUBEMAP;
-		else if(value == "NORMALSPEC")
-			scene->setTypeShader() = NORMALSPEC;
-		else if(value == "TOON")
-			scene->setTypeShader() = TOON;
-    else if(value == "SHADOW")
-			scene->setTypeShader() = SHADOW;
-//		else if(value == "BUMP")
-//			scene->setTypeShader() = BUMP;
-    else if(value == "ALPHA")
-			scene->setTypeShader() = ALPHA;
-		
-		
-      shaderTag = shaderTag->NextSiblingElement("shader");
+			//TODO : complete with all kinds of shaders
+			if(value == "PARALLAX")
+				scene->setTypeShader() = PARALLAX;
+			else if(value == "ENV")
+				scene->setTypeShader() = ENV;
+			else if(value == "CUBEMAP")
+				scene->setTypeShader() = CUBEMAP;
+			else if(value == "NORMALSPEC")
+				scene->setTypeShader() = NORMALSPEC;
+			else if(value == "TOON")
+				scene->setTypeShader() = TOON;
+			else if(value == "SHADOW")
+				scene->setTypeShader() = SHADOW;
+	//		else if(value == "BUMP")
+	//			scene->setTypeShader() = BUMP;
+			else if(value == "ALPHA")
+				scene->setTypeShader() = ALPHA;
+			
+			shaderTag = shaderTag->NextSiblingElement("shader");
     }
 
     
@@ -91,8 +136,14 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
     while(NULL != objTag)
     {
       TiXmlHandle hObj = TiXmlHandle(objTag);
-//      std::cout << objTag->Value() << std::endl;
-      Obj * object = new Obj();
+
+			int objLoaderId;
+      objTag->QueryIntAttribute("objid", &objLoaderId);
+
+			// get the good model in loader :
+			ObjLoader* tmpObjLoader = loader.getObjLoader(objLoaderId);
+     
+      Obj * object = new Obj(tmpObjLoader);
 
       int idObj;
       objTag->QueryIntAttribute("id", &idObj);
@@ -102,22 +153,19 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
       objTag->QueryIntAttribute("scene", &idAssociatedScene);
       object->setAssociatedScene() = idAssociatedScene;
 
-	  if( idAssociatedScene > 0 ) 
-   	  {
-		object->setType() = HOUSE;
-	  }
-	  else
-	  {
-		object->setType() = SETTING;
-	  }
+			if( idAssociatedScene > 0 ) 
+			{
+				object->setType() = HOUSE;
+			}
+			else
+			{
+				object->setType() = SETTING;
+			}
 		
       
 
       TiXmlElement* modelTag = hObj.FirstChild( "model" ).Element();
-//      std::cout << modelTag->Value() << " : " << std::string(modelTag->GetText()) << std::endl;
-      
-      // create a new model and insert to global table
-      object->setModelFileName() = std::string(modelTag->GetText());
+
       scene->setObjList().push_back(object);
 
 
@@ -158,20 +206,24 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
       translateTag->QueryFloatAttribute("x", &x);
       translateTag->QueryFloatAttribute("y", &y);
       translateTag->QueryFloatAttribute("z", &z);
-		object->setTranslate(x, y, z);
- //     std::cout << "float " << x << ", "<< y << " " << z << std::endl;
+			object->setTranslate(x, y, z);
 
       TiXmlElement* texTag = hObj.FirstChild( "texture" ).Element();
       while(NULL != texTag)
       {      
-//        std::cout << texTag->Value() << std::endl;
+				int texLoaderId;
+				texTag->QueryIntAttribute("texid", &texLoaderId);
+
+				// get the good model in loader :
+				TextureLoader* tmpTextureLoader = loader.getTextureLoader(texLoaderId);
 
         // create texture files and push to the object texture list
         int id;
         texTag->QueryIntAttribute("id", &id);
         std::string str = texTag->GetText();
          
-        Texture * texture = new Texture(id, str);
+        //Texture * texture = new Texture(id, str);
+        Texture * texture = new Texture(id, tmpTextureLoader);
         object->setTextures().push_back(texture);
 
         texTag=texTag->NextSiblingElement("texture");
@@ -184,4 +236,7 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList)
     typeS = OTHER;
     sceneTag=sceneTag->NextSiblingElement("scene");
   }
+  
+  
+    std::cout << "FIN lecture xml" << std::endl;
 }

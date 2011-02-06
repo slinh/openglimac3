@@ -59,7 +59,10 @@ HEADERS += Obj.hpp \
        common/include/XMLParser.hpp \
        Draw.hpp \
        main.hpp \
-       utils.hpp
+       utils.hpp \
+       TextureLoader.hpp \
+       ObjLoader.hpp \
+       Loader.hpp
 
 #UIs
 FORMS += 
@@ -84,4 +87,7 @@ SOURCES += Obj.cpp \
        common/src/XMLParser.cpp \
        Draw.cpp \
        main.cpp \
-       utils.cpp
+       utils.cpp \
+       TextureLoader.cpp \
+       ObjLoader.cpp \
+       Loader.cpp

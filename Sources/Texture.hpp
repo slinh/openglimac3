@@ -11,23 +11,22 @@
 #include <string.h>
 #include <iostream>
 #include <vector>
+#include "TextureLoader.hpp"
 
 class Texture 
 {
-	protected:
-		int				id;
-		GLuint 			idTex;
-		std::string 	file;
-	
-	public:
-	
-		Texture(int id, std::string s) : id(id), file(s) {} ;
-		~Texture();
-    
-    const std::string & getFile() const { return file; }
-    std::string & setFile() { return file; }
+protected:	
+	int				id;
+	TextureLoader * textureLoader;
 
-	void create(int repeat=0);
+public:
+	
+	Texture(int i, TextureLoader * texture) : id(i), textureLoader(texture){} ;
+	~Texture(){};
+
+	const TextureLoader & getTextureLoader() const { return *textureLoader; }
+	TextureLoader & setTextureLoader() { return *textureLoader; }
+
 	void bind() const;
 	void unbind() const;
 	void tryCube();

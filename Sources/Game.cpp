@@ -242,7 +242,13 @@ void Game::display()
       }
 			//END IF 3
 			//ELSE IF 1
-
+      else if  (sceneList[currentScene]->getTypeShader() == TOON)
+      {
+              glEnable(GL_CULL_FACE);
+              glFrontFace(GL_CW);
+              glPolygonMode(GL_FRONT, GL_FILL);
+              glCullFace(GL_FRONT);
+      }
 			//END ELSE IF 1
 			//ELSE 1
 			else{
@@ -323,10 +329,10 @@ void Game::display()
 			case CUBEMAP:
 				break;
 				
-			case TOON:
+      case TOON:
 				#ifndef __NO_SHADER__
-				glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
-				#endif
+        glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
+        #endif
 				break;
 
 			case ALPHA:
@@ -344,14 +350,15 @@ void Game::display()
 				break;
 		}
 
-		// display the scene
+    // display the scene
     sceneList[currentScene]->display();
 
 	}
 	//END IF 1
 	checkGLError(254);
 
-	if(sceneList[currentScene]->getTypeShader() == ENV){
+  if(sceneList[currentScene]->getTypeShader() == ENV)
+  {
 		glPopMatrix();
 		//glPopMatrix();
 		glMatrixMode(GL_TEXTURE);
@@ -362,9 +369,34 @@ void Game::display()
     glBindTexture(GL_TEXTURE_CUBE_MAP,0);
     glDisable(GL_TEXTURE_CUBE_MAP);
 
-	}
-	checkGLError(265);
+  }
 
+  else if(sceneList[currentScene]->getTypeShader() == TOON)
+  {
+
+      // display strokes for toon shading
+      #ifndef __NO_SHADER__
+        glUseProgramObjectARB(0);
+      #endif
+
+      glLineWidth(5.0);
+      glDisable(GL_LIGHTING);
+      glCullFace (GL_BACK);
+      glPolygonMode(GL_FRONT, GL_LINE);
+      glColor3f(0.0,0.0,0.0);
+
+      sceneList[currentScene]->display();
+      sceneList[currentScene]->getContentHouse().getBbox().displayWall();
+      sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
+
+      glLineWidth (1.0f);
+      glDisable(GL_CULL_FACE);
+      glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+      glFrontFace(GL_CCW);
+  }
+  checkGLError(265);
+
+//glPolygonMode(GL_FRONT, GL_FILL);
 #ifndef __NO_SHADER__
   glUseProgramObjectARB(0);
 #endif
@@ -986,8 +1018,8 @@ void Game::displayShadow()
     glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"eyematrix"),1,GL_FALSE,shadowmatrix);
     glUniform1iARB(glGetUniformLocationARB(programObject[SHADOW],"shadowmap"),0);
   }
-  std::cout << "shadow matrix" << std::endl;
-  displayMatrix(shadowmatrix);
+//  std::cout << "shadow matrix" << std::endl;
+//  displayMatrix(shadowmatrix);
 
   drawShadow(true);
 

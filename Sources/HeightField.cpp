@@ -63,7 +63,7 @@ void HeightField::draw(void){
 	
 	glPushMatrix();
 	//X->x, Y->z, Z->y
-	glTranslatef(-13., 0, -13.);
+	glTranslatef(-13., -.6, -13.);
 	glScalef(scale.X, scale.Y, scale.Z);
 	
 	

@@ -36,6 +36,7 @@
 		<texload loadid="25">models/full/full.ppm</texload>
 		<texload loadid="26">textures/alpha_map.ppm</texload>
 		<texload loadid="27">textures/alpha_map_cube.ppm</texload>
+    <texload loadid="28">textures/alpha_map_circle.ppm</texload>
 		
 	
 		<!--  OBJ / MODELS   -->
@@ -234,14 +235,6 @@
       <texture id="0" texid="15" >models/wood_chest/texture.ppm</texture>
     </obj>
     
-    <obj id="0" objid="13">
-      <model>models/furniture/furniture.obj</model>
-      <scale x="0.0005" y="0.0005" z="0.0005" />
-      <rotation angle="0." x="0." y="0." z="0." />
-      <translate x="-4." y="0.0" z="-2.8" />
-      <texture id="0" texid="17">models/furniture/furniture.ppm</texture>
-    </obj>
-    
     <obj id="0" objid="15">
       <model>models/barrel/barrel.obj</model>
       <scale x="0.01" y="0.01" z="0.01" />
@@ -282,11 +275,12 @@
 	<scene id="4">
 	  <shader>ALPHA</shader>
       <light x="0.0" y="5.0" z="1.0" w="1.0"/>
+
 	  <obj id="0" objid="10">
       <model>models/logs/fre005.obj</model>
       <scale x="0.001" y="0.001" z="0.001" />
       <rotation angle="270." x="1." y="0." z="0." />
-      <translate x="-4" y="0.0" z="2.5" />
+      <translate x="-4" y="0.2" z="2.5" />
       <texture id="0" texid="13">models/logs/FRE00502.ppm</texture>
       <texture id="1" texid="26">textures/alpha_map.ppm</texture>
     </obj> 
@@ -294,11 +288,20 @@
     <obj id="1" objid="11">
       <model>models/kitchen_table/kitchen_table.obj</model>
       <scale x="0.0009" y="0.0009" z="0.0009" />
-      <rotation angle="270." x="1." y="0." z="0." />
-      <translate x="-4" y="0.0" z="2.5" />
+      <rotation angle="0." x="1." y="0." z="0." />
+      <translate x="-4" y=".5" z="2.5" />
       <texture id="0" texid="14">models/kitchen_table/kitchen_table.ppm</texture>
       <texture id="1" texid="27">textures/alpha_map_cube.ppm</texture>
 		</obj>
+
+    <obj id="2" objid="13">
+      <model>models/furniture/furniture.obj</model>
+      <scale x="0.0025" y="0.005" z="0.0025" />
+      <rotation angle="0." x="0." y="0." z="0." />
+      <translate x="-4" y=".2" z="1.5" />
+      <texture id="0" texid="17">models/furniture/furniture.ppm</texture>
+      <texture id="1" texid="28">textures/alpha_map_circle.ppm</texture>
+    </obj>
     
    
   </scene>

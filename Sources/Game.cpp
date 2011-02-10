@@ -253,7 +253,7 @@ void Game::display()
 
           #ifndef __NO_SHADER__
 		  
-		  displayShadow();
+          displayShadow();
           
           glUseProgramObjectARB(programObject[PARALLAX]);
           glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "wallTex"), 0);
@@ -435,8 +435,6 @@ void Game::display()
       glFrontFace(GL_CCW);
   }
   checkGLError(265);
-
-//glPolygonMode(GL_FRONT, GL_FILL);
 
 #ifndef __NO_SHADER__
   glUseProgramObjectARB(0);

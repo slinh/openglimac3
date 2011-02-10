@@ -32,8 +32,7 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList, Loader & l
 		TextureLoader* tmpTextureLoader;
 		
 		if( texRepeat > 0)
-		{	std::cout << "////////////:::::::::::::////////////:::::::::://///" << std::endl;
-		
+		{	
 			tmpTextureLoader = new TextureLoader(textureLoaderName, true);
 		}
 		else
@@ -119,15 +118,18 @@ void loadXML(const char * pFilename, std::vector<Scene*> & sceneList, Loader & l
     
     // tinylight
     TiXmlElement* tinylightTag = hScene.FirstChild( "tinylight" ).Element();
-    float sizetl, xtl, ytl, ztl;
+    float sizetl, xtl, ytl, ztl, pastl;
     if(tinylightTag != NULL)
     {
 			tinylightTag->QueryFloatAttribute("size", &sizetl);
       tinylightTag->QueryFloatAttribute("x", &xtl);
       tinylightTag->QueryFloatAttribute("y", &ytl);
       tinylightTag->QueryFloatAttribute("z", &ztl);
+      tinylightTag->QueryFloatAttribute("pas", &pastl);
       
       scene->setTinyLightPosition(sizetl, xtl, ytl, ztl);
+      scene->setTinyLightPas(pastl);
+      scene->setTinyLightActive(true);
     }
     
     

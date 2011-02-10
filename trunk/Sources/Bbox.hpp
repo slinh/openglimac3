@@ -11,6 +11,12 @@
 
 class Obj;
 
+typedef enum TypeWall_
+{
+	TOONWALL,
+	CLASSIC
+}TypeWall;
+
 class Bbox
 {
 	
@@ -26,12 +32,13 @@ protected:
 	float 	height;
 	bool 		init;	
 	
+	
 	std::vector<Texture*>	textures;	
 				
 public:
 	Bbox();
 	Bbox(const Bbox & copy);
-	~Bbox();
+	~Bbox();	
 		
 	void initialize(ObjLoader* obj);
 	void initialize(Obj* obj);
@@ -40,7 +47,7 @@ public:
 	bool intersect(const vector3df point)const;
 	void updateCenter();
 	void addPoint(const float & posX, const float & posY, const float & posZ);
-	void displayWall()const;
+	void displayWall(TypeWall type)const;
 	void displayUpDown()const;
 
 	inline const float & getX()const { return x; };

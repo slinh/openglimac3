@@ -75,7 +75,7 @@ public:
     void drawShadow2(bool shaders = false);
   void displayShadow(void);
   void displayFBO(void);
-
+	void idleGL(void);
   void lightUp();
   void lightDown();
   void lightRight();

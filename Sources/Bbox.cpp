@@ -23,6 +23,7 @@ Bbox::Bbox()
 	init = false;
 }
 
+
 Bbox::Bbox(const Bbox & copy)
 {
 
@@ -50,20 +51,18 @@ Bbox::Bbox(const Bbox & copy)
 Bbox::~Bbox(){}
 
 
-		
 void Bbox::initialize(ObjLoader* obj)
 {
 	// apply scale and translate :
 
+
 	height = top-bottom;
 	width = right-left;
+}
 
-	
-}	
 void Bbox::initialize(Obj* obj)
 {
 	// apply scale and translate :
-	
 	height = top-bottom;
 	width = right-left;
 	
@@ -144,9 +143,21 @@ void Bbox::addPoint(const float & posX, const float & posY, const float & posZ)
 
 
 
-void Bbox::displayWall()const
+void Bbox::displayWall(TypeWall type)const
 {
-	//vector3df color(0.19,0.14,0.15);
+
+	switch(type)
+	{
+		case TOON:
+			textures[5]->bind();
+		break;
+		
+		case CLASSIC:
+			textures[0]->bind();
+			textures[1]->bind();
+			textures[2]->bind();
+		break;
+	}
 	
 	glPushMatrix();
 		// on deplace le rectangle à la bonne position	
@@ -155,6 +166,20 @@ void Bbox::displayWall()const
 		glScalef(getWidth()*1.5, 4., getHeight()*1.5);
 		createWall();
 	glPopMatrix();
+	
+	switch(type)
+	{
+		case TOON:
+			textures[5]->unbind();
+		break;
+		
+		case CLASSIC:
+			textures[0]->unbind();
+			textures[1]->unbind();
+			textures[2]->unbind();
+		break;
+	}
+	
 	
 }
 
@@ -209,6 +234,11 @@ void Bbox::initTextures()
 		Texture* ground = new Texture(0, tmp);
 	
     textures.push_back(ground);
+    
+    Texture* toonWall = new Texture(29, tmp);
+	
+    textures.push_back(toonWall);
+    
 }
 
 

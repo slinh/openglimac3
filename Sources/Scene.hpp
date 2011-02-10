@@ -57,7 +57,18 @@ class Scene
 
     inline GLfloat* getTinyLightPosition(){ return tinyLightPosition; };
     void setTinyLightPosition(float size, float x, float y, float z);
+    
+    inline const float & getTinyLightSize() { return tinyLightSize; };
+    
+    inline const float & getTinyLightPas(){ return tinyLightPas; };
+    void setTinyLightPas(float pas);
 
+	  inline const float & getTinyLightRadian(){ return tinyLightRadian; };
+    inline float & setTinyLightRadian(){ return tinyLightRadian; };
+
+    inline const bool & getTinyLightActive()const{ return isTinyLightActive; };
+    void setTinyLightActive(bool b);
+        
 		void updateLight(void);
 
     void lightUp();
@@ -70,6 +81,7 @@ class Scene
     void initGL();
     void display();
     
+
   protected:
     TypeScene 			    typeS;
     TypeShader 			    typeShader;    //  shader
@@ -82,6 +94,8 @@ class Scene
     GLfloat*						tinyLightPosition;
     float								tinyLightSize;
     float								tinyLightRadian;
+    float								tinyLightPas;
+    bool								isTinyLightActive;
     
     
 	

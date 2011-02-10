@@ -8,6 +8,8 @@
 #include "ppm.hpp"
 #include "utils.hpp"
 
+
+
 //#define __NO_SHADER__
 //#define __CASTELJAU__
 #define __CUBE_MAP__
@@ -54,11 +56,12 @@ void mat_inverse (float *in, float *out)
 
 static void displayGL(void)
 {
-
+#ifndef __NO_SHADER__
   if(game.getSceneList()[game.getCurrentScene()]->getTypeShader() == SHADOW)
   {
    game.FBO();
   }
+#endif
 
 #ifdef __MAIN_SCENE__  // MAIN SCENE - FROM XML - + NORMAL SPEC ILLUMINATION
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -325,6 +328,8 @@ vector3df casteljau(float t,std::vector<vector3df> l)
 
 static void idleGL(void)
 {
+	game.idleGL();
+	
     angle += 0.25;
     
     //Timer
@@ -624,10 +629,13 @@ static void initGL(int argc,
   { 
     loadShader(tabShader[i]+".vert", tabShader[i]+".frag", i);
   }
-#endif
- 
+  
   game.initShadowGL();
 
+  
+#endif
+ 
+  
 
 #ifdef __CUBE_MAP__
   //Creation de la cube map

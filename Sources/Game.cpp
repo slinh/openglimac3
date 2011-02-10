@@ -4,7 +4,7 @@
 #include "Obj.hpp"
 #include "common/include/XMLParser.hpp"
 #include "utils.hpp"
-#include <iostream>
+
 //#define __NO_SHADER__
 
 
@@ -168,6 +168,47 @@ void Game::initGL()
 
 void Game::display()
 {
+	
+	checkGLError(173);
+	
+	
+	if(sceneList[currentScene]->getTinyLightActive())
+	{
+		
+		static GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
+		static GLfloat softred[]= { 0.2f, 0.0f, 0.0f, 1.0f };
+
+		// tiny light
+		glEnable(GL_LIGHT1);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, softred);
+		glLightfv(GL_LIGHT1, GL_AMBIENT, softred);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
+			
+		glPushMatrix();
+		glRotatef(sceneList[currentScene]->getTinyLightRadian(),0.0,1.0,0.0);
+		glLightfv(GL_LIGHT1, GL_POSITION, sceneList[currentScene]->getTinyLightPosition());
+		glPopMatrix();
+		
+		// See where the light is
+		glPushMatrix();
+			glRotatef(sceneList[currentScene]->getTinyLightRadian(),.0,1.0,.0);
+			 glTranslatef(sceneList[currentScene]->getTinyLightPosition()[0],
+										sceneList[currentScene]->getTinyLightPosition()[1],
+										sceneList[currentScene]->getTinyLightPosition()[2]);
+			
+			 drawSphere(sceneList[currentScene]->getTinyLightSize(), 30, 30);
+		
+		std::cout << sceneList[currentScene]->getTinyLightRadian() << std::endl;	 
+	//     std::cout << "lightPos :" << sceneList[currentScene]->getTinyLightPosition()[0] << " / " << sceneList[currentScene]->getTinyLightPosition()[1] << " / " << sceneList[currentScene]->getTinyLightPosition()[2] << " /"  << sceneList[currentScene]->getTinyLightPosition()[3]<< std::endl;
+		glPopMatrix();
+		
+	}
+	else
+	{
+		std::cout << "no second light" << std::endl;
+		glDisable(GL_LIGHT1);
+	}
+	
 	//IF 1
 	if( currentScene < (int)sceneList.size() )
 	{
@@ -210,33 +251,31 @@ void Game::display()
       else if (sceneList[currentScene]->getTypeShader() == SHADOW)
       {
 
-
-          displayShadow();
-
           #ifndef __NO_SHADER__
+		  
+		  displayShadow();
+          
           glUseProgramObjectARB(programObject[PARALLAX]);
           glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "wallTex"), 0);
           glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "heightmapTex"), 1);
           glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
           #endif
 
-          sceneList[currentScene]->setContentHouse().setBbox().bindTextures();
-
           //PUSH 6
           glPushMatrix();
-             sceneList[currentScene]->getContentHouse().getBbox().displayWall();
+             sceneList[currentScene]->getContentHouse().getBbox().displayWall(CLASSIC);
           //POP 6
           glPopMatrix();
 
           #ifndef __NO_SHADER__
           glUseProgramObjectARB(0);
           #endif
-          sceneList[currentScene]->setContentHouse().setBbox().unbindTextures();
-
+ 
 
 
 
 //          displayFBO();
+
           checkGLError(182);
           return;
       }
@@ -260,19 +299,20 @@ void Game::display()
 				glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
 				#endif
 
-				sceneList[currentScene]->setContentHouse().setBbox().bindTextures();
-				
 				//PUSH 6
 				glPushMatrix();
-					 sceneList[currentScene]->getContentHouse().getBbox().displayWall();
+
+					sceneList[currentScene]->getContentHouse().getBbox().displayWall(CLASSIC);
+
 				//POP 6
 				glPopMatrix();
 				
 				#ifndef __NO_SHADER__
 				glUseProgramObjectARB(0);
 				#endif
+
 				sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
-				sceneList[currentScene]->setContentHouse().setBbox().unbindTextures();
+
 			}
 			//END ELSE
 		}
@@ -386,7 +426,7 @@ void Game::display()
       glColor3f(0.0,0.0,0.0);
 
       sceneList[currentScene]->display();
-      sceneList[currentScene]->getContentHouse().getBbox().displayWall();
+      sceneList[currentScene]->getContentHouse().getBbox().displayWall(TOONWALL);
       sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
 
       glLineWidth (1.0f);
@@ -397,10 +437,21 @@ void Game::display()
   checkGLError(265);
 
 //glPolygonMode(GL_FRONT, GL_FILL);
+
 #ifndef __NO_SHADER__
   glUseProgramObjectARB(0);
 #endif
 
+}
+
+void Game::idleGL(void)
+{
+	// moving light
+	if(sceneList[currentScene]->getTinyLightActive())
+	{
+			sceneList[currentScene]->setTinyLightRadian() += sceneList[currentScene]->getTinyLightPas();
+	}
+	
 }
 
 Game & Game::Instance()

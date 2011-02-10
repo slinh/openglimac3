@@ -6,6 +6,7 @@
 #include "Scene.hpp"
 #include "Draw.hpp"
 #include "HeightField.hpp"
+#include "utils.hpp"
 
 class Game;
 
@@ -29,7 +30,10 @@ Scene::Scene(TypeScene type):typeS(type), typeShader(PARALLAX), objList(NULL)
   lightPosition[2] = 2.;
   lightPosition[3] = 1.;
   
-  tinyLightPosition = new GLfloat[3];
+  tinyLightRadian = 0;
+  tinyLightPosition = new GLfloat[4];
+  tinyLightPosition[3] = 1.;
+  isTinyLightActive = false;
 }
 
 Scene::~Scene(){
@@ -92,6 +96,16 @@ void Scene::setTinyLightPosition(float size, float x, float y, float z)
 	tinyLightPosition[0] = x;
 	tinyLightPosition[1] = y;
 	tinyLightPosition[2] = z;
+}
+
+void Scene::setTinyLightPas(float pas)
+{
+	tinyLightPas = pas;
+}
+
+void Scene::setTinyLightActive(bool b)
+{
+	isTinyLightActive = b;
 }
 
 void Scene::updateLight()

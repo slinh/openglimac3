@@ -16,7 +16,7 @@
 		<texload loadid="8">models/chapel/chapel_spec.ppm</texload>
 
 		<texload loadid="9">models/gallows/gallows.ppm</texload>
-		<texload loadid="10">models/wall/texture.ppm</texload>
+		<texload loadid="10">models/wall/wall.ppm</texload>
 		<texload loadid="11">models/castle/castle.ppm</texload>
 		<texload loadid="12">models/church/kosciol.ppm</texload>
 		<texload loadid="13">models/logs/FRE00502.ppm</texload>
@@ -26,6 +26,7 @@
 		<texload loadid="17">models/furniture/furniture.ppm</texload>
 		<texload loadid="18">models/barrel/barrel.ppm</texload>
 		<texload loadid="19">models/candle/texture.ppm</texload>
+   
    
 		<texload loadid="20" repeat="1">textures/wall.ppm</texload>
 		<texload loadid="21" repeat="1">textures/heightmap.ppm</texload>
@@ -38,6 +39,7 @@
 		<texload loadid="27">textures/alpha_map_cube.ppm</texload>
     <texload loadid="28">textures/alpha_map_circle.ppm</texload>
 		
+		<texload loadid="29">models/curly_table/curly_table.ppm</texload>
 	
 		<!--  OBJ / MODELS   -->
 		<objload loadid="0">models/house_obj/house_obj.obj</objload>
@@ -57,7 +59,7 @@
 		<objload loadid="14">models/Wine_Goblet/goblet.obj</objload>
 		<objload loadid="15">models/barrel/barrel.obj</objload>
 		<objload loadid="16">models/candle/candle.obj</objload>
-		<objload loadid="17">models/barrel/barrel.obj</objload>
+		<objload loadid="17">models/curly_table/curly_table.obj</objload>
  
 	</loader>
 
@@ -141,7 +143,7 @@
       <scale x="4." y="5." z="3." />
       <rotation angle="90." x="0." y="1." z="0" />
       <translate x="0." y="-1.4" z="-2.5" />
-      <texture id="0" texid="10">models/wall/texture.ppm</texture>
+      <texture id="0" texid="10">models/wall/wall.ppm</texture>
     </obj>
     
     <obj id="7" objid="6">
@@ -149,7 +151,7 @@
       <scale x="0.005" y="0.005" z="0.005" />
       <rotation angle="0." x="0." y="0." z="0" />
       <translate x="-5." y="0." z="0." />
-      <texture id="0" texid="10">models/wall/texture.ppm</texture>
+      <texture id="0" texid="10">models/wall/wall.ppm</texture>
     </obj>
     
     <obj id="8" objid="7">
@@ -157,7 +159,7 @@
       <scale x="0.025" y="0.025" z="0.025" />
       <rotation angle="0." x="0." y="0." z="0" />
       <translate x="-5." y="0." z="-1." />
-      <texture id="0" texid="10">models/wall/texture.ppm</texture>
+      <texture id="0" texid="10">models/wall/wall.ppm</texture>
     </obj>  
      
     <obj id="8" objid="8">
@@ -263,12 +265,12 @@
       <texture id="0" texid="13">models/logs/FRE00502.ppm</texture>
     </obj> 
      
-    <obj id="1" objid="11">
-      <model>models/kitchen_table/kitchen_table.obj</model>
-      <scale x="0.0009" y="0.0009" z="0.0009" />
-      <rotation angle="270." x="1." y="0." z="0." />
+    <obj id="1" objid="17">
+      <model>models/curly_table/curly_table.obj</model>
+      <scale x="0.025" y="0.025" z="0.025" />
+      <rotation angle="0." x="0." y="0." z="0." />
       <translate x="2." y="0.0" z="-5.0" />
-      <texture id="0" texid="14">models/kitchen_table/kitchen_table.ppm</texture>
+      <texture id="0" texid="29">models/curly_table/curly_table.ppm</texture>
 		</obj>
   </scene>
 

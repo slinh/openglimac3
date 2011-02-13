@@ -180,8 +180,8 @@ void Game::display()
 	static GLfloat yellow[]= { 0.4f, 0.4f, 0.1f, 1.0f };
 	static GLfloat softred[]= { 0.8f, 0.0f, 0.0f, 1.0f };
 	static GLfloat grey[]= { 0.5f, 0.5f, 0.5f, 1.0f };
-	static GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };	
-	static GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
+	//static GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };	
+	//static GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
 	
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);
@@ -827,12 +827,12 @@ void Game::drawShadow(bool shaders)
 
   GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
   GLfloat gray[]= { 0.5f, 0.5f, 0.5f, 1.0f };
-  GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
-  GLfloat softred[]= { 0.2f, 0.0f, 0.0f, 1.0f };
-  GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
-  GLfloat softblue[]= { 0.0f, 0.0f, 0.2f, 1.0f };
-  GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
-  GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
+  //GLfloat red[]= { 1.0f, 0.0f, 0.0f, 1.0f };
+  //GLfloat softred[]= { 0.2f, 0.0f, 0.0f, 1.0f };
+  //GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
+  //GLfloat softblue[]= { 0.0f, 0.0f, 0.2f, 1.0f };
+  //GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
+  //GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
 /*
   glMaterialfv(GL_FRONT, GL_SPECULAR,white);
   glMaterialfv(GL_FRONT, GL_DIFFUSE,red);
@@ -969,8 +969,8 @@ void Game::drawShadow2(bool shaders)
   GLfloat softred[]= { 0.2f, 0.0f, 0.0f, 1.0f };
   GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
   GLfloat softblue[]= { 0.0f, 0.0f, 0.2f, 1.0f };
-  GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
-  GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
+  //GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };
+  //GLfloat grey[]= { .5f, .5f, .5f, 1.0f };
 
   glMaterialfv(GL_FRONT, GL_SPECULAR,white);
   glMaterialfv(GL_FRONT, GL_DIFFUSE,red);

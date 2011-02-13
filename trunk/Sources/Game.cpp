@@ -542,7 +542,7 @@ void Game::display()
 #endif
 
   // si scene principale :
-  if(sceneList[currentScene]->getTypeShader() == MAIN)
+  if(sceneList[currentScene]->getTypeScene() == MAIN)
   {
       /********************************  Billboard  *******************************************/
       glDisable(GL_CULL_FACE);
@@ -650,6 +650,7 @@ GLfloat* Game::getLightPosition()
 	{
     return sceneList[currentScene]->getLightPosition();
   }
+	return NULL;
 }
 
 void Game::lightUp()
@@ -1279,13 +1280,15 @@ void Game::displayFBO()
   void Game::setSky(CubeMap * sky){ this->sky = sky; }
 
   void Game::initTripleBillboard(){
+	  checkGLError(1282);
       // definition de la couleur d'effacage donc couleur de fond
         glClearColor(0.0,0.0,0.0,1.0);
 
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_SMOOTH);
+       //glEnable(GL_SMOOTH);
+	  glShadeModel(GL_SMOOTH);
 
         // comment on stocke les nifos sur la carte graphique
         glPixelStorei(GL_PACK_ALIGNMENT,1);
@@ -1302,7 +1305,7 @@ void Game::displayFBO()
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthData, heightData, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
       free(data);
-      checkGLError(1108);
+      
       displayListId = glGenLists(1); //Make room for the display list
       glNewList(displayListId, GL_COMPILE); //Begin the display list
         vector3df* myPosition = new vector3df(-1.f,0.1f,0.0f);

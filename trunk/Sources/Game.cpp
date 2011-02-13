@@ -306,7 +306,7 @@ void Game::display()
           glEnable(GL_TEXTURE_GEN_R);
 
 					church->drawCubeMap(10.0);
-
+				
 					#ifndef __NO_SHADER__
 						glUseProgramObjectARB(0);
           #endif
@@ -356,10 +356,30 @@ void Game::display()
 			//ELSE IF 1
       else if  (sceneList[currentScene]->getTypeShader() == TOON)
       {
+		  
+		  glUseProgramObjectARB(programObject[TOON]);
+		  #ifndef __NO_SHADER__
+		  glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
+          #endif
+		  
+		  sceneList[currentScene]->getContentHouse().getBbox().displayWall(TOONWALL);
+			
+		  #ifndef __NO_SHADER__
+		  glUseProgramObjectARB(0);
+		  #endif
+		  
+		  sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
+		  
+		  
               glEnable(GL_CULL_FACE);
               glFrontFace(GL_CW);
               glPolygonMode(GL_FRONT, GL_FILL);
               glCullFace(GL_FRONT);
+		  
+		  
+		  
+		  
+		 		  
       }
 			//END ELSE IF 1
 			//ELSE 1
@@ -437,15 +457,25 @@ void Game::display()
 				glUniform3fv(glGetUniformLocationARB(programObject[ENV], "posCamera"), 1, position);
 				#endif
 				
+				
+				glutSolidSphere(1.0, 30, 30);
+				
+				
+				
 				break;
 				
 			case CUBEMAP:
 				break;
 				
       case TOON:
+				
+				
+				
 				#ifndef __NO_SHADER__
         glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
         #endif
+			
+				
 				break;
 
 			case ALPHA:
@@ -457,6 +487,7 @@ void Game::display()
 
 			case SHADOW:
 
+	
 				break;
 
 			default:
@@ -485,8 +516,7 @@ void Game::display()
   }
 
   else if(sceneList[currentScene]->getTypeShader() == TOON)
-  {
-
+  {	  
       // display strokes for toon shading
       #ifndef __NO_SHADER__
         glUseProgramObjectARB(0);
@@ -498,10 +528,8 @@ void Game::display()
       glPolygonMode(GL_FRONT, GL_LINE);
       glColor3f(0.0,0.0,0.0);
 
-      sceneList[currentScene]->display();
-      sceneList[currentScene]->getContentHouse().getBbox().displayWall(TOONWALL);
-      sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
-
+	  sceneList[currentScene]->display();
+	  
       glLineWidth (1.0f);
       glDisable(GL_CULL_FACE);
       glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
@@ -557,7 +585,7 @@ void Game::idleGL(void)
 	// light principal
 	if(sceneList[currentScene]->getTypeScene() != MAIN)
 	{
-		sceneList[currentScene]->setLightRadian() += sceneList[currentScene]->getLightPas();
+	//	sceneList[currentScene]->setLightRadian() += sceneList[currentScene]->getLightPas();
 		//std::cout << "light : " << sceneList[currentScene]->getLightRadian() << std::endl;
 	}
 	
@@ -1277,11 +1305,11 @@ void Game::displayFBO()
       checkGLError(1108);
       displayListId = glGenLists(1); //Make room for the display list
       glNewList(displayListId, GL_COMPILE); //Begin the display list
-        vector3df* myPosition = new vector3df(-0.5f,0.0f,0.0f);
-        TripleBillBoard * b1 = new TripleBillBoard(myPosition,0.5f,2.f);
+        vector3df* myPosition = new vector3df(-1.f,0.1f,0.0f);
+        TripleBillBoard * b1 = new TripleBillBoard(myPosition,.5f,.2f);
         b1->draw(getCamera()); //Add commands for drawing a cube to the display list
-        vector3df* myPosition2 = new vector3df(-0.5f,0.0f,0.0f);
-        TripleBillBoard * b2 = new TripleBillBoard(myPosition2,0.5f,2.f);
+        vector3df* myPosition2 = new vector3df(-0.5f,0.1f,0.0f);
+        TripleBillBoard * b2 = new TripleBillBoard(myPosition2,.5f,.2f);
         b2->draw(getCamera()); //Add commands for drawing a cube to the display list
       glEndList();
       checkGLError(1118);

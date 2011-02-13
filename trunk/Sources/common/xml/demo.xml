@@ -37,9 +37,10 @@
 		<texload loadid="25">models/full/full.ppm</texload>
 		<texload loadid="26">textures/alpha_map.ppm</texload>
 		<texload loadid="27">textures/alpha_map_cube.ppm</texload>
-    <texload loadid="28">textures/alpha_map_circle.ppm</texload>
+        <texload loadid="28">textures/alpha_map_circle.ppm</texload>
 		
 		<texload loadid="29">models/curly_table/curly_table.ppm</texload>
+        <texload loadid="30" repeat="1">textures/toon.ppm</texload>
 	
 		<!--  OBJ / MODELS   -->
 		<objload loadid="0">models/house_obj/house_obj.obj</objload>
@@ -140,9 +141,9 @@
   
     <obj id="6" objid="5">
       <model>models/wall/castle_wall.obj</model>
-      <scale x="0.04" y="0.05" z="0.03" />
+      <scale x="0.025" y="0.035" z="0.015" />
       <rotation angle="90." x="0." y="1." z="0" />
-      <translate x="0." y="-1.4" z="-2.5" />
+      <translate x="0." y="1.0" z="5.0" />
       <texture id="0" texid="10">models/wall/wall.ppm</texture>
     </obj>
     
@@ -183,13 +184,8 @@
     
   <scene id="1">
     <shader>SHADOW</shader>
-<<<<<<< .mine
     <light x="1.5" y="4." z="1." w="1.0"/>
     
-=======
-    <light x="2." y="2." z="1." w="1.0"/>
-    <tinylight size="0.1" x="1.0" y="3.0" z=".6" pas="0.50"/>
->>>>>>> .r52
     <obj id="0" objid="10">
       <model>models/logs/fre005.obj</model>
       <scale x="0.001" y="0.001" z="0.001" />
@@ -217,13 +213,12 @@
   
   <scene id="2">
     <shader>TOON</shader>
-    <light x="-3.5" y="2.0" z="-2.5" w="1.0"/>
-    <tinylight size="0.1" x="1.0" y="3.0" z=".6" pas="0.50"/>
+    <light x="1.5" y="2.0" z="0.5" w="1.0"/>
     <obj id="1" objid="11">
       <model>models/kitchen_table/kitchen_table.obj</model>
       <scale x="0.0009" y="0.0009" z="0.0009" />
       <rotation angle="0." x="0." y="0." z="0." />
-      <translate x="-2.0" y="0.0" z="-2.0" />
+      <translate x="-2.0" y="0.5" z="-2.5" />
       <texture id="0" texid="14">models/kitchen_table/kitchen_table.ppm</texture>
     </obj>      
     
@@ -239,7 +234,7 @@
       <model>models/wood_chest/wood_chest.obj</model>
       <scale x="0.0005" y="0.0005" z="0.0005" />
       <rotation angle="0." x="0." y="0." z="0." />
-      <translate x="-4." y="0.0" z="-2.8" />
+      <translate x="-4." y="0.2" z="-2.8" />
       <texture id="0" texid="15" >models/wood_chest/texture.ppm</texture>
     </obj>
     
@@ -282,13 +277,8 @@
 
 	<scene id="4">
 	  <shader>ALPHA</shader>
-<<<<<<< .mine
       <light x="0.5" y="3.0" z="1.0" w="1.0"/>
 		
-=======
-      <light x="-4.0" y="5.0" z="2.0" w="1.0"/>
-		<tinylight size="0.1" x="0.5" y="2.0" z="1.0" pas="1.0"/>
->>>>>>> .r52
 	  <obj id="0" objid="10">
       <model>models/logs/fre005.obj</model>
       <scale x="0.001" y="0.001" z="0.001" />

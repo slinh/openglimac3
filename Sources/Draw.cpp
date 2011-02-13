@@ -5,6 +5,34 @@
 #endif
 #include "Draw.hpp"
 
+void drawRepere(void)
+{
+	glDisable(GL_TEXTURE_2D);
+  glDisable(GL_LIGHTING);
+  
+  glBegin(GL_LINES);
+  glColor3f(1.0f,0.0f,0.0f);
+  glVertex3f(0.0f, 0.0f, 0.0f);
+  glVertex3f(1.0f, 0.0f, 0.0f);
+  glEnd();
+
+
+  glBegin(GL_LINES);
+  glColor3f(0.0f,1.0f,0.0f);
+  glVertex3f(0.0f, 0.0f, 0.0f);
+  glVertex3f(0.0f, 0.0f, 1.0f);
+  glEnd();
+
+  glBegin(GL_LINES);
+  glColor3f(0.0f,0.0f,1.0f);
+  glVertex3f(0.0f, 0.0f, 0.0f);
+  glVertex3f(0.0f, 1.0f, 0.0f);
+  glEnd();
+
+  glEnable(GL_TEXTURE_2D);
+  glEnable(GL_LIGHTING);
+}
+
 void createCarre(void)
 {
 

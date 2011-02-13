@@ -34,6 +34,9 @@ Scene::Scene(TypeScene type):typeS(type), typeShader(PARALLAX), objList(NULL)
   tinyLightPosition = new GLfloat[4];
   tinyLightPosition[3] = 1.;
   isTinyLightActive = false;
+  
+  lightPas = 1.0;
+  lightRadian = 0;
 }
 
 Scene::~Scene(){

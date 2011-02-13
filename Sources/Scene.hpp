@@ -63,8 +63,13 @@ class Scene
     inline const float & getTinyLightPas(){ return tinyLightPas; };
     void setTinyLightPas(float pas);
 
+    inline const float & getLightPas(){ return lightPas; };
+
 	  inline const float & getTinyLightRadian(){ return tinyLightRadian; };
     inline float & setTinyLightRadian(){ return tinyLightRadian; };
+
+	  inline const float & getLightRadian(){ return lightRadian; };
+    inline float & setLightRadian(){ return lightRadian; };
 
     inline const bool & getTinyLightActive()const{ return isTinyLightActive; };
     void setTinyLightActive(bool b);
@@ -94,6 +99,8 @@ class Scene
     GLfloat*						tinyLightPosition;
     float								tinyLightSize;
     float								tinyLightRadian;
+    float								lightRadian;
+    float 							lightPas;
     float								tinyLightPas;
     bool								isTinyLightActive;
     

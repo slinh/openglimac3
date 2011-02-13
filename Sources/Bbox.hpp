@@ -53,6 +53,8 @@ public:
 	inline const float & getX()const { return x; };
 	inline const float & getY()const { return y; };
 
+	const Texture & getTexture(int id)const;
+
 	inline const float & getWidth()const { return width; };
 	inline const float & getHeight()const { return height; };
 	

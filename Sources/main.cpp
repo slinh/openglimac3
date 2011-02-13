@@ -64,6 +64,7 @@ static void displayGL(void)
 #endif
 
 #ifdef __MAIN_SCENE__  // MAIN SCENE - FROM XML - + NORMAL SPEC ILLUMINATION
+  glClearColor (0.0,0.0,0.0,1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glMatrixMode(GL_MODELVIEW);
@@ -79,18 +80,11 @@ static void displayGL(void)
 //            up[0],up[1],up[2]);
 
 
-
   //glRotatef(xrotation,1.0f,0.0f,0.0f);
   //glRotatef(yrotation,0.0f,1.0f,0.0f);
   //glTranslatef(-position[0],-position[1],-position[2]);
 
-  glPushMatrix();
-// glRotatef(angle,0.0,0.0,1.0);
-  glLightfv(GL_LIGHT0, GL_POSITION, game.getLightPosition());
 
-//   std::cout << "lightPos" <<  game.getLightPosition()[0] << ", " << game.getLightPosition()[1] << ", " << game.getLightPosition()[2] << std::endl;
-
-  glPopMatrix();
 
 
   glDisable(GL_TEXTURE_2D);
@@ -127,12 +121,7 @@ static void displayGL(void)
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,white);
   glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
 
-  // See where the light is
-  glPushMatrix();
-     glTranslatef(game.getLightPosition()[0],game.getLightPosition()[1],game.getLightPosition()[2]);
-     drawSphere(0.1, 30, 30);
-//     std::cout << "lightPos :" << game.getLightPosition()[0] << " / " << game.getLightPosition()[1] << " / " << game.getLightPosition()[2] << " /"  << game.getLightPosition()[3]<< std::endl;
-  glPopMatrix();
+
 
   vector3df cam = vector3df(position[0], position[1], position[2]);
   vector3df dir = vector3df(direction[0], direction[1], direction[2]);
@@ -143,11 +132,15 @@ static void displayGL(void)
   game.checkCurrentScene();
 
 
+
+
+game.display();
+
 #ifdef __TEST_TEXTURE__  
   glPushMatrix();
     glTranslatef(-1.0,1.0,2.0);
 
-    glUseProgramObjectARB(0);
+ //   glUseProgramObjectARB(0);
     glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_2D);
     
@@ -159,14 +152,14 @@ static void displayGL(void)
   glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
     
 	  
-    drawSphere(1.2,30,30);
+    drawSphere(2.2,30,30);
+    
+ //  glutSolidSphere(2, 30 ,30);
     glBindTexture(GL_TEXTURE_2D,0);
     glDisable(GL_TEXTURE_2D);
 
   glPopMatrix();
 #endif
-
-game.display();
 
 checkGLError(332);
 
@@ -275,6 +268,7 @@ glutSwapBuffers();
 #endif  // --- END TEST ALPHA SHADING
 
 
+	glutSwapBuffers();
 }
 
 static void reshapeGL(int newwidth,
@@ -632,7 +626,7 @@ static void initGL(int argc,
   
   game.initShadowGL();
 
-  
+ glLightModelfv(GL_LIGHT_MODEL_AMBIANT, black);
 #endif
  
   

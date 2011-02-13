@@ -162,7 +162,6 @@ void Game::initGL()
   {
 		sceneList[i]->initGL();
 	}
-	
 
 }
 
@@ -170,42 +169,110 @@ void Game::display()
 {
 	
 	checkGLError(173);
+
+	static GLfloat white[]= { 1.f, 1.f, 1.f, 1.0f };
+	static GLfloat yellow[]= { 0.4f, 0.4f, 0.1f, 1.0f };
+	static GLfloat softred[]= { 0.8f, 0.0f, 0.0f, 1.0f };
+	static GLfloat grey[]= { 0.5f, 0.5f, 0.5f, 1.0f };
+	static GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };	
+	static GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
 	
+	//first light :
+	glPushMatrix();
+
+		glLightfv(GL_LIGHT0, GL_SPECULAR, grey);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, grey);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+
+
+		if( sceneList[currentScene]->getTypeScene() != MAIN )
+		{
+				vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
+				glTranslatef(trans.X, trans.Y, trans.Z);
+
+				glRotatef(sceneList[currentScene]->getLightRadian(),0.0,1.0,0.0);
+				glLightfv(GL_LIGHT0, GL_POSITION, sceneList[currentScene]->getTinyLightPosition());	
+		}
+
+		glLightfv(GL_LIGHT0, GL_POSITION, sceneList[currentScene]->getLightPosition());
+
+	  // See where the light is
+		glPushMatrix();
+			 glTranslatef(sceneList[currentScene]->getLightPosition()[0],sceneList[currentScene]->getLightPosition()[1],sceneList[currentScene]->getLightPosition()[2]);
+			 drawSphere(0.1, 30, 30);
+		glPopMatrix();
+
+  glPopMatrix();
 	
 	if(sceneList[currentScene]->getTinyLightActive())
 	{
-		
-		static GLfloat white[]= { 1.0f, 1.0f, 1.0f, 1.0f };
-		static GLfloat softred[]= { 0.2f, 0.0f, 0.0f, 1.0f };
 
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,grey);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,grey);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,grey);
+		glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
+  
 		// tiny light
+		glPushMatrix();
+		
+		// define the repere to the center of the object :
+		vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
+		
+		glTranslatef(trans.X, trans.Y, trans.Z);
+		
+		drawRepere();
+		
+		glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, black);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+		
+
 		glEnable(GL_LIGHT1);
 		glLightfv(GL_LIGHT1, GL_SPECULAR, softred);
-		glLightfv(GL_LIGHT1, GL_AMBIENT, softred);
+		glLightfv(GL_LIGHT1, GL_AMBIENT, yellow);
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
+
+//			const Texture & p = sceneList[currentScene]->getContentHouse().getBbox().getTexture(0);
 			
-		glPushMatrix();
+//		 p.bind();
+		glutSolidSphere(2., 30, 30);
+//		  drawSphere(2., 30, 30);
+ // 	p.unbind();
+
+/*
+		GLfloat light_spot_direction[] = { 0.0, 0.0, -1.0};
+		GLfloat light_spot_cutoff[] = { 25.0 }; 
+		GLfloat light_spot_exp[] = { 2.0 };
+
+		//Apply the light position
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION , light_spot_direction);
+		glLightfv(GL_LIGHT1, GL_SPOT_CUTOFF , light_spot_cutoff);
+		glLightfv(GL_LIGHT1, GL_SPOT_EXPONENT , light_spot_exp); 
+*/
+		
 		glRotatef(sceneList[currentScene]->getTinyLightRadian(),0.0,1.0,0.0);
 		glLightfv(GL_LIGHT1, GL_POSITION, sceneList[currentScene]->getTinyLightPosition());
-		glPopMatrix();
+	//	glPopMatrix();
 		
 		// See where the light is
-		glPushMatrix();
-			glRotatef(sceneList[currentScene]->getTinyLightRadian(),.0,1.0,.0);
+	//	glPushMatrix();
+	//	glTranslatef(trans.X, trans.Y, trans.Z);
+		
+	//		glRotatef(sceneList[currentScene]->getTinyLightRadian(),.0,1.0,.0);
 			 glTranslatef(sceneList[currentScene]->getTinyLightPosition()[0],
 										sceneList[currentScene]->getTinyLightPosition()[1],
 										sceneList[currentScene]->getTinyLightPosition()[2]);
 			
 			 drawSphere(sceneList[currentScene]->getTinyLightSize(), 30, 30);
 		
-		std::cout << sceneList[currentScene]->getTinyLightRadian() << std::endl;	 
-	//     std::cout << "lightPos :" << sceneList[currentScene]->getTinyLightPosition()[0] << " / " << sceneList[currentScene]->getTinyLightPosition()[1] << " / " << sceneList[currentScene]->getTinyLightPosition()[2] << " /"  << sceneList[currentScene]->getTinyLightPosition()[3]<< std::endl;
+		//std::cout << "angle" << sceneList[currentScene]->getTinyLightRadian() << std::endl;	 
+	  //   std::cout << "lightPos :" << sceneList[currentScene]->getTinyLightPosition()[0] << " / " << sceneList[currentScene]->getTinyLightPosition()[1] << " / " << sceneList[currentScene]->getTinyLightPosition()[2] << " /"  << sceneList[currentScene]->getTinyLightPosition()[3]<< std::endl;
 		glPopMatrix();
 		
 	}
 	else
 	{
-		std::cout << "no second light" << std::endl;
+	//	std::cout << "no second light" << std::endl;
 		glDisable(GL_LIGHT1);
 	}
 	
@@ -444,12 +511,17 @@ void Game::display()
 
 void Game::idleGL(void)
 {
+	// light principal
+	if(sceneList[currentScene]->getTypeScene() != MAIN)
+	{
+			sceneList[currentScene]->setLightRadian() += sceneList[currentScene]->getLightPas();
+	}
+	
 	// moving light
 	if(sceneList[currentScene]->getTinyLightActive())
 	{
 			sceneList[currentScene]->setTinyLightRadian() += sceneList[currentScene]->getTinyLightPas();
 	}
-	
 }
 
 Game & Game::Instance()

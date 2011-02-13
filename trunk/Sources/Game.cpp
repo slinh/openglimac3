@@ -585,7 +585,7 @@ void Game::idleGL(void)
 	// light principal
 	if(sceneList[currentScene]->getTypeScene() != MAIN)
 	{
-	//	sceneList[currentScene]->setLightRadian() += sceneList[currentScene]->getLightPas();
+		sceneList[currentScene]->setLightRadian() += sceneList[currentScene]->getLightPas();
 		//std::cout << "light : " << sceneList[currentScene]->getLightRadian() << std::endl;
 	}
 	

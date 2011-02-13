@@ -151,7 +151,7 @@ checkGLError(332);
 
 glPopMatrix();
 
-glutSwapBuffers();
+//glutSwapBuffers();
 
 #endif  // --- END MAIN SCENE
 
@@ -612,7 +612,7 @@ static void initGL(int argc,
   
   game.initShadowGL();
 
-// glLightModelfv(GL_LIGHT_MODEL_AMBIANT, black);
+ glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
 #endif
  
   

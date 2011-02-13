@@ -56,6 +56,8 @@ public:
   inline void setShadowtexid(GLuint shadowtexid) { this->shadowtexid = shadowtexid; };
   inline GLuint getShadowtexid() { return shadowtexid; };
 
+  inline GLuint getDisplayListId() {return displayListId; };
+
   inline void setShadowbufferid(GLuint shadowbufferid) { this->shadowbufferid = shadowbufferid; };
 
   inline void setWindowSize(int windowwidth, int windowheight) { this->windowwidth = windowwidth;
@@ -83,10 +85,11 @@ public:
   
   void lightFront();
   void lightBack();
+  void initTripleBillboard();
 
 protected:
   std::vector<Scene*> 	sceneList;
-  Loader*								loader;
+  Loader*				loader;
 
   vector3df 			camera;
   vector3df 			direction;
@@ -97,7 +100,7 @@ protected:
   GLhandleARB* 		programObject;
   float*          invmat;
 
-  unsigned int    shadowbufferid;
+  GLuint   shadowbufferid;
   float           angle;
   GLfloat lightprojectionmatrix[16];
   GLfloat lightmodelviewmatrix[16];
@@ -111,7 +114,8 @@ protected:
 
 	//Timer
 	float timer;
-
+  GLuint displayListId;
+  GLuint idTexBillboard;
 
 };
 

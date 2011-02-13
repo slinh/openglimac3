@@ -13,9 +13,10 @@
 
 #include <fstream>
 #include <cstring>
+#include "vector3d.h"
 
 GLubyte * loadPPM(const char * const fn,
 			unsigned int& w,
 			unsigned int& h);
-
+unsigned char * loadPPMRGBA(char *fn, int *w, int *h, vector3di c);
 #endif

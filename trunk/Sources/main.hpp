@@ -85,11 +85,14 @@ float ratio;
 // SphereMap
 CubeMap * cubeMap;
 CubeMap * church;
+//Billboard
+GLuint texid;
 
 // textures
 static const unsigned int nbtextures = 5;
 GLuint texturesid[nbtextures];
 GLuint idTexAlpha;
+GLuint idTexBillboard;
 
 // Shaders
 GLhandleARB programobject[NB_SHADERS];
@@ -107,4 +110,5 @@ Scene* scene = NULL;
 Game & game = Game::Instance();									
 
 void initShadowGL();
+
 #endif

@@ -64,7 +64,7 @@ static void displayGL(void)
 #endif
 
 #ifdef __MAIN_SCENE__  // MAIN SCENE - FROM XML - + NORMAL SPEC ILLUMINATION
-  glClearColor (0.0,0.0,0.0,1.0);
+ // glClearColor (0.0,0.0,0.0,1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glMatrixMode(GL_MODELVIEW);
@@ -108,18 +108,7 @@ static void displayGL(void)
   glVertex3f(0.0f, 1.0f, 0.0f);
   glEnd();
 
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_DEPTH_TEST);
-//  glEnable(GL_CULL_FACE);
-  glShadeModel(GL_SMOOTH);
-
-
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,white);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,white);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,white);
-  glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
+ 
 
 
 
@@ -131,10 +120,7 @@ static void displayGL(void)
 
   game.checkCurrentScene();
 
-
-
-
-game.display();
+  game.display();
 
 #ifdef __TEST_TEXTURE__  
   glPushMatrix();
@@ -626,7 +612,7 @@ static void initGL(int argc,
   
   game.initShadowGL();
 
- glLightModelfv(GL_LIGHT_MODEL_AMBIANT, black);
+// glLightModelfv(GL_LIGHT_MODEL_AMBIANT, black);
 #endif
  
   

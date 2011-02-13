@@ -2,6 +2,7 @@
 #define DRAW_HPP
 #include "vector3d.h"
 
+void drawRepere(void);
 void drawSphere(const float& radius,
     const unsigned int& stepx,
     const unsigned int& stepy);

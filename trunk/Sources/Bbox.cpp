@@ -95,6 +95,12 @@ void Bbox::initialize(Obj* obj)
 	
 }
 
+
+const Texture & Bbox::getTexture(int id)const
+{
+	return *textures[id];
+}
+
 bool Bbox::intersect(const Bbox & box)const
 {
 	return true;
@@ -160,7 +166,7 @@ void Bbox::displayWall(TypeWall type)const
 	}
 	
 	glPushMatrix();
-		// on deplace le rectangle Ã  la bonne position	
+		// on deplace le rectangle ˆ la bonne position	
 		glTranslatef(x, 2, y);
 		
 		glScalef(getWidth()*1.5, 4., getHeight()*1.5);

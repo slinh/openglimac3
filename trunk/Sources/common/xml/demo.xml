@@ -183,7 +183,7 @@
     
   <scene id="1">
     <shader>SHADOW</shader>
-    <light x="2." y="5." z="2." w="1.0"/>
+    <light x="2." y="2." z="1." w="1.0"/>
     <tinylight size="0.1" x="1.0" y="3.0" z=".6" pas="0.50"/>
     <obj id="0" objid="10">
       <model>models/logs/fre005.obj</model>
@@ -213,6 +213,7 @@
   <scene id="2">
     <shader>TOON</shader>
     <light x="-3.5" y="2.0" z="-2.5" w="1.0"/>
+    <tinylight size="0.1" x="1.0" y="3.0" z=".6" pas="0.50"/>
     <obj id="1" objid="11">
       <model>models/kitchen_table/kitchen_table.obj</model>
       <scale x="0.0009" y="0.0009" z="0.0009" />
@@ -276,8 +277,8 @@
 
 	<scene id="4">
 	  <shader>ALPHA</shader>
-      <light x="0.0" y="5.0" z="1.0" w="1.0"/>
-
+      <light x="-4.0" y="5.0" z="2.0" w="1.0"/>
+		<tinylight size="0.1" x="0.5" y="2.0" z="1.0" pas="1.0"/>
 	  <obj id="0" objid="10">
       <model>models/logs/fre005.obj</model>
       <scale x="0.001" y="0.001" z="0.001" />

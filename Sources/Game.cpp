@@ -2,7 +2,9 @@
 #include "Scene.hpp"
 #include "Draw.hpp"
 #include "Obj.hpp"
+#include "TripleBillboard.hpp"
 #include "common/include/XMLParser.hpp"
+#include "ppm.hpp"
 #include "utils.hpp"
 
 //#define __NO_SHADER__
@@ -158,10 +160,14 @@ void Game::initGL()
 	// init obj in loader
   loader->initObj();	
 	
-	for(unsigned int i=0; i<sceneList.size(); ++i)
-  {
+	for(unsigned int i=0; i<sceneList.size(); ++i){
 		sceneList[i]->initGL();
 	}
+
+        //Appel des Billboards
+        initTripleBillboard();
+        checkGLError(169);
+
 
 }
 
@@ -177,6 +183,19 @@ void Game::display()
 	static GLfloat black[]= { 0.0f, 0.0f, 0.0f, 1.0f };	
 	static GLfloat blue[]= { 0.0f, 0.0f, 1.0f, 1.0f };
 	
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
+	//  glEnable(GL_CULL_FACE);
+	glShadeModel(GL_SMOOTH);
+	
+	
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,white);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,white);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,white);
+	glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
+	
 	//first light :
 	glPushMatrix();
 
@@ -185,19 +204,27 @@ void Game::display()
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
 
 
-		if( sceneList[currentScene]->getTypeScene() != MAIN )
+		glPushMatrix();
+		
+	    if( sceneList[currentScene]->getTypeScene() != MAIN )
 		{
 				vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
 				glTranslatef(trans.X, trans.Y, trans.Z);
 
 				glRotatef(sceneList[currentScene]->getLightRadian(),0.0,1.0,0.0);
-				glLightfv(GL_LIGHT0, GL_POSITION, sceneList[currentScene]->getTinyLightPosition());	
 		}
 
 		glLightfv(GL_LIGHT0, GL_POSITION, sceneList[currentScene]->getLightPosition());
-
+	    glPopMatrix();
+	
 	  // See where the light is
 		glPushMatrix();
+	if( sceneList[currentScene]->getTypeScene() != MAIN )
+	{
+		vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
+		glTranslatef(trans.X, trans.Y, trans.Z);
+	}
+		glRotatef(sceneList[currentScene]->getLightRadian(),0.0,1.0,0.0);
 			 glTranslatef(sceneList[currentScene]->getLightPosition()[0],sceneList[currentScene]->getLightPosition()[1],sceneList[currentScene]->getLightPosition()[2]);
 			 drawSphere(0.1, 30, 30);
 		glPopMatrix();
@@ -206,12 +233,13 @@ void Game::display()
 	
 	if(sceneList[currentScene]->getTinyLightActive())
 	{
-
+		/*
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,grey);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,grey);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,grey);
 		glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, 10.0f);
-  
+		 */
+		
 		// tiny light
 		glPushMatrix();
 		
@@ -222,52 +250,29 @@ void Game::display()
 		
 		drawRepere();
 		
+		/*
 		glLightfv(GL_LIGHT0, GL_SPECULAR, white);
 		glLightfv(GL_LIGHT0, GL_AMBIENT, black);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-		
-
+		*/
+		 
 		glEnable(GL_LIGHT1);
 		glLightfv(GL_LIGHT1, GL_SPECULAR, softred);
 		glLightfv(GL_LIGHT1, GL_AMBIENT, yellow);
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
 
-//			const Texture & p = sceneList[currentScene]->getContentHouse().getBbox().getTexture(0);
-			
-//		 p.bind();
-		glutSolidSphere(2., 30, 30);
-//		  drawSphere(2., 30, 30);
- // 	p.unbind();
 
-/*
-		GLfloat light_spot_direction[] = { 0.0, 0.0, -1.0};
-		GLfloat light_spot_cutoff[] = { 25.0 }; 
-		GLfloat light_spot_exp[] = { 2.0 };
-
-		//Apply the light position
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION , light_spot_direction);
-		glLightfv(GL_LIGHT1, GL_SPOT_CUTOFF , light_spot_cutoff);
-		glLightfv(GL_LIGHT1, GL_SPOT_EXPONENT , light_spot_exp); 
-*/
 		
-		glRotatef(sceneList[currentScene]->getTinyLightRadian(),0.0,1.0,0.0);
+	glRotatef(sceneList[currentScene]->getTinyLightRadian(),0.0,1.0,0.0);
 		glLightfv(GL_LIGHT1, GL_POSITION, sceneList[currentScene]->getTinyLightPosition());
-	//	glPopMatrix();
-		
-		// See where the light is
-	//	glPushMatrix();
-	//	glTranslatef(trans.X, trans.Y, trans.Z);
-		
-	//		glRotatef(sceneList[currentScene]->getTinyLightRadian(),.0,1.0,.0);
+
 			 glTranslatef(sceneList[currentScene]->getTinyLightPosition()[0],
 										sceneList[currentScene]->getTinyLightPosition()[1],
 										sceneList[currentScene]->getTinyLightPosition()[2]);
-			
-			 drawSphere(sceneList[currentScene]->getTinyLightSize(), 30, 30);
+			drawSphere(sceneList[currentScene]->getTinyLightSize(), 30, 30);
 		
-		//std::cout << "angle" << sceneList[currentScene]->getTinyLightRadian() << std::endl;	 
-	  //   std::cout << "lightPos :" << sceneList[currentScene]->getTinyLightPosition()[0] << " / " << sceneList[currentScene]->getTinyLightPosition()[1] << " / " << sceneList[currentScene]->getTinyLightPosition()[2] << " /"  << sceneList[currentScene]->getTinyLightPosition()[3]<< std::endl;
-		glPopMatrix();
+
+	glPopMatrix();
 		
 	}
 	else
@@ -275,6 +280,7 @@ void Game::display()
 	//	std::cout << "no second light" << std::endl;
 		glDisable(GL_LIGHT1);
 	}
+	
 	
 	//IF 1
 	if( currentScene < (int)sceneList.size() )
@@ -507,6 +513,43 @@ void Game::display()
   glUseProgramObjectARB(0);
 #endif
 
+  // si scene principale :
+  if(sceneList[currentScene]->getTypeShader() == MAIN)
+  {
+      /********************************  Billboard  *******************************************/
+      glDisable(GL_CULL_FACE);
+      glEnable(GL_TEXTURE_2D);
+      //Gestion de la transparence
+      glEnable(GL_BLEND);
+      // faire des mélanges
+      glEnable(GL_ALPHA_TEST);
+      glAlphaFunc(GL_EQUAL,1);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glBindTexture(GL_TEXTURE_2D, idTexBillboard);
+      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+      // Affichage du billboard
+      // vector3df cam = vector3df(position[0], position[1], position[2]);
+
+
+      //   glutSolidSphere(1., 30, 30);
+      //monBillboard->draw(cam);
+      //Appel du glCallList
+
+      checkGLError(396);
+      glCallList(displayListId);
+checkGLError(398);
+
+      glBindTexture(GL_TEXTURE_2D, 0);
+      // Activation/Desactivation de certains états
+      glDisable(GL_TEXTURE_2D);
+	  
+	  glDisable(GL_BLEND);
+	  glDisable(GL_ALPHA_TEST);
+
+      /********************************  Billboard  *******************************************/
+
+  }
+
 }
 
 void Game::idleGL(void)
@@ -514,7 +557,8 @@ void Game::idleGL(void)
 	// light principal
 	if(sceneList[currentScene]->getTypeScene() != MAIN)
 	{
-			sceneList[currentScene]->setLightRadian() += sceneList[currentScene]->getLightPas();
+		sceneList[currentScene]->setLightRadian() += sceneList[currentScene]->getLightPas();
+		//std::cout << "light : " << sceneList[currentScene]->getLightRadian() << std::endl;
 	}
 	
 	// moving light
@@ -636,11 +680,12 @@ void Game::initShadowGL()
   glDisable(GL_LIGHTING);
   glDisable(GL_LIGHT0);
 
+
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
   glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
-  glGenTextures (1, (GLuint *)&shadowtexid);
+  glGenTextures (1,&shadowtexid);
   glBindTexture (GL_TEXTURE_2D, shadowtexid);
   glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,
                windowwidth * 3.,windowheight * 3.,0,
@@ -651,13 +696,17 @@ void Game::initShadowGL()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
+
   // Fonctions très imortantes pour faire la comparaison de profondeur
   // avec la fonction glsl shadow2D
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 
-  glGenFramebuffersEXT (1, (GLuint *)&shadowbufferid);
+
+  glGenFramebuffersEXT (1, &shadowbufferid);
+
   glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, shadowbufferid);
+
 
   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D,shadowtexid, 0);
 
@@ -682,6 +731,11 @@ void Game::initShadowGL()
   glPixelStorei(GL_PACK_ALIGNMENT,1);
 
   glBindTexture (GL_TEXTURE_2D, 0);
+
+
+
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
 }
 
 void Game::displaySky()
@@ -1102,14 +1156,14 @@ void Game::FBO()
     glLoadIdentity();
 
     float up[] = {0.0f, 1.0f, 0.0f};
-    gluLookAt(getLightPosition()[0],getLightPosition()[1],getLightPosition()[2],
+    gluLookAt(getLightPosition()[0],getLightPosition()[1]+1.,getLightPosition()[2],
               0., 0., 0.,
               up[0],up[1],up[2]);
 
 //    gluLookAt(getLightPosition()[0], getLightPosition()[1], getLightPosition()[2],
 //      0.0f, 0.0f, 0.0f,
 //      0.0f, 1.0f, 0.0f);
-//        glRotatef(-angle,0.0,1.0,0.0);
+    glRotatef(-sceneList[currentScene]->getLightRadian(),0.0,1.0,0.0);
     glGetFloatv(GL_MODELVIEW_MATRIX, lightmodelviewmatrix);
 
     multMatrix4x4(lightprojectionmatrix, lightmodelviewmatrix, shadowmatrix);
@@ -1195,3 +1249,47 @@ void Game::displayFBO()
 }
 
   void Game::setSky(CubeMap * sky){ this->sky = sky; }
+
+  void Game::initTripleBillboard(){
+      // definition de la couleur d'effacage donc couleur de fond
+        glClearColor(0.0,0.0,0.0,1.0);
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_SMOOTH);
+
+        // comment on stocke les nifos sur la carte graphique
+        glPixelStorei(GL_PACK_ALIGNMENT,1);
+        glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+      int widthData, heightData;
+      GLubyte * data = NULL;
+      vector3di myVector = vector3di(255,255,255);
+      data = loadPPMRGBA((char *)"textures/grass.ppm", &widthData, &heightData, myVector);
+          glGenTextures(1, &idTexBillboard);
+      glBindTexture(GL_TEXTURE_2D, idTexBillboard);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthData, heightData, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+      free(data);
+      checkGLError(1108);
+      displayListId = glGenLists(1); //Make room for the display list
+      glNewList(displayListId, GL_COMPILE); //Begin the display list
+        vector3df* myPosition = new vector3df(-0.5f,0.0f,0.0f);
+        TripleBillBoard * b1 = new TripleBillBoard(myPosition,0.5f,2.f);
+        b1->draw(getCamera()); //Add commands for drawing a cube to the display list
+        vector3df* myPosition2 = new vector3df(-0.5f,0.0f,0.0f);
+        TripleBillBoard * b2 = new TripleBillBoard(myPosition2,0.5f,2.f);
+        b2->draw(getCamera()); //Add commands for drawing a cube to the display list
+      glEndList();
+      checkGLError(1118);
+      glBindTexture(GL_TEXTURE_2D, 0);
+      checkGLError(1120);
+      glDisable(GL_LIGHTING);
+      glDisable(GL_LIGHT0);
+      glDisable(GL_DEPTH_TEST);
+      //glDisable(GL_SMOOTH);
+      checkGLError(1125);
+  }

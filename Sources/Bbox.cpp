@@ -154,7 +154,7 @@ void Bbox::displayWall(TypeWall type)const
 
 	switch(type)
 	{
-		case TOON:
+		case TOONWALL:
 			textures[5]->bind();
 		break;
 		
@@ -175,7 +175,7 @@ void Bbox::displayWall(TypeWall type)const
 	
 	switch(type)
 	{
-		case TOON:
+		case TOONWALL:
 			textures[5]->unbind();
 		break;
 		
@@ -188,6 +188,7 @@ void Bbox::displayWall(TypeWall type)const
 	
 	
 }
+
 
 void Bbox::displayUpDown()const
 {
@@ -241,7 +242,8 @@ void Bbox::initTextures()
 	
     textures.push_back(ground);
     
-    Texture* toonWall = new Texture(29, tmp);
+	tmp = game.getLoader().getTextureLoader(30);
+    Texture* toonWall = new Texture(0, tmp);
 	
     textures.push_back(toonWall);
     

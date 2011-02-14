@@ -39,6 +39,7 @@ GLenum err;
 
 // Modele de la camera
 static float position[] = {-1.0f,0.5f,0.0f};
+//static float position[] = {-4.0f,0.5f,2.0f};
 static float aim[] = {0.0f,0.0f,-1.0f};
 static float direction[] = {0.0f,0.0f,-1.0f};
 static float up[] = {0.0f, 1.0f, 0.0f};
@@ -102,7 +103,9 @@ std::string tabShader[NB_SHADERS] = { "shaders/normalspec",
                                       "shaders/cubemap",
                                       "shaders/toon",
                                       "shaders/alpha",
-                                      "shaders/shadow"
+                                      "shaders/shadow",
+                                      "shaders/bright",
+                                      "shaders/blur"
                                     };
 									
 									

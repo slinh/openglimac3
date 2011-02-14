@@ -24,6 +24,8 @@ typedef enum TypeShader_
   TOON,
   ALPHA,
   SHADOW,
+  BRIGHT,
+  BLUR,
   NB_SHADERS
   
 }TypeShader;

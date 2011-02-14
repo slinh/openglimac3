@@ -19,6 +19,9 @@ public:
   ~Game();
   
   void initGL();
+  void displayQuadScene();
+  void displayLight();
+  void displayWall();
   void display();
   void checkCurrentScene();
  
@@ -69,6 +72,7 @@ public:
   GLfloat* getLightPosition();
   void displaySky(void);
   void initShadowGL();
+  void initFBOGlow();
   void FBO();
   void displayMatrix(GLfloat * m);
   bool checkFramebufferStatus(void);
@@ -116,6 +120,12 @@ protected:
 	float timer;
   GLuint displayListId;
   GLuint idTexBillboard;
+
+  GLuint   mainScenebufferid;
+  GLuint   mainScenetexid;
+
+  GLuint   glowbufferid;
+  GLuint   glowtexid;
 
 };
 

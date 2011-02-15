@@ -11,7 +11,7 @@
 
 
 //#define __NO_SHADER__
-//#define __CASTELJAU__
+#define __CASTELJAU__
 #define __CUBE_MAP__
 #define __MAIN_SCENE__
 //#define __TEST_TEXTURE__ 
@@ -325,10 +325,7 @@ static void idleGL(void)
     //Timer
     if(game.getTimer()>1.) facteur=-1.; 
     if(game.getTimer()<0.) facteur=1.;
-    
-    white[0]-= facteur * 0.005;
-    white[1]-= facteur * 0.005;
-    white[2]-= facteur * 0.005;
+
     game.setTimer() +=facteur * 0.006;
     //Récupération de l'instance du timer pour le FPS
     Timer& timer = Timer::getInstance();
@@ -339,21 +336,33 @@ static void idleGL(void)
 
    	if(f<=1.){
 			vector3df p=casteljau(f,controlPoints);
+			vector3df d=casteljau(f, aimPoints);
+			position[0]=p.X;
+			position[1]=p.Y;
+			position[2]=p.Z;
+			//std::cout << "pos : "<<p.X<<" , "<<p.Y<<" , "<<p.Z<<std::endl;
 
-			position[0]=nextP.X;
-			position[1]=nextP.Y;
-			position[2]=nextP.Z;
-			
 
-			direction[0]=p.X-nextP.X;
-    	direction[1]=p.Y-nextP.Y;
-    	direction[2]=p.Z-nextP.Z;
+			direction[0]=d.X-p.X;
+    	direction[1]=d.Y-p.Y;
+    	direction[2]=d.Z-p.Z;
+			//std::cout << "aim : "<<d.X<<" , "<<d.Y<<" , "<<d.Z<<std::endl;
 
 			nextP = p;
 			f+=1./(float)nbPoints;
 			sleep(0.97);
 		}
+		else if(f>1. && points.size() != 0){
+			controlPoints = points.back();
+			points.pop_back();
+			aimPoints = aimPointsList.back();
+			aimPointsList.pop_back();
+			f=0;
+		}
 #endif
+		//std::cout << "pos : "<<position[0]<<" , "<<position[1]<<" , "<<position[2]<<std::endl;
+
+		//std::cout << "direction : "<<direction[0]<<" , "<<direction[1]<<" , "<<direction[2]<<std::endl;
     
     glutPostRedisplay();
 }
@@ -688,18 +697,112 @@ static void initGL(int argc,
 
 #endif // --- END TEST ALPHA
 
-
+	//start position {0.0f,6.5f,-2.0f};
   // camera
-	nbPoints = 32;
+	nbPoints = 256;
 	f=0;
-	vector3df pointTmp= vector3df(-2.,0.5,3.0);
-	vector3df point2= vector3df(10., 0.5, -1.0);
-  vector3df point3= vector3df(-1., 0., 0.);
+	vector3df point1= vector3df(-24.,6.5,-2.);
+	vector3df point2= vector3df(0.,6.5, 10.0);
+  vector3df point3= vector3df(0.,0.5,2.);
 	vector3df cam = vector3df(position[0], position[1], position[2]);
-	controlPoints.push_back(cam);
-	controlPoints.push_back(pointTmp);
-	controlPoints.push_back(point2);
-	controlPoints.push_back(point3);
+	std::vector<vector3df>  list1;
+	list1.push_back(cam);
+	list1.push_back(point1);
+	list1.push_back(point2);
+	list1.push_back(point3);
+	
+
+	std::vector<vector3df>  list2;
+	list2.push_back(point3);
+	vector3df point= vector3df(-1.,0.5,1.);	
+	list2.push_back(point);
+	point.X=-0.75; point.Y=1.5; point.Z=-2.5;
+	list2.push_back(point);
+	point.X=2.5; point.Y=1.5; point.Z=-2.5;
+	list2.push_back(point);
+	point.X=3.2; point.Y=1.5; point.Z=0.;
+	list2.push_back(point);
+	point.X=2.4; point.Y=1.5; point.Z=1.2;
+	list2.push_back(point);
+	
+	std::vector<vector3df>  list3;
+	list3.push_back(point);	
+	point.X=-0.9; point.Y=0.5; point.Z=-1.5;
+	list3.push_back(point);	
+	point.X=-3.; point.Y=1.5; point.Z=-2.;
+	list3.push_back(point);	
+	point.X=-4.5; point.Y=1.5; point.Z=-2.6;
+	list3.push_back(point);	
+	point.X=-2.; point.Y=0.5; point.Z=-3.6;
+	list3.push_back(point);		
+
+	std::vector<vector3df>  list4;
+	list4.push_back(point);		
+	list4.push_back(point);		
+	point.X=0.2; point.Y=0.5; point.Z=-5;
+	list4.push_back(point);	
+
+	std::vector<vector3df>  list5;
+	list5.push_back(point);		
+	point.X=3.19; point.Y=2.5; point.Z=-7.;
+	list5.push_back(point);	
+	point.X=0.29; point.Y=2.5; point.Z=-4.02;
+	list5.push_back(point);
+
+
+	controlPoints =list1;
+	//points.push_back(list5);
+	points.push_back(list4);
+	points.push_back(list3);
+	points.push_back(list2);
+		
+	//Direction
+	vector3df dir = vector3df(direction[0], direction[1], direction[2]);
+	std::vector<vector3df>  aimList1;
+	std::vector<vector3df>  aimList2;
+	std::vector<vector3df>  aimList3;
+	std::vector<vector3df>  aimList4;
+	std::vector<vector3df>  aimList5;
+
+	aimList1.push_back(dir);
+	aimList1.push_back(dir);
+	aimList1.push_back(dir);
+	aimList1.push_back(dir);
+	dir.X=1.; dir.Z=0.;
+	aimList1.push_back(dir);
+		
+	aimList2.push_back(dir);
+	aimList2.push_back(dir);
+	aimList2.push_back(dir);
+	aimList2.push_back(dir);
+	aimList2.push_back(dir);
+	dir.X=-2.; dir.Z=-2.;
+	aimList2.push_back(dir);
+	
+	aimList3.push_back(dir);
+	aimList3.push_back(dir);
+	dir.X=-4.; dir.Z=-3.;
+	aimList3.push_back(dir);
+	dir.X=-2.; dir.Z=-2.;
+	aimList3.push_back(dir);
+	aimList3.push_back(dir);
+	
+	aimList4.push_back(dir);
+	dir.X=0.4; dir.Z=-5.2;
+	aimList4.push_back(dir);
+	dir.X=0.1; dir.Y=1.5; dir.Z=-2.8;
+	aimList4.push_back(dir);
+
+	aimList5.push_back(dir);
+	aimList5.push_back(dir);
+	aimList5.push_back(dir);
+
+	
+	aimPoints =aimList1;
+	//aimPointsList.push_back(aimList5);
+	aimPointsList.push_back(aimList4);
+	aimPointsList.push_back(aimList3);
+	aimPointsList.push_back(aimList2);
 
 	nextP = vector3df(position[0], position[1], position[2]);
 

@@ -15,14 +15,14 @@ Scene::Scene(TypeScene type):typeS(type), typeShader(PARALLAX), objList(NULL)
 	
 	contentHouse = NULL;
 	
-	if(typeS==MAIN)
+        if(typeS==MAIN)
 	{
                 heightfield = new HeightField("textures/hmpBW.raw", 512, 512);
   }
 	else
 	{
 		heightfield = NULL;
-	}
+        }
   
   lightPosition = new GLfloat[4];
   lightPosition[0] = 0.;
@@ -49,10 +49,10 @@ Scene::~Scene(){
 
 void Scene::initGL()
 {
-	if(typeS == MAIN)
+        if(typeS == MAIN)
 	{
 		heightfield->init();
-	}
+        }
 	
 	for(unsigned int i=0; i<objList.size(); ++i)
 	{
@@ -63,10 +63,10 @@ void Scene::initGL()
 
 void Scene::display()
 {
-	if(typeS == MAIN)
+        if(typeS == MAIN)
 	{
     	heightfield->display();
-	}
+        }
 	
 	// display all obj :
 	for(unsigned int i=0; i<objList.size(); ++i)

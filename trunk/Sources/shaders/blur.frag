@@ -2,7 +2,7 @@
 uniform sampler2D texture;
 
 // Texture main
-uniform sampler2D main;
+uniform sampler2D mainTex;
 
 // Texture size
 uniform vec2 size;
@@ -57,7 +57,7 @@ void main()
 	{
 		
 		// Main
-		vec4 myMainColor = texture2D(main, vec2(gl_TexCoord[0].st));
+		vec4 myMainColor = texture2D(mainTex, vec2(gl_TexCoord[0].st));
 	   // Glow
 	   vec4 myGlowColor = texture2D(texture, vec2(gl_TexCoord[0].st));
 	

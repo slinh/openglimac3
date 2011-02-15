@@ -40,8 +40,9 @@
         <texload loadid="28">textures/alpha_map_circle.ppm</texload>
 		
 		<texload loadid="29">models/curly_table/curly_table.ppm</texload>
-        <texload loadid="30" repeat="1">textures/toon.ppm</texload>
-	
+    <texload loadid="30" repeat="1">textures/toon.ppm</texload>
+	  <texload loadid="31" repeat="1">textures/stone.ppm</texload>
+  
 		<!--  OBJ / MODELS   -->
 		<objload loadid="0">models/house_obj/house_obj.obj</objload>
 		<objload loadid="1">models/windmill_obj/windmill.obj</objload>
@@ -152,7 +153,7 @@
       <scale x="0.005" y="0.005" z="0.005" />
       <rotation angle="0." x="0." y="0." z="0" />
       <translate x="-5." y="0." z="0." />
-      <texture id="0" texid="10">models/wall/wall.ppm</texture>
+      <texture id="0" texid="31">textures/stone.ppm</texture>
     </obj>
     
     <obj id="8" objid="7">
@@ -160,12 +161,12 @@
       <scale x="0.025" y="0.025" z="0.025" />
       <rotation angle="0." x="0." y="0." z="0" />
       <translate x="-5." y="0." z="-1." />
-      <texture id="0" texid="10">models/wall/wall.ppm</texture>
+      <texture id="0" texid="31">textures/stone.ppm</texture>
     </obj>  
      
     <obj id="8" objid="8">
       <model>models/castle/castle.obj</model>
-      <scale x="0.05" y="0.05" z="0.05" />
+      <scale x="0.025" y="0.025" z="0.025" />
       <rotation angle="0." x="0." y="0." z="0" />
       <translate x="-7." y="1." z="-3." />
       <texture id="0" texid="11">models/castle/castle.ppm</texture>

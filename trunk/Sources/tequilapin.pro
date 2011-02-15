@@ -64,7 +64,9 @@ HEADERS += Obj.hpp \
        ObjLoader.hpp \
        Loader.hpp \
        Timer.hpp \
-       Singleton.h
+       Singleton.h \
+       Billboard.hpp \
+       TripleBillboard.hpp \
 
 #UIs
 FORMS += 
@@ -93,4 +95,6 @@ SOURCES += Obj.cpp \
        TextureLoader.cpp \
        ObjLoader.cpp \
        Loader.cpp \
-       Timer.cpp
+       Timer.cpp \
+       Billboard.cpp \
+       TripleBillboard.cpp \

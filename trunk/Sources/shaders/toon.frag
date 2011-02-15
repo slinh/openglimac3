@@ -10,28 +10,34 @@ void main()
   vec4 Spec = gl_LightSource[0].specular * gl_FrontMaterial.specular * max(0., dot(normalize(vecView), normalize(halfVec)));
   float att= 1./(4.*3.14*length(vecLight));
   vec4 intensity = gl_LightSource[0].ambient * gl_FrontMaterial.ambient + att*(Dif + Spec);
-  float val = intensity.r + intensity.g + intensity.b/3.;
+  float valAmb = intensity.r + intensity.g + intensity.b/3.;
+  float valDiff = Dif.r + Dif.g + Dif.b/3.;
+  float valSpec = Spec.r + Spec.g + Spec.b/3.;
   vec4 color = texture2D(diffuseTexture, gl_TexCoord[0].xy);
 
-  if(val > 0.95)
-    color *= 0.99;
-  else if(val > 0.5)
-    color *= 0.6;
-  else if(val > 0.25)
-    color *= 0.3;
-  else
-    color *= 0.2;
-
+  Dif = normalize(gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse);
+	if(valDiff < 0.3)
+		gl_FragColor = Dif*0.3;
+	else if(valDiff < 0.6)
+		gl_FragColor = Dif*0.6;
+	else
+		gl_FragColor = Dif;
 /*
-  if (intensity.rvb > 0.03)
-    color = vec4(1.0,0.5,0.5,1.0);  // rose pale
-  else if (intensity.r > 0.025)
-    color = vec4(0.6,0.3,0.3,1.0);  // rose sale
-  else if (intensity.r > 0.01)
-    color = vec4(0.4,0.2,0.2,1.0);  // bordeau moche
-  else
-    color = vec4(0.2 ,0.1, 0.1, 1.0);  // gris foncé
+	Spec = normalize(gl_FrontMaterial.specular * gl_LightSource[0].specular);
+	if(valSpec < 0.3)
+		gl_FragColor += Spec*0.3;
+	else if(valSpec < 0.6)
+		gl_FragColor += Spec*0.6;
+	else
+		gl_FragColor += Spec;
 */
- gl_FragColor = color;
+
+	color = normalize(color);
+  if(valAmb < 0.3)
+		gl_FragColor += color*0.3;
+	else if(valAmb < 0.6)
+		gl_FragColor += color*0.6;
+	else
+		gl_FragColor += color;
 
 }

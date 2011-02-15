@@ -38,7 +38,7 @@ static unsigned int windowheight = 600;
 GLenum err;
 
 // Modele de la camera
-static float position[] = {-1.0f,0.5f,0.0f};
+static float position[] = {-1.0f,0.5f,2.0f};
 //static float position[] = {-4.0f,0.5f,2.0f};
 static float aim[] = {0.0f,0.0f,-1.0f};
 static float direction[] = {0.0f,0.0f,-1.0f};

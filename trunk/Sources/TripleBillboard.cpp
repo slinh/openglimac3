@@ -40,7 +40,7 @@ void TripleBillBoard::draw(vector3df camera){
                 glPopMatrix();
 
                 glPushMatrix();
-                glTranslatef(0.2, 0., 0.3);
+                glTranslatef(0.05, 0., 0.1);
                 glRotatef(60,0,1,0);
 
                 glBegin(GL_QUADS);
@@ -57,7 +57,7 @@ void TripleBillBoard::draw(vector3df camera){
                 glPopMatrix();
 
                 glPushMatrix();
-                glTranslatef(-0.2, 0., 0.3);
+                glTranslatef(-0.05, 0., 0.1);
                 glRotatef(-60,0,1.,0);
                 glBegin(GL_QUADS);
                     glNormal3f(0.0f,0.0f,1.0f);

@@ -17,7 +17,7 @@ Scene::Scene(TypeScene type):typeS(type), typeShader(PARALLAX), objList(NULL)
 	
 	if(typeS==MAIN)
 	{
-		heightfield = new HeightField("textures/hmpBW.raw", 512, 512);
+                heightfield = new HeightField("textures/hmpBW.raw", 512, 512);
   }
 	else
 	{

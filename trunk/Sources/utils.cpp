@@ -14,7 +14,7 @@
   #include <GL/glu.h>
 #endif
 #include <iostream>
-
+#include <assert.h>
 
 void checkGLError(int line)
 {
@@ -27,3 +27,18 @@ void checkGLError(int line)
   #endif
 }
 
+void drawString(float x, float y, void* font, const std::string& str)
+{
+        assert(font);
+        glPushAttrib(GL_ENABLE_BIT);
+
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
+//	glRasterPos2f(pos.x, pos.y);
+        glWindowPos2f(x, y);
+
+        for(GLuint i=0; i<str.size(); i++)
+                glutBitmapCharacter(font, str[i]);
+
+        glPopAttrib();
+}

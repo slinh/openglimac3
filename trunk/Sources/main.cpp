@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "Obj.hpp"
 #include "common/include/XMLParser.hpp"
-
+#include "Timer.hpp"
 #include "Game.hpp"
 #include "ppm.hpp"
 #include "utils.hpp"
@@ -253,6 +253,16 @@ glPopMatrix();
 #endif
 #endif  // --- END TEST ALPHA SHADING
 
+  // Affichage du texte
+  glColor3f(1.0f, 1.0f, 1.0f);
+  std::stringstream strStream1;
+  strStream1 << Timer::getInstance().getFPSCounter() << " FPS";
+  drawString(1.0f, (float)windowheight - 20.0f, GLUT_BITMAP_HELVETICA_18, strStream1.str());
+  std::stringstream strStream2;
+  strStream2 << (int)(1.0f*100.0f) << " %";
+  drawString(1.0f, windowheight - 40.0f, GLUT_BITMAP_HELVETICA_18, strStream2.str());
+
+
 
 	glutSwapBuffers();
 }
@@ -309,7 +319,7 @@ vector3df casteljau(float t,std::vector<vector3df> l)
 static void idleGL(void)
 {
 	game.idleGL();
-	
+
     angle += 0.25;
     
     //Timer
@@ -320,6 +330,10 @@ static void idleGL(void)
     white[1]-= facteur * 0.005;
     white[2]-= facteur * 0.005;
     game.setTimer() +=facteur * 0.006;
+    //Récupération de l'instance du timer pour le FPS
+    Timer& timer = Timer::getInstance();
+    timer.Idle();
+    //float fElapsedTime = 1.0f * timer.getElapsedTime();
 
 #ifdef __CASTELJAU__
 

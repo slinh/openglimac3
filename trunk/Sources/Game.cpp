@@ -823,15 +823,31 @@ void Game::display()
       //Appel du glCallList
 
       //Grass
-      glCallList(displayListId);
       glPushMatrix();
-      glTranslatef(0.05, 0., 0.6);
-      glCallList(displayListId);
+          glTranslatef(2.0, 0, -3.);
+          glPushMatrix();
+            glCallList(displayListId);
+          glPopMatrix();
+          glPushMatrix();
+              glTranslatef(0.05, 0., 0.6);
+              glCallList(displayListId);
+          glPopMatrix();
+          glPushMatrix();
+              glTranslatef(0.1, 0., 0.4);
+              glCallList(displayListId);
+          glPopMatrix();
+          glPushMatrix();
+              glTranslatef(0., 0., 0.2);
+              glCallList(displayListId);
+          glPopMatrix();
+          glPushMatrix();
+              glTranslatef(1, 0., 0.);
+              glRotatef(33.,0,1,0);
+              glCallList(displayListId);
+          glPopMatrix();
+
       glPopMatrix();
-      glPushMatrix();
-      glTranslatef(0.1, 0., 0.4);
-      glCallList(displayListId);
-      glPopMatrix();
+      //End Grass
 
       glBindTexture(GL_TEXTURE_2D, 0);
       // Activation/Desactivation de certains états

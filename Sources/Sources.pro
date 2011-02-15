@@ -49,7 +49,9 @@ HEADERS += Bbox.hpp \
            ObjLoader.hpp \
            Loader.hpp \
            Billboard.hpp \
-           TripleBillboard.hpp
+           TripleBillboard.hpp \
+           Timer.hpp \
+           Singleton.h
 
 SOURCES += Bbox.cpp \
            CubeMap.cpp \
@@ -72,4 +74,6 @@ SOURCES += Bbox.cpp \
            ObjLoader.cpp \
            Loader.cpp \
            Billboard.cpp \
-           TripleBillboard.cpp
+           TripleBillboard.cpp \
+           Timer.cpp
+

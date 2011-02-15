@@ -62,7 +62,9 @@ HEADERS += Obj.hpp \
        utils.hpp \
        TextureLoader.hpp \
        ObjLoader.hpp \
-       Loader.hpp
+       Loader.hpp \
+       Timer.hpp \
+       Singleton.h
 
 #UIs
 FORMS += 
@@ -90,4 +92,5 @@ SOURCES += Obj.cpp \
        utils.cpp \
        TextureLoader.cpp \
        ObjLoader.cpp \
-       Loader.cpp
+       Loader.cpp \
+       Timer.cpp

@@ -11,7 +11,7 @@
 
 
 //#define __NO_SHADER__
-//#define __CASTELJAU__
+#define __CASTELJAU__
 #define __CUBE_MAP__
 #define __MAIN_SCENE__
 //#define __TEST_TEXTURE__ 

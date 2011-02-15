@@ -7,7 +7,7 @@
 
 HeightField::HeightField(std::string hFileName, const int hWidth, const int hHeight) : height(hHeight), width(hWidth), filename(hFileName)
 {
-	scale = vector3df(0.05, 0.03, 0.05);	
+        scale = vector3df(0.05, 0.03, 0.05);
 }
 
 HeightField::~HeightField()

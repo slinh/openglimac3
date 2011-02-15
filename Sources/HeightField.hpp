@@ -32,7 +32,7 @@ public:
 	void display(void);
 	void draw(void);	
 	
-	char hHeightField[512][512];
+        char hHeightField[512][512];
 	
 
 };

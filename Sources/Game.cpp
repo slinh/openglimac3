@@ -822,9 +822,16 @@ void Game::display()
       //monBillboard->draw(cam);
       //Appel du glCallList
 
-      checkGLError(396);
+      //Grass
       glCallList(displayListId);
-checkGLError(398);
+      glPushMatrix();
+      glTranslatef(0.05, 0., 0.6);
+      glCallList(displayListId);
+      glPopMatrix();
+      glPushMatrix();
+      glTranslatef(0.1, 0., 0.4);
+      glCallList(displayListId);
+      glPopMatrix();
 
       glBindTexture(GL_TEXTURE_2D, 0);
       // Activation/Desactivation de certains états
@@ -1430,14 +1437,6 @@ void Game::drawShadow2(bool shaders)
   glutSolidTeapot(1.0);
   glPopMatrix();
 
-
-
-
-
-
-
-
-
   glMaterialfv(GL_FRONT, GL_SPECULAR,gray);
   glMaterialfv(GL_FRONT, GL_DIFFUSE,blue);
   glMaterialfv(GL_FRONT, GL_AMBIENT,softblue);
@@ -1618,15 +1617,20 @@ void Game::displayFBO()
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthData, heightData, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
       free(data);
-      
+      //Grass Group 1
+      TripleBillBoard * group1grass1 = new TripleBillBoard(new vector3df(-1.5f,0.1f,0.0f),.5f,.2f);
+      TripleBillBoard * group1grass2 = new TripleBillBoard(new vector3df(-1.3f,0.1f,.2f),.5f,.2f);
+      TripleBillBoard * group1grass3 = new TripleBillBoard(new vector3df(-1.5f,0.1f,0.2f),.5f,.2f);
+      TripleBillBoard * group1grass4 = new TripleBillBoard(new vector3df(-1.7f,0.1f,.0f),.5f,.2f);
+      //Grass Group 2
       displayListId = glGenLists(1); //Make room for the display list
       glNewList(displayListId, GL_COMPILE); //Begin the display list
-        vector3df* myPosition = new vector3df(-1.f,0.1f,0.0f);
-        TripleBillBoard * b1 = new TripleBillBoard(myPosition,.5f,.2f);
-        b1->draw(getCamera()); //Add commands for drawing a cube to the display list
-        vector3df* myPosition2 = new vector3df(-0.5f,0.1f,0.0f);
-        TripleBillBoard * b2 = new TripleBillBoard(myPosition2,.5f,.2f);
-        b2->draw(getCamera()); //Add commands for drawing a cube to the display list
+        //Group 1
+        group1grass1->draw(getCamera()); //Add commands for drawing a cube to the display list
+        group1grass2->draw(getCamera());
+        group1grass3->draw(getCamera());
+        group1grass4->draw(getCamera());
+        //Group 2
       glEndList();
       checkGLError(1118);
       glBindTexture(GL_TEXTURE_2D, 0);

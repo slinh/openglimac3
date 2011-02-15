@@ -222,7 +222,7 @@ void CubeMap::display()
 {
 				//std::cout<< "avant idtex0 " << idTex << " idtex1 " << idTex2<< std::endl;
 
-		drawSphere(10.,30,30);
+                drawSphere(12.5,30,30);
 				//std::cout<< "apres idtex0 " << idTex << " idtex1 " << idTex2<< std::endl;
 
  //glCallList(displayListId);

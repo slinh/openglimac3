@@ -415,6 +415,13 @@ void Game::display()
                               else if  (sceneList[currentScene]->getTypeShader() == TOON)
                               {
 
+
+
+                                glEnable(GL_CULL_FACE);
+                                glFrontFace(GL_CW);
+                                glPolygonMode(GL_FRONT, GL_FILL);
+                                glCullFace(GL_FRONT);
+
                                 glUseProgramObjectARB(programObject[TOON]);
                                 #ifndef __NO_SHADER__
                                 glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
@@ -427,12 +434,6 @@ void Game::display()
                                 #endif
 
                                 sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
-
-
-                                glEnable(GL_CULL_FACE);
-                                glFrontFace(GL_CW);
-                                glPolygonMode(GL_FRONT, GL_FILL);
-                                glCullFace(GL_FRONT);
 
                               }
 			//END ELSE IF 1
@@ -787,7 +788,9 @@ void Game::display()
       glPolygonMode(GL_FRONT, GL_LINE);
       glColor3f(0.0,0.0,0.0);
 
-	  sceneList[currentScene]->display();
+       sceneList[currentScene]->display();
+      sceneList[currentScene]->getContentHouse().getBbox().displayWall(TOONWALL);
+      sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
 	  
       glLineWidth (1.0f);
       glDisable(GL_CULL_FACE);

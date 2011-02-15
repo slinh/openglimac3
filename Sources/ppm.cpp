@@ -64,8 +64,8 @@ unsigned char * loadPPMRGBA(char *fn, int *width, int *height, vector3di c) {
 	
 	if(fp==NULL){
 		fprintf(stderr,"Error in function readPPM : %s doesn't exist\n",fn);
-		system("PAUSE");
-		exit(1); 
+
+
 	}
 	
     fgets(head, 70, fp);

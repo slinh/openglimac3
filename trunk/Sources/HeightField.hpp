@@ -12,6 +12,19 @@
 	#include <GL/gl.h>
 #endif
 
+class Vert{
+public:
+        float x;
+        float y;
+        float z;
+};
+
+class TexCoord{
+public:
+        float u;
+        float v;
+};
+
 class HeightField {
 
 protected:
@@ -23,6 +36,13 @@ protected:
 	std::vector<Texture *> textures;
 	
 	vector3df scale;
+
+        int vhVertexCount;
+        Vert *vhVertices;
+        TexCoord *vhTexCoords;
+
+        GLuint vhVBOVertices;
+        GLuint vhVBOTexCoords;
 	
 public:
 	HeightField(std::string hFileName, const int hWidth, const int hHeight);
@@ -30,7 +50,11 @@ public:
 	
 	void init(void);
 	void display(void);
-	void draw(void);	
+        void draw(void);
+
+        //VBO
+        int hLOD;
+        //VBO
 	
         char hHeightField[512][512];
 	

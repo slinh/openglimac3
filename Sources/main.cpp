@@ -332,7 +332,7 @@ static void idleGL(void)
     timer.Idle();
     //float fElapsedTime = 1.0f * timer.getElapsedTime();
 
-#ifdef __CASTELJAU__
+	#ifdef __CASTELJAU__
 
    	if(f<=1.){
 			vector3df p=casteljau(f,controlPoints);
@@ -359,7 +359,7 @@ static void idleGL(void)
 			aimPointsList.pop_back();
 			f=0;
 		}
-#endif
+	#endif
 		//std::cout << "pos : "<<position[0]<<" , "<<position[1]<<" , "<<position[2]<<std::endl;
 
 		//std::cout << "direction : "<<direction[0]<<" , "<<direction[1]<<" , "<<direction[2]<<std::endl;
@@ -701,7 +701,7 @@ static void initGL(int argc,
   // camera
 	nbPoints = 256;
 	f=0;
-	vector3df point1= vector3df(-24.,6.5,-2.);
+	vector3df point1= vector3df(-22.,6.5,-2.);
 	vector3df point2= vector3df(0.,6.5, 10.0);
   vector3df point3= vector3df(0.,0.5,2.);
 	vector3df cam = vector3df(position[0], position[1], position[2]);
@@ -744,14 +744,50 @@ static void initGL(int argc,
 
 	std::vector<vector3df>  list5;
 	list5.push_back(point);		
-	point.X=3.19; point.Y=2.5; point.Z=-7.;
+	point.X=3.7; point.Y=2.5; point.Z=-3.;
 	list5.push_back(point);	
-	point.X=0.29; point.Y=2.5; point.Z=-4.02;
+	point.X=2.5; point.Y=2.5; point.Z=-6.6;
+	list5.push_back(point);
+	point.X=0.7; point.Y=0.65; point.Z=-7;
 	list5.push_back(point);
 
+	
+	std::vector<vector3df>  list6;
+	list6.push_back(point);
+	point.X=0.4; point.Y=0.65; point.Z=-2.3;
+	list6.push_back(point);
+	point.X=-2.9; point.Y=0.65; point.Z=1.78;
+	list6.push_back(point);
+	point.X=-3.; point.Y=1.; point.Z=3.4;
+	list6.push_back(point);
+	point.X=-5.1; point.Y=1.8; point.Z=3.4;
+	list6.push_back(point);	
+	point.X=-5.125; point.Y=1.8; point.Z=1.65;
+	list6.push_back(point);		
+	point.X=-2.8; point.Y=1.8; point.Z=1.79;
+	list6.push_back(point);
+	list6.push_back(point);
+	point.X=-5.125; point.Y=1.8; point.Z=1.65;
+	list6.push_back(point);	
+	point.X=-5.05; point.Y=1.8; point.Z=3.3;
+	list6.push_back(point);	
+	list6.push_back(point);	
 
+	std::vector<vector3df>  list7;
+	list7.push_back(point);	
+	point.X=-3.9; point.Y=1.8; point.Z=1.4;
+	list7.push_back(point);
+	point.X=0.; point.Y=6.5; point.Z=10.0;
+	list7.push_back(point);
+	point.X=-24.; point.Y=6.5; point.Z=-2.;
+	list7.push_back(point);
+	point.X=0.0f; point.Y=6.5f; point.Z=-10.0f;
+	list7.push_back(point);
+			
 	controlPoints =list1;
-	//points.push_back(list5);
+	points.push_back(list7);
+	points.push_back(list6);
+	points.push_back(list5);
 	points.push_back(list4);
 	points.push_back(list3);
 	points.push_back(list2);
@@ -763,6 +799,8 @@ static void initGL(int argc,
 	std::vector<vector3df>  aimList3;
 	std::vector<vector3df>  aimList4;
 	std::vector<vector3df>  aimList5;
+	std::vector<vector3df>  aimList6;
+	std::vector<vector3df>  aimList7;
 
 	aimList1.push_back(dir);
 	aimList1.push_back(dir);
@@ -790,16 +828,43 @@ static void initGL(int argc,
 	aimList4.push_back(dir);
 	dir.X=0.4; dir.Z=-5.2;
 	aimList4.push_back(dir);
-	dir.X=0.1; dir.Y=1.5; dir.Z=-2.8;
 	aimList4.push_back(dir);
 
+	dir.X=-0.9; dir.Y=0.7; dir.Z=0.7;
 	aimList5.push_back(dir);
 	aimList5.push_back(dir);
+	dir.X=-4.7; dir.Y=-1.5; dir.Z=10.6;
+	aimList5.push_back(dir);
+	dir.X=2.1; dir.Y=-6.2; dir.Z=16.9;
 	aimList5.push_back(dir);
 
 	
+	aimList6.push_back(dir);	
+	dir.X=-10.4; dir.Y=-5.7; dir.Z=20.8;
+	aimList6.push_back(dir);
+	dir.X=-6.4; dir.Y=-6.35; dir.Z=19.5;
+	aimList6.push_back(dir);
+	dir.X=-4.1; dir.Y=0.7; dir.Z=2.1;
+	aimList6.push_back(dir);
+	aimList6.push_back(dir);
+	aimList6.push_back(dir);
+	aimList6.push_back(dir);
+	dir.X=-4.1; dir.Y=3.; dir.Z=2.1;
+	aimList6.push_back(dir);
+	aimList6.push_back(dir);
+	aimList6.push_back(dir);
+	aimList6.push_back(dir);
+			
+	aimList7.push_back(dir);
+	dir.X=0.0f; dir.Y=0.5; dir.Z=-2.0f;
+	aimList7.push_back(dir);
+	aimList7.push_back(dir);
+	aimList7.push_back(dir);
+					
 	aimPoints =aimList1;
-	//aimPointsList.push_back(aimList5);
+	aimPointsList.push_back(aimList7);
+	aimPointsList.push_back(aimList6);
+	aimPointsList.push_back(aimList5);
 	aimPointsList.push_back(aimList4);
 	aimPointsList.push_back(aimList3);
 	aimPointsList.push_back(aimList2);

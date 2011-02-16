@@ -40,7 +40,7 @@
         <texload loadid="28">textures/alpha_map_circle.ppm</texload>
 		
 		<texload loadid="29">models/curly_table/curly_table.ppm</texload>
-    <texload loadid="30" repeat="1">textures/toon.ppm</texload>
+    <texload loadid="30" repeat="1">textures/seventies_ceilingfloor.ppm</texload>
 	  <texload loadid="31" repeat="1">textures/stone.ppm</texload>
   
 		<!--  OBJ / MODELS   -->

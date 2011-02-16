@@ -86,7 +86,7 @@ static void displayGL(void)
 
 
 
-
+/*
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_LIGHTING);
   glBegin(GL_LINES);
@@ -107,8 +107,8 @@ static void displayGL(void)
   glVertex3f(0.0f, 0.0f, 0.0f);
   glVertex3f(0.0f, 1.0f, 0.0f);
   glEnd();
-
- 
+ glEnable(GL_LIGHTING);
+ */
 
 
 

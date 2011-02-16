@@ -300,44 +300,6 @@ void Game::displayLight()
 
 glPopMatrix();
 
-    if(sceneList[currentScene]->getTinyLightActive())
-    {
-            // tiny light
-            glPushMatrix();
-
-            // define the repere to the center of the object :
-            vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
-
-            glTranslatef(trans.X, trans.Y, trans.Z);
-
-            drawRepere();
-
-            glEnable(GL_LIGHT1);
-            glLightfv(GL_LIGHT1, GL_SPECULAR, softred);
-            glLightfv(GL_LIGHT1, GL_AMBIENT, yellow);
-            glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
-
-
-
-    glRotatef(sceneList[currentScene]->getTinyLightRadian(),0.0,1.0,0.0);
-            glLightfv(GL_LIGHT1, GL_POSITION, sceneList[currentScene]->getTinyLightPosition());
-
-                     glTranslatef(sceneList[currentScene]->getTinyLightPosition()[0],
-                                                                            sceneList[currentScene]->getTinyLightPosition()[1],
-                                                                            sceneList[currentScene]->getTinyLightPosition()[2]);
-                    drawSphere(sceneList[currentScene]->getTinyLightSize(), 30, 30);
-
-
-    glPopMatrix();
-
-    }
-    else
-    {
-    //	std::cout << "no second light" << std::endl;
-            glDisable(GL_LIGHT1);
-    }
-
-
 }
 
 void Game::display()
@@ -557,6 +519,7 @@ void Game::display()
                           glPushMatrix();
                           glActiveTexture(GL_TEXTURE0);
                           glBindTexture(GL_TEXTURE_2D,0);
+                          glDisable(GL_TEXTURE_2D);
 
                             #ifndef __NO_SHADER__
                             glUseProgramObjectARB(0);
@@ -607,6 +570,7 @@ void Game::display()
                         glPushMatrix();
                         glActiveTexture(GL_TEXTURE0);
                         glBindTexture(GL_TEXTURE_2D,0);
+                        glDisable(GL_TEXTURE_2D);
 
                           #ifndef __NO_SHADER__
                           glUseProgramObjectARB(0);
@@ -636,6 +600,7 @@ void Game::display()
 
                     glActiveTexture(GL_TEXTURE0);
                     glBindTexture(GL_TEXTURE_2D,glowtexid);
+                    glDisable(GL_TEXTURE_2D);
 
                     glUniform1i(glGetUniformLocationARB(programObject[BRIGHT], "texture"), 0);
                     glUniform1f(glGetUniformLocationARB(programObject[BRIGHT], "threshold"), 0.1f);
@@ -644,6 +609,7 @@ void Game::display()
 
                     glActiveTexture(GL_TEXTURE0);
                     glBindTexture(GL_TEXTURE_2D,0);
+                    glDisable(GL_TEXTURE_2D);
 
                     glUseProgramObjectARB(0);
                     #endif
@@ -675,6 +641,7 @@ void Game::display()
 
                     glActiveTexture(GL_TEXTURE0);
                     glBindTexture(GL_TEXTURE_2D,0);
+                    glDisable(GL_TEXTURE_2D);
 
                     glUseProgramObjectARB(0);
                     #endif
@@ -702,6 +669,7 @@ void Game::display()
 
                     glActiveTexture(GL_TEXTURE0);
                     glBindTexture(GL_TEXTURE_2D,0);
+                    glDisable(GL_TEXTURE_2D);
 
                     glUseProgramObjectARB(0);
                     #endif
@@ -746,8 +714,11 @@ void Game::display()
 
                     glActiveTexture(GL_TEXTURE0);
                     glBindTexture(GL_TEXTURE_2D,0);
+                    glDisable(GL_TEXTURE_2D);
+
                     glActiveTexture(GL_TEXTURE1);
                     glBindTexture(GL_TEXTURE_2D,0);
+                    glDisable(GL_TEXTURE_2D);
 
                     glPopMatrix();
                 }
@@ -796,6 +767,7 @@ void Game::display()
       glDisable(GL_CULL_FACE);
       glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
       glFrontFace(GL_CCW);
+      glEnable(GL_LIGHTING);
   }
   checkGLError(265);
 
@@ -1135,8 +1107,10 @@ void Game::displaySky()
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
-    //glActiveTexture(GL_TEXTURE1);
-    //glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+    glDisable(GL_TEXTURE_CUBE_MAP);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
     glDisable(GL_TEXTURE_CUBE_MAP);
 
 #ifndef __NO_SHADER__
@@ -1282,6 +1256,7 @@ void Game::drawShadow(bool shaders)
   glPopMatrix();
 
   glCullFace(GL_BACK);
+  glDisable(GL_CULL_FACE);
 
 }
 

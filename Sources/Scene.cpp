@@ -36,7 +36,7 @@ Scene::Scene(TypeScene type):typeS(type), typeShader(PARALLAX), objList(NULL)
   isTinyLightActive = false;
   
   lightPas = 0.5;
-  lightRadian = 0;
+  lightRadian = 0.f;
 }
 
 Scene::~Scene(){

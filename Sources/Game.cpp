@@ -321,7 +321,6 @@ void Game::display()
 				//PUSH 1
 
         glPushMatrix();
-        //todo ; enlever, de la triche
         glColor3f(1.0f,1.0f,1.0f);
         glEnable(GL_TEXTURE_CUBE_MAP);
         //          std::cout << "church->getIdTex():" << church->getIdTex() << std::endl;
@@ -453,8 +452,11 @@ void Game::display()
 				#endif
 				
 				
-				glutSolidSphere(1.0, 30, 30);
 				
+        glPushMatrix();
+        glTranslatef(0., 0, -3);        
+        glutSolidSphere(1.0, 30, 30);
+				glPopMatrix();
 				
 				
 				break;
@@ -1285,42 +1287,7 @@ void Game::drawShadow2(bool shaders)
   glMaterialfv(GL_FRONT, GL_AMBIENT,softred);
   glMaterialf( GL_FRONT, GL_SHININESS, 10.0f);
 
-/*
-  Obj* tmp;
 
-  for(unsigned int i=0; i<sceneList[currentScene]->getObjList().size(); ++i)
-  {
-    tmp = sceneList[currentScene]->getObjList()[i];
-
-    if(shaders)
-    {
-      glPushMatrix();
-      glLoadIdentity();
-      // todo translate
-
-      glTranslatef(tmp->getTranslate().X, tmp->getTranslate().Y, tmp->getTranslate().Z);
-      glScalef(tmp->getScale().X, tmp->getScale().Y, tmp->getScale().Z);
-    //  glRotatef(tmp->getAngleRotation(), tmp->getAxeRotate().X, tmp->getAxeRotate().Y, tmp->getAxeRotate().Z);
-
-      glGetFloatv(GL_MODELVIEW_MATRIX, transformationmatrix);
-      glUniformMatrix4fvARB(glGetUniformLocationARB(programObject[SHADOW],"transmatrix"),1,GL_FALSE,transformationmatrix);
-      glPopMatrix();
-    }
-
-
-    glPushMatrix();
-        glTranslatef(tmp->getTranslate().X, tmp->getTranslate().Y, tmp->getTranslate().Z);
-        glScalef(tmp->getScale().X, tmp->getScale().Y, tmp->getScale().Z);
-       // glRotatef(tmp->getAngleRotation(), tmp->getAxeRotate().X, tmp->getAxeRotate().Y, tmp->getAxeRotate().Z);
-       //  tmp->RenderOBJModel();
-        tmp->displayList();
-    glPopMatrix();
-
-    //objList[i]->setBbox().display();
-  }
-
-
-*/
 
 
   if(shaders)

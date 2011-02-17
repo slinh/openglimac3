@@ -84,6 +84,7 @@ int facteur = -1.;
 float scale = 0.04;
 Obj* objfile;
 
+int start = 0;
 float angle = 0.0f;
 float ratio;
 

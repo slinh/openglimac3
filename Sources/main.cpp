@@ -14,6 +14,7 @@
 #define __CASTELJAU__
 #define __CUBE_MAP__
 #define __MAIN_SCENE__
+#define __FPS__
 //#define __TEST_TEXTURE__ 
 //#define __ENV_TEST__
 //#define __BUMP_TEST__
@@ -253,12 +254,13 @@ glPopMatrix();
 #endif
 #endif  // --- END TEST ALPHA SHADING
 
+#ifdef __FPS__
   // Affichage du texte
   glColor3f(1.0f, 1.0f, 1.0f);
   std::stringstream strStream1;
   strStream1 << Timer::getInstance().getFPSCounter() << " FPS";
   drawString(1.0f, (float)windowheight - 20.0f, GLUT_BITMAP_HELVETICA_18, strStream1.str());
-
+#endif
 
 
 	glutSwapBuffers();
@@ -315,7 +317,9 @@ vector3df casteljau(float t,std::vector<vector3df> l)
 
 static void idleGL(void)
 {
-	game.idleGL();
+if (start == 1)
+{
+    game.idleGL();
 
     angle += 0.25;
     
@@ -362,6 +366,7 @@ static void idleGL(void)
 		//std::cout << "direction : "<<direction[0]<<" , "<<direction[1]<<" , "<<direction[2]<<std::endl;
     
     glutPostRedisplay();
+  }
 }
 
 static void quit(void)
@@ -378,7 +383,9 @@ static void keyboardGL(unsigned char c,
   case 27:
     quit();
     break;
-    
+  case 32: // spacebar
+    start = 1;
+    break;
    case 'y': // light up
     game.lightUp();
    break; 

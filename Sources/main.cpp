@@ -76,10 +76,6 @@ static void displayGL(void)
   glPushMatrix();
   gluLookAt(position[0],position[1],position[2],position[0]+direction[0],position[1]+direction[1],position[2]+direction[2],up[0],up[1],up[2]);
 
-//  gluLookAt(game.getLightPosition()[0],game.getLightPosition()[1]+1.0,game.getLightPosition()[2],
-//            0.0,0.0,0.0,
-//            up[0],up[1],up[2]);
-
 
   //glRotatef(xrotation,1.0f,0.0f,0.0f);
   //glRotatef(yrotation,0.0f,1.0f,0.0f);
@@ -327,7 +323,7 @@ if (start == 1)
     if(game.getTimer()>1.) facteur=-1.; 
     if(game.getTimer()<0.) facteur=1.;
 
-    game.setTimer() +=facteur * 0.006;
+    game.setTimer() +=facteur * 0.0006;
     //Récupération de l'instance du timer pour le FPS
     Timer& timer = Timer::getInstance();
     timer.Idle();
@@ -341,30 +337,26 @@ if (start == 1)
 			position[0]=p.X;
 			position[1]=p.Y;
 			position[2]=p.Z;
-			//std::cout << "pos : "<<p.X<<" , "<<p.Y<<" , "<<p.Z<<std::endl;
 
 
 			direction[0]=d.X-p.X;
     	direction[1]=d.Y-p.Y;
     	direction[2]=d.Z-p.Z;
-			//std::cout << "aim : "<<d.X<<" , "<<d.Y<<" , "<<d.Z<<std::endl;
 
-			nextP = p;
 			f+=1./(float)nbPoints;
-			sleep(0.97);
+			sleep(0.9999);
 		}
 		else if(f>1. && points.size() != 0){
 			controlPoints = points.back();
 			points.pop_back();
 			aimPoints = aimPointsList.back();
 			aimPointsList.pop_back();
+       nbPoints = nbPointsList.back();
+      nbPointsList.pop_back();
 			f=0;
 		}
 	#endif
-		//std::cout << "pos : "<<position[0]<<" , "<<position[1]<<" , "<<position[2]<<std::endl;
 
-		//std::cout << "direction : "<<direction[0]<<" , "<<direction[1]<<" , "<<direction[2]<<std::endl;
-    
     glutPostRedisplay();
   }
 }
@@ -456,7 +448,7 @@ static void keyboardGL(unsigned char c,
 static void keyboardSpecialGL(int c, int x, int y)
 { 
 
-  float step = 0.05f;
+  float step = 0.005f;
   float x1,z1;
   switch(c){
   case GLUT_KEY_UP :
@@ -516,7 +508,6 @@ static void motionGL(int x, int y)
 			direction[0]=directionTmp[0]*cos(M_PI/24)-directionTmp[2]*sin(M_PI/24);
 			direction[2]=directionTmp[0]*sin(M_PI/24)+directionTmp[2]*cos(M_PI/24);
 		
-			//produitVectoriel(right, direction, up);
 	
 		}
 		else if(x<xmouseposition){ // gauche
@@ -525,7 +516,6 @@ static void motionGL(int x, int y)
 			direction[0]=directionTmp[0]*cos(M_PI/24)+directionTmp[2]*sin(M_PI/24);
 			direction[2]=-directionTmp[0]*sin(M_PI/24)+directionTmp[2]*cos(M_PI/24);
 		
-			//produitVectoriel(right, direction, up);
 	
 		}
 		if(y>ymouseposition){ // haut
@@ -536,7 +526,6 @@ static void motionGL(int x, int y)
 			direction[1]=directionTmp[1]*cos(M_PI/48)-upTmp[1]*sin(M_PI/48);
 			direction[0]=directionTmp[0]*cos(M_PI/48)-upTmp[0]*sin(M_PI/48);
 			
-			//produitVectoriel(right, direction, up);
 		}
 		else if(y<ymouseposition){ // bas
 			GLfloat directionTmp[] ={direction[0], direction[1],direction[2]};
@@ -546,7 +535,6 @@ static void motionGL(int x, int y)
 			direction[1]=directionTmp[1]*cos(M_PI/60)+upTmp[1]*sin(M_PI/60);
 			direction[0]=directionTmp[0]*cos(M_PI/60)+upTmp[0]*sin(M_PI/60);
 			
-			//produitVectoriel(right, direction, up);
 		}
 	
 	
@@ -752,13 +740,16 @@ static void initGL(int argc,
 	list5.push_back(point);	
 	point.X=2.5; point.Y=2.5; point.Z=-6.6;
 	list5.push_back(point);
-	point.X=0.7; point.Y=0.65; point.Z=-7;
+	point.X=0.17; point.Y=0.65; point.Z=-8.88;
 	list5.push_back(point);
-
+	point.X=2.98; point.Y=2.75; point.Z=-2.88;
+	list5.push_back(point);
+	point.X=0.12; point.Y=0.65; point.Z=-5.3;
+	list5.push_back(point);
 	
 	std::vector<vector3df>  list6;
 	list6.push_back(point);
-	point.X=0.4; point.Y=0.65; point.Z=-2.3;
+	point.X=-0.8; point.Y=0.65; point.Z=-2.3;
 	list6.push_back(point);
 	point.X=-2.9; point.Y=0.65; point.Z=1.78;
 	list6.push_back(point);
@@ -779,7 +770,7 @@ static void initGL(int argc,
 
 	std::vector<vector3df>  list7;
 	list7.push_back(point);	
-	point.X=-3.9; point.Y=1.8; point.Z=1.4;
+	point.X=-4.; point.Y=1.8; point.Z=1.8;
 	list7.push_back(point);
 	point.X=0.; point.Y=6.5; point.Z=10.0;
 	list7.push_back(point);
@@ -790,8 +781,8 @@ static void initGL(int argc,
 			
 	controlPoints =list1;
 	points.push_back(list7);
-	points.push_back(list6);
-	points.push_back(list5);
+  points.push_back(list6);
+	points.push_back(list5); //env 
 	points.push_back(list4);
 	points.push_back(list3);
 	points.push_back(list2);
@@ -834,14 +825,13 @@ static void initGL(int argc,
 	aimList4.push_back(dir);
 	aimList4.push_back(dir);
 
-	dir.X=-0.9; dir.Y=0.7; dir.Z=0.7;
+	dir.X=0.41; dir.Y=0.3; dir.Z=-3.98;
 	aimList5.push_back(dir);
 	aimList5.push_back(dir);
-	dir.X=-4.7; dir.Y=-1.5; dir.Z=10.6;
+	aimList5.push_back(dir);	
 	aimList5.push_back(dir);
-	dir.X=2.1; dir.Y=-6.2; dir.Z=16.9;
 	aimList5.push_back(dir);
-
+	aimList5.push_back(dir);
 	
 	aimList6.push_back(dir);	
 	dir.X=-10.4; dir.Y=-5.7; dir.Z=20.8;
@@ -873,7 +863,22 @@ static void initGL(int argc,
 	aimPointsList.push_back(aimList3);
 	aimPointsList.push_back(aimList2);
 
-	nextP = vector3df(position[0], position[1], position[2]);
+
+  nbPoints= 128; //dehors
+  nbPointsList.push_back(nbPoints);
+  nbPoints= 512; // glow / alpha
+  nbPointsList.push_back(nbPoints);
+  nbPoints= 1512; // dehors
+  nbPointsList.push_back(nbPoints);
+  nbPoints= 4096; // env
+ nbPointsList.push_back(nbPoints);
+  nbPoints= 1024; //dehors
+  nbPointsList.push_back(nbPoints);
+  nbPoints= 4096; // toon
+  nbPointsList.push_back(nbPoints);
+  nbPoints= 2048; // shadow
+  nbPointsList.push_back(nbPoints);
+  nbPoints= 512; // dehors
 
 #ifdef __MAIN_SCENE__
   glEnable(GL_LIGHTING);

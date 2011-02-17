@@ -18,7 +18,7 @@
 
 void Texture::bind()const
 {
-	
+  glEnable(GL_TEXTURE_2D);
   switch(id)
   {
 	  case 0:
@@ -53,6 +53,7 @@ void Texture::bind()const
   
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
   glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+
 }
 
 
@@ -88,7 +89,7 @@ void Texture::unbind()const
 	
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,0);
-        glDisable(GL_TEXTURE_2D);
+//  glDisable(GL_TEXTURE_2D);
 }
 
 

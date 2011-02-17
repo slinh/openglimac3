@@ -227,7 +227,7 @@
       <model>models/Wine_Goblet/goblet.obj</model>
       <scale x="0.002" y="0.002" z="0.002" />
       <rotation angle="0." x="0." y="0." z="0" />
-      <translate x="-1.8" y="0.87" z="-2." />
+      <translate x="-1.8" y="0.85" z="-2." />
       <texture id="0" texid="16">models/Wine_Goblet/texture.ppm</texture>
     </obj>	
     
@@ -251,7 +251,7 @@
       <model>models/candle/candle.obj</model>
       <scale x="0.0006" y="0.0006" z="0.0006" />
       <rotation angle="270." x="1." y="0." z="0." />
-      <translate x="-2.0" y=".72" z="-2.0" />
+      <translate x="-2.0" y=".69" z="-2.0" />
       <texture id="0" texid="19">models/candle/texture.ppm</texture>
     </obj>
     

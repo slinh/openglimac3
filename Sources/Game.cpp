@@ -312,7 +312,7 @@ void Game::display()
 	{
 		// if not main : display wall
 		//IF 2
-                if( sceneList[currentScene]->getTypeScene() != MAIN)
+    if( sceneList[currentScene]->getTypeScene() != MAIN)
 		{
 			//IF 3
 			if(sceneList[currentScene]->getTypeShader() == ENV)
@@ -320,97 +320,94 @@ void Game::display()
 				// draw cubemap
 				//PUSH 1
 
-                            glPushMatrix();
-                            //todo ; enlever, de la triche
-                            glColor3f(1.0f,1.0f,1.0f);
-                            glEnable(GL_TEXTURE_CUBE_MAP);
-                            //          std::cout << "church->getIdTex():" << church->getIdTex() << std::endl;
-                            glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
-                            glEnable(GL_TEXTURE_GEN_S);
-                            glEnable(GL_TEXTURE_GEN_T);
-                            glEnable(GL_TEXTURE_GEN_R);
+        glPushMatrix();
+        //todo ; enlever, de la triche
+        glColor3f(1.0f,1.0f,1.0f);
+        glEnable(GL_TEXTURE_CUBE_MAP);
+        //          std::cout << "church->getIdTex():" << church->getIdTex() << std::endl;
+        glBindTexture (GL_TEXTURE_CUBE_MAP, church->getIdTex());
+        glEnable(GL_TEXTURE_GEN_S);
+        glEnable(GL_TEXTURE_GEN_T);
+        glEnable(GL_TEXTURE_GEN_R);
 
-                            church->drawCubeMap(10.0);
+        church->drawCubeMap(10.0);
 
-                            #ifndef __NO_SHADER__
-                                    glUseProgramObjectARB(0);
-                            #endif
-                            glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
-                            glDisable(GL_TEXTURE_CUBE_MAP);
+        #ifndef __NO_SHADER__
+                glUseProgramObjectARB(0);
+        #endif
+        glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+        glDisable(GL_TEXTURE_CUBE_MAP);
 
-                            // invert matrix
-                            float mat[16];
-                            float invmat[16];
-                            glGetFloatv (GL_MODELVIEW_MATRIX, mat);
-                            mat_inverse (mat, invmat);
-                            setInvMat(invmat);
+        // invert matrix
+        float mat[16];
+        float invmat[16];
+        glGetFloatv (GL_MODELVIEW_MATRIX, mat);
+        mat_inverse (mat, invmat);
+        setInvMat(invmat);
 
-			}
-                          else if (sceneList[currentScene]->getTypeShader() == SHADOW)
-                          {
+      }
+      else if (sceneList[currentScene]->getTypeShader() == SHADOW)
+      {
 
-                              #ifndef __NO_SHADER__
+          #ifndef __NO_SHADER__
 
-                              displayShadow();
+          displayShadow();
 
-                              glUseProgramObjectARB(programObject[PARALLAX]);
-                              glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "wallTex"), 0);
-                              glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "heightmapTex"), 1);
-                              glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
-                              #endif
+          glUseProgramObjectARB(programObject[PARALLAX]);
+          glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "wallTex"), 0);
+          glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "heightmapTex"), 1);
+          glUniform1i(glGetUniformLocationARB(programObject[PARALLAX], "normalmapTex"), 2);
+          #endif
 
-                              //PUSH 6
-                              glPushMatrix();
-                                 sceneList[currentScene]->getContentHouse().getBbox().displayWall(CLASSIC);
-                              //POP 6
-                              glPopMatrix();
+          //PUSH 6
+          glPushMatrix();
+             sceneList[currentScene]->getContentHouse().getBbox().displayWall(CLASSIC);
+          //POP 6
+          glPopMatrix();
 
-                              #ifndef __NO_SHADER__
-                              glUseProgramObjectARB(0);
-                              #endif
+          #ifndef __NO_SHADER__
+          glUseProgramObjectARB(0);
+          #endif
 
-                                  checkGLError(182);
-                                  return;
-                              }
-			//END IF 3
-			//ELSE IF 1
-                              else if  (sceneList[currentScene]->getTypeShader() == TOON)
-                              {
+              checkGLError(182);
+              return;
+          }
+          //END IF 3
+          //ELSE IF 1
+          else if  (sceneList[currentScene]->getTypeShader() == TOON)
+          {
+            glEnable(GL_CULL_FACE);
+            glFrontFace(GL_CW);
+            glPolygonMode(GL_FRONT, GL_FILL);
+            glCullFace(GL_FRONT);
 
+            glUseProgramObjectARB(programObject[TOON]);
+            #ifndef __NO_SHADER__
+            glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
+            #endif
 
+            sceneList[currentScene]->getContentHouse().getBbox().displayWall(TOONWALL);
 
-                                glEnable(GL_CULL_FACE);
-                                glFrontFace(GL_CW);
-                                glPolygonMode(GL_FRONT, GL_FILL);
-                                glCullFace(GL_FRONT);
+            #ifndef __NO_SHADER__
+            glUseProgramObjectARB(0);
+            #endif
 
-                                glUseProgramObjectARB(programObject[TOON]);
-                                #ifndef __NO_SHADER__
-                                glUniform1i(glGetUniformLocationARB(programObject[TOON], "diffuseTexture"), 0);
-                                #endif
+            sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
 
-                                sceneList[currentScene]->getContentHouse().getBbox().displayWall(TOONWALL);
-
-                                #ifndef __NO_SHADER__
-                                glUseProgramObjectARB(0);
-                                #endif
-
-                                sceneList[currentScene]->setContentHouse().setBbox().displayUpDown();
-
-                              }
+          }
 			//END ELSE IF 1
 			//ELSE 1
 			else{
-				
-                            displayWall();
+
+        displayWall();
 
 			}
 			//END ELSE
 		}
-                else
-                {
-                  displaySky();
-                }
+    else
+    {
+      displaySky();
+    }
 		//END IF 2
 		
 		// active the scene shader
@@ -492,245 +489,242 @@ void Game::display()
 				break;
 		}
 
-                 // display the scene
-                if(sceneList[currentScene]->getTypeShader() == ALPHA)
-                {
-                    GLfloat size[] = {windowwidth, windowheight};
-                    float up[] = {0.0f, 1.0f, 0.0f};
+     // display the scene
+    if(sceneList[currentScene]->getTypeShader() == ALPHA)
+    {
+        GLfloat size[] = {windowwidth, windowheight};
+        float up[] = {0.0f, 1.0f, 0.0f};
 
-                    glPushMatrix();
-                    // Premiere passe en FBO
-                    if(mainScenebufferid!=0)
-                    {
-                        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, mainScenebufferid);
+        glPushMatrix();
+        // Premiere passe en FBO
+        if(mainScenebufferid!=0)
+        {
+            glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, mainScenebufferid);
 
-                          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+              glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                          glMatrixMode(GL_MODELVIEW);
+              glMatrixMode(GL_MODELVIEW);
 
-                          glViewport(0, 0, windowwidth, windowheight);
-                          glLoadIdentity();
+              glViewport(0, 0, windowwidth, windowheight);
+              glLoadIdentity();
 
-                          glPushMatrix();
-                          gluLookAt(camera.X,camera.Y,camera.Z,camera.X+direction.X,camera.Y+direction.Y,camera.Z+direction.Z,up[0],up[1],up[2]);
+              glPushMatrix();
+              gluLookAt(camera.X,camera.Y,camera.Z,camera.X+direction.X,camera.Y+direction.Y,camera.Z+direction.Z,up[0],up[1],up[2]);
 
-                          displayWall();
+              displayWall();
 
-                          glPushMatrix();
-                          glActiveTexture(GL_TEXTURE0);
-                          glBindTexture(GL_TEXTURE_2D,0);
-                          glDisable(GL_TEXTURE_2D);
+              glPushMatrix();
+              glActiveTexture(GL_TEXTURE0);
+              glBindTexture(GL_TEXTURE_2D,0);
+              glDisable(GL_TEXTURE_2D);
 
-                            #ifndef __NO_SHADER__
-                            glUseProgramObjectARB(0);
-                            #endif
+                #ifndef __NO_SHADER__
+                glUseProgramObjectARB(0);
+                #endif
 
-                          vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
-                          glTranslatef(trans.X, trans.Y, trans.Z);
+              vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
+              glTranslatef(trans.X, trans.Y, trans.Z);
 
-                          glRotatef(sceneList[currentScene]->getLightRadian(),0.0,1.0,0.0);
-                                   glTranslatef(sceneList[currentScene]->getLightPosition()[0],sceneList[currentScene]->getLightPosition()[1],sceneList[currentScene]->getLightPosition()[2]);
-                                   drawSphere(0.1, 30, 30);
-                          glPopMatrix();
+              glRotatef(sceneList[currentScene]->getLightRadian(),0.0,1.0,0.0);
+               glTranslatef(sceneList[currentScene]->getLightPosition()[0],sceneList[currentScene]->getLightPosition()[1],sceneList[currentScene]->getLightPosition()[2]);
+               drawSphere(0.1, 30, 30);
+              glPopMatrix();
 
 
 
 
-                        #ifndef __NO_SHADER__
-                        glUseProgramObjectARB(programObject[ALPHA]);
+            #ifndef __NO_SHADER__
+            glUseProgramObjectARB(programObject[ALPHA]);
 
-                        glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "colorMap"), 0);
-                        glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "alphaMap"), 1);
-                        #endif
+            glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "colorMap"), 0);
+            glUniform1i(glGetUniformLocationARB(programObject[ALPHA], "alphaMap"), 1);
+            #endif
 
 
-                          sceneList[currentScene]->display();
+            sceneList[currentScene]->display();
 
 
-                        checkGLError(100505);
+            checkGLError(100505);
 
-                          glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-                        glPopMatrix();
-                    }
-                    // render for glow
-                    if(glowbufferid!=0)
-                    {
-                        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, glowbufferid);
+            glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+            glPopMatrix();
+        }
+        // render for glow
+        if(glowbufferid!=0)
+        {
+            glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, glowbufferid);
 
-                        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                        glMatrixMode(GL_MODELVIEW);
+            glMatrixMode(GL_MODELVIEW);
 
-                        glViewport(0, 0, windowwidth, windowheight);
-                        glLoadIdentity();
+            glViewport(0, 0, windowwidth, windowheight);
+            glLoadIdentity();
 
-                        glPushMatrix();
-                        gluLookAt(camera.X,camera.Y,camera.Z,camera.X+direction.X,camera.Y+direction.Y,camera.Z+direction.Z,up[0],up[1],up[2]);
+            glPushMatrix();
+            gluLookAt(camera.X,camera.Y,camera.Z,camera.X+direction.X,camera.Y+direction.Y,camera.Z+direction.Z,up[0],up[1],up[2]);
 
-                        glPushMatrix();
-                        glActiveTexture(GL_TEXTURE0);
-                        glBindTexture(GL_TEXTURE_2D,0);
-                        glDisable(GL_TEXTURE_2D);
+            glPushMatrix();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D,0);
+            glDisable(GL_TEXTURE_2D);
 
-                          #ifndef __NO_SHADER__
-                          glUseProgramObjectARB(0);
-                          #endif
+              #ifndef __NO_SHADER__
+              glUseProgramObjectARB(0);
+              #endif
 
-                        vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
-                        glTranslatef(trans.X, trans.Y, trans.Z);
+            vector3df trans = sceneList[currentScene]->getContentHouse().getTranslate();
+            glTranslatef(trans.X, trans.Y, trans.Z);
 
-                        glRotatef(sceneList[currentScene]->getLightRadian(),0.0,1.0,0.0);
-                                 glTranslatef(sceneList[currentScene]->getLightPosition()[0],sceneList[currentScene]->getLightPosition()[1],sceneList[currentScene]->getLightPosition()[2]);
-                                 drawSphere(0.1, 30, 30);
-                        glPopMatrix();
+            glRotatef(sceneList[currentScene]->getLightRadian(),0.0,1.0,0.0);
+                     glTranslatef(sceneList[currentScene]->getLightPosition()[0],sceneList[currentScene]->getLightPosition()[1],sceneList[currentScene]->getLightPosition()[2]);
+                     drawSphere(0.1, 30, 30);
+            glPopMatrix();
 
 
-                        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
-                        glPopMatrix();
-                    }
-                    glPopMatrix();
+            glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+            glPopMatrix();
+        }
+        glPopMatrix();
 
 
-                    // lighter light
-                    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, glowbufferid);
-                    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // lighter light
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, glowbufferid);
+        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                    #ifndef __NO_SHADER__
-                    glUseProgramObjectARB(programObject[BRIGHT]);
+        #ifndef __NO_SHADER__
+        glUseProgramObjectARB(programObject[BRIGHT]);
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D,glowtexid);
-                    glDisable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,glowtexid);
+        glDisable(GL_TEXTURE_2D);
 
-                    glUniform1i(glGetUniformLocationARB(programObject[BRIGHT], "texture"), 0);
-                    glUniform1f(glGetUniformLocationARB(programObject[BRIGHT], "threshold"), 0.1f);
+        glUniform1i(glGetUniformLocationARB(programObject[BRIGHT], "texture"), 0);
+        glUniform1f(glGetUniformLocationARB(programObject[BRIGHT], "threshold"), 0.1f);
 
-                    displayQuadScene();
+        displayQuadScene();
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D,0);
-                    glDisable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,0);
+        glDisable(GL_TEXTURE_2D);
 
-                    glUseProgramObjectARB(0);
-                    #endif
+        glUseProgramObjectARB(0);
+        #endif
 
-                    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
 
 
-                    // blur
-                    // ON BLUR LES SOURCES LUMINEUSES HORIZONTALEMENT
-                    // lighter light
-                    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, glowbufferid);
-                    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // blur
+        // ON BLUR LES SOURCES LUMINEUSES HORIZONTALEMENT
+        // lighter light
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, glowbufferid);
+        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                    #ifndef __NO_SHADER__
-                    glUseProgramObjectARB(programObject[BLUR]);
+        #ifndef __NO_SHADER__
+        glUseProgramObjectARB(programObject[BLUR]);
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D,glowtexid);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,glowtexid);
 
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "pass"), 1);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "texture"), 0);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "main"), 1);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "pass"), 1);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "texture"), 0);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "main"), 1);
 
-                    glUniform2fv(glGetUniformLocationARB(programObject[BLUR], "size"), 1, size);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "horizontal"), true);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "kernel_size"), 30);
+        glUniform2fv(glGetUniformLocationARB(programObject[BLUR], "size"), 1, size);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "horizontal"), true);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "kernel_size"), 30);
 
-                    displayQuadScene();
+        displayQuadScene();
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D,0);
-                    glDisable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,0);
+        glDisable(GL_TEXTURE_2D);
 
-                    glUseProgramObjectARB(0);
-                    #endif
+        glUseProgramObjectARB(0);
+        #endif
 
-                    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
 
-                    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, glowbufferid);
-                    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, glowbufferid);
+        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                    #ifndef __NO_SHADER__
-                    glUseProgramObjectARB(programObject[BLUR]);
+        #ifndef __NO_SHADER__
+        glUseProgramObjectARB(programObject[BLUR]);
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D,glowtexid);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,glowtexid);
 
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "pass"), 1);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "texture"), 0);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "main"), 1);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "pass"), 1);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "texture"), 0);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "main"), 1);
 
-                    glUniform2fv(glGetUniformLocationARB(programObject[BLUR], "size"), 1, size);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "horizontal"), false);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "kernel_size"), 30);
+        glUniform2fv(glGetUniformLocationARB(programObject[BLUR], "size"), 1, size);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "horizontal"), false);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "kernel_size"), 30);
 
-                    displayQuadScene();
+        displayQuadScene();
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D,0);
-                    glDisable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,0);
+        glDisable(GL_TEXTURE_2D);
 
-                    glUseProgramObjectARB(0);
-                    #endif
+        glUseProgramObjectARB(0);
+        #endif
 
-                    glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
+        glBindFramebufferEXT (GL_FRAMEBUFFER_EXT, 0);
 
 
+        #ifndef __NO_SHADER__
+          glUseProgramObjectARB(0);
+        #endif
 
+        // shader
+        glPushMatrix();
 
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,mainScenetexid);
 
-                    #ifndef __NO_SHADER__
-                      glUseProgramObjectARB(0);
-                    #endif
+        #ifndef __NO_SHADER__
 
-                    // shader
-                    glPushMatrix();
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D,glowtexid);
 
-                    glEnable(GL_TEXTURE_2D);
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D,mainScenetexid);
+        glUseProgramObjectARB(programObject[BLUR]);
 
-                    #ifndef __NO_SHADER__
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "pass"), 3);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "main"), 0);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "texture"), 1);
 
-                    glActiveTexture(GL_TEXTURE1);
-                    glBindTexture(GL_TEXTURE_2D,glowtexid);
+        glUniform2fv(glGetUniformLocationARB(programObject[BLUR], "size"), 1, size);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "horizontal"), true);
+        glUniform1i(glGetUniformLocationARB(programObject[BLUR], "kernel_size"), 10);
 
-                    glUseProgramObjectARB(programObject[BLUR]);
 
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "pass"), 3);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "main"), 0);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "texture"), 1);
+        displayQuadScene();
 
-                    glUniform2fv(glGetUniformLocationARB(programObject[BLUR], "size"), 1, size);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "horizontal"), true);
-                    glUniform1i(glGetUniformLocationARB(programObject[BLUR], "kernel_size"), 10);
+        glUseProgramObjectARB(0);
+        #endif
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,0);
+        glDisable(GL_TEXTURE_2D);
 
-                    displayQuadScene();
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D,0);
+        glDisable(GL_TEXTURE_2D);
 
-                    glUseProgramObjectARB(0);
-                    #endif
-
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D,0);
-                    glDisable(GL_TEXTURE_2D);
-
-                    glActiveTexture(GL_TEXTURE1);
-                    glBindTexture(GL_TEXTURE_2D,0);
-                    glDisable(GL_TEXTURE_2D);
-
-                    glPopMatrix();
-                }
-                else
-                {
-                   // classic display
-                    sceneList[currentScene]->display();
-                }
+        glPopMatrix();
+    }
+    else
+    {
+       // classic display
+        sceneList[currentScene]->display();
+    }
 
 	}
 	//END IF 1
-        checkGLError(100746);
+  checkGLError(100746);
 
   if(sceneList[currentScene]->getTypeShader() == ENV)
   {

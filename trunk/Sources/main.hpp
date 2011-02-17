@@ -56,8 +56,9 @@ std::vector<vector3df> aimPoints;
 std::vector<std::vector<vector3df> >aimPointsList;
 
 int nbPoints;
+std::vector<int> nbPointsList; 
 float f;
-vector3df nextP;
+
     
 // Données sur le curseur et la souris
 static int xmouseposition = 0;

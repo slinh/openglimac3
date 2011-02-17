@@ -258,9 +258,6 @@ glPopMatrix();
   std::stringstream strStream1;
   strStream1 << Timer::getInstance().getFPSCounter() << " FPS";
   drawString(1.0f, (float)windowheight - 20.0f, GLUT_BITMAP_HELVETICA_18, strStream1.str());
-  std::stringstream strStream2;
-  strStream2 << (int)(1.0f*100.0f) << " %";
-  drawString(1.0f, windowheight - 40.0f, GLUT_BITMAP_HELVETICA_18, strStream2.str());
 
 
 
